@@ -8,6 +8,7 @@ export default async function handler(
     res: NextApiResponse<string>
   ) {
   const { URL = 'https://twitter.com/n0bisuke' } = req.query;
+  
   const browser = await puppeteer.launch({
     args: chrome.args,
     executablePath: await chrome.executablePath,

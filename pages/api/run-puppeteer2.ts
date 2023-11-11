@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-
 let chrome = {};
 let puppeteer = {};
+console.log("let's puppeteer")
 
 //puppeteer main process
 const run = async (puppeteer: any, chrome:any={}, URL: string) => {
@@ -30,10 +30,12 @@ const run = async (puppeteer: any, chrome:any={}, URL: string) => {
 
 if(process.env.AWS_LAMBDA_FUNCTION_VERSION){
   //Vercel
+  console.log("production start")
   chrome = require('chrome-aws-lambda');
   puppeteer = require('puppeteer-core');
 }else{
   //Local Test
+  console.log("local start")
   puppeteer = require('puppeteer');
 
   const URL = `https://www.yahoo.com/`;
@@ -41,9 +43,9 @@ if(process.env.AWS_LAMBDA_FUNCTION_VERSION){
 }
 
 export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse<string>
-  ) {
+  req: NextApiRequest,
+  res: NextApiResponse<string>
+) {
   const { URL='https://www.yahoo.com/' } = req.query;
   const dimensions = await run(puppeteer, chrome, URL as string);
   res.send(`${URL}'s title is'${dimensions.title}!`);
