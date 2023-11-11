@@ -1,10 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+
 const chrome = require('chrome-aws-lambda');
 const puppeteer = require('puppeteer-core');
 
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse<ResponseData>
+    res: NextApiResponse<string>
   ) {
   const { URL = 'https://twitter.com/n0bisuke' } = req.query;
   const browser = await puppeteer.launch({
@@ -18,7 +19,7 @@ export default async function handler(
   // Get the "viewport" of the page, as reported by the page.
   const dimensions = await page.evaluate(() => {
     return {
-      title: document.title
+      title: document.title,
     };
   });
 

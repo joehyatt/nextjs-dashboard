@@ -1,10 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
+
 let chrome = {};
 let puppeteer = {};
 
 //puppeteer main process
-const run = async (puppeteer, chrome={}, URL) => {
+const run = async (puppeteer: any, chrome:any={}, URL: string) => {
   const browser = await puppeteer.launch({
     args: chrome.args,
     executablePath: await chrome.executablePath,
@@ -41,9 +42,9 @@ if(process.env.AWS_LAMBDA_FUNCTION_VERSION){
 
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse<ResponseData>
+    res: NextApiResponse<string>
   ) {
   const { URL='https://www.yahoo.com/' } = req.query;
-  const dimensions = await run(puppeteer, chrome, URL);
+  const dimensions = await run(puppeteer, chrome, URL as string);
   res.send(`${URL}'s title is'${dimensions.title}!`);
 }
