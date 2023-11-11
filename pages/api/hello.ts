@@ -1,11 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import puppeteer from 'puppeteer-core'
  
 type ResponseData = {
   message: string
-}
-type Json = {
-    message: string
 }
  
 export default function handler(

@@ -6,14 +6,18 @@ console.log("let's puppeteer")
 
 //puppeteer main process
 const run = async (puppeteer: any, chrome:any={}, URL: string) => {
+
+  console.log("run start")
   const browser = await puppeteer.launch({
     args: chrome.args,
     executablePath: await chrome.executablePath,
     headless: chrome.headless,
   });
 
+  console.log(URL)
   const page = await browser.newPage();
   await page.goto(URL);
+  
   // Get the "viewport" of the page, as reported by the page.
   const dimensions = await page.evaluate(() => {
     return {
