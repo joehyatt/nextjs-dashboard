@@ -13,7 +13,7 @@ const run = async (puppeteer: any, chrome:any={}, URL: string) => {
     chrome = require('@sparticuz/chromium-min');
     puppeteer = require('puppeteer-core');
     options = {
-      args: [...chrome?.args, '--hide-scrollbars', '--disable-web-security'],
+      args: [...chrome?.args, '--hide-scrollbars', '--disable-web-security', '--window-size=1920,1080','--user-agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36"'],
       executablePath: await chrome.executablePath(
         `https://github.com/Sparticuz/chromium/releases/download/v116.0.0/chromium-v116.0.0-pack.tar`
       ),
@@ -28,18 +28,17 @@ const run = async (puppeteer: any, chrome:any={}, URL: string) => {
     options = {
       args: chrome.args,
       executablePath: await chrome.executablePath,
-      headless: false,
+      // headless: false,
+      headless: true,
     }
     // Local --------------------------------------------- //
   }
 
   const browser = await puppeteer.launch(options)
   const page = await browser.newPage();
+  await page.setUserAgent('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36');
   await page.goto(URL);
-
-  const title = await page.evaluate(() => {
-    return  document.title;
-  });
+  const title = await page.evaluate(() => document.title);
 
   await browser.close();
 
