@@ -28,8 +28,8 @@ const run = async (puppeteer: any, chrome:any={}, URL: string) => {
     options = {
       args: chrome.args,
       executablePath: await chrome.executablePath,
-      // headless: false,
-      headless: true,
+      headless: false,
+      // headless: true,
     }
     // Local --------------------------------------------- //
   }
