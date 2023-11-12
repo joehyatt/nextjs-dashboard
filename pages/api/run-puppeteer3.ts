@@ -49,7 +49,7 @@ if(process.env.AWS_LAMBDA_FUNCTION_VERSION){
   //Local Test
   console.log("local start")
   puppeteer = require('puppeteer');
-  const URL = `https://www.yahoo.com/`;
+  const URL = `http://abehiroshi.la.coocan.jp/`;
   run(puppeteer,{},URL).then(res => console.log(res));
 }
 
@@ -57,7 +57,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<string>
 ) {
-  const { URL='https://www.yahoo.com/' } = req.query;
+  const { URL='http://abehiroshi.la.coocan.jp/' } = req.query;
   const dimensions = await run(puppeteer, chrome, URL as string);
   res.send(`${URL}'s title is'${dimensions.title}!`);
 }
