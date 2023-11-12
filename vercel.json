@@ -1,0 +1,8 @@
+{
+    "crons": [
+      {
+        "path": "/api/run-puppeteer3",
+        "schedule": "30 23 * * *"
+      }
+    ]
+}

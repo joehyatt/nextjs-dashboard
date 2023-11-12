@@ -50,8 +50,8 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<string>
 ) {
-  const { URL='https://www.hilton.com/en/book/reservation/flexibledates/?ctyhocn=TOYSHDI&arrivalDate=2023-11-01&departureDate=2023-11-02' } = req.query;
-  // const { URL='http://abehiroshi.la.coocan.jp/' } = req.query;
+  // const { URL='https://www.hilton.com/en/book/reservation/flexibledates/?ctyhocn=TOYSHDI&arrivalDate=2023-11-01&departureDate=2023-11-02' } = req.query;
+  const { URL='http://abehiroshi.la.coocan.jp/' } = req.query;
   const title = await run(puppeteer, chrome, URL as string);
   res.send(`${URL}'s title is ${title}`);
 }

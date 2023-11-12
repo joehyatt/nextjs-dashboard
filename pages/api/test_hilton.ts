@@ -43,6 +43,7 @@ const run = async (puppeteer: any, chrome:any={}) => {
 
     const browser = await puppeteer.launch(options)
     const page = await browser.newPage();
+    await page.setUserAgent('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36');
 
     const hotels = ["TYOHITW","HIJSHHI"];
     const monthCount = 2;
@@ -50,6 +51,7 @@ const run = async (puppeteer: any, chrome:any={}) => {
 
     for (let hotelNum = 0; hotelNum < hotels.length; hotelNum++) {
         const hotelId = hotels[hotelNum];
+
         for (let monthNum = 0; monthNum < monthCount; monthNum++) {
             let currentMonth = new Date();
             const searchMonth = new Date(currentMonth.setMonth(currentMonth.getMonth() + monthNum)).toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit"}).replace('/', '-');
@@ -63,8 +65,10 @@ const run = async (puppeteer: any, chrome:any={}) => {
             };
             const lastDay = getNumOfDaysInMonth(Number(searchMonth.slice(0,4)), Number(searchMonth.slice(-2)))
             await page.waitForSelector("#flexibleDatesCalendar > div:nth-child(3) > div > div div[data-testid='flexDatesRoomRate'] > span", { hidden: true, timeout: 0 });
+            
             const priceList = await page.evaluate((hotelId: string, lastDay: number, searchMonth: string) => {
                 const priceList:Prices[] = []
+
                 for (let dayNum = 0; dayNum < lastDay; dayNum++) {
                     const searchDate = ( '00' + (dayNum + 1) ).slice(-2);
                     let price;
