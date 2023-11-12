@@ -31,6 +31,7 @@ const run = async (puppeteer: any, chrome:any={}, URL: string) => {
       executablePath: await chrome.executablePath,
     //   headless: chrome.headless,
       headless: false,
+      slowMo: 100,
     }
     // Local --------------------------------------------- //
   }
@@ -38,7 +39,8 @@ const run = async (puppeteer: any, chrome:any={}, URL: string) => {
   const browser = await puppeteer.launch(options)
   const page = await browser.newPage();
   await page.goto(URL);
-  await page.waitForSelector("#__next > div > main > div > div > div.notification_notificationWrapper__Kdf8t.mb-4.px-4.py-3.text-left.text-base.font-semibold.sm\\:text-lg.enableMargin.notification_tags__cFBxY > div > div");
+//   await new Promise(resolve => setTimeout(resolve, 1000))
+  await page.waitForSelector("#flexibleDatesCalendar > div:nth-child(3) > div > div div[data-testid='flexDatesRoomRate'] > span", { hidden: true, timeout: 0 });
 
 //   const dimensions = await page.evaluate(() => {
 //     return {
@@ -46,10 +48,10 @@ const run = async (puppeteer: any, chrome:any={}, URL: string) => {
 //       deviceScaleFactor: window.devicePixelRatio
 //     };
 //   });
+
   const text = await page.evaluate(() => {
-    const month = document.querySelector("#__next > div > main > div > div > div.notification_notificationWrapper__Kdf8t.mb-4.px-4.py-3.text-left.text-base.font-semibold.sm\\:text-lg.enableMargin.notification_tags__cFBxY > div > div");
+    const month = document.querySelector("#flexibleDatesCalendar > div:nth-child(3) > div > div.lg\\:border-border.mb-4.lg\\:border-l.lg\\:border-t > div:nth-child(3) > div:nth-child(5) > div > button > div.overflow-hidden.lg\\:flex.lg\\:flex-1.lg\\:flex-col.lg\\:items-center.lg\\:justify-center > div.font-body.group-hover\\:text-text-inverse.text-center.text-xs.lg\\:text-2xl.lg\\:font-bold.\\[word-break\\:break-word\\].text-primary");
     return month?.textContent;
-    // return document.title;
   });
 
   await browser.close();
@@ -62,8 +64,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<string>
 ) {
-  // const { URL='https://www.hilton.com/en/book/reservation/flexibledates/?ctyhocn=TOYSHDI&arrivalDate=2023-11-01&departureDate=2023-11-02' } = req.query;
-//   const { URL=searchUrl } = req.query;
   const text = await run(puppeteer, chrome, searchUrl);
   res.send(`Month's title is ${text}!`);
 }

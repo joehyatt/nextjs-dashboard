@@ -17,7 +17,7 @@ const run = async (puppeteer: any, chrome:any={}, URL: string) => {
       executablePath: await chrome.executablePath(
         `https://github.com/Sparticuz/chromium/releases/download/v116.0.0/chromium-v116.0.0-pack.tar`
       ),
-      headless: chrome.headless,
+      headless: false,
       ignoreHTTPSErrors: true,
     }
     // Production --------------------------------------------- //
