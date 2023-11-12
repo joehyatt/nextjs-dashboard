@@ -17,7 +17,8 @@ const run = async (puppeteer: any, chrome:any={}, URL: string) => {
       executablePath: await chrome.executablePath(
         `https://github.com/Sparticuz/chromium/releases/download/v116.0.0/chromium-v116.0.0-pack.tar`
       ),
-      headless: chrome.headless,
+    //   headless: chrome.headless,
+      headless: false,
       ignoreHTTPSErrors: true,
     }
     // Production --------------------------------------------- //
@@ -28,7 +29,8 @@ const run = async (puppeteer: any, chrome:any={}, URL: string) => {
     options = {
       args: chrome.args,
       executablePath: await chrome.executablePath,
-      headless: chrome.headless,
+    //   headless: chrome.headless,
+      headless: false,
     }
     // Local --------------------------------------------- //
   }
@@ -36,17 +38,24 @@ const run = async (puppeteer: any, chrome:any={}, URL: string) => {
   const browser = await puppeteer.launch(options)
   const page = await browser.newPage();
   await page.goto(URL);
+  await page.waitForSelector("#__next > div > main > div > div > div.notification_notificationWrapper__Kdf8t.mb-4.px-4.py-3.text-left.text-base.font-semibold.sm\\:text-lg.enableMargin.notification_tags__cFBxY > div > div");
 
-  const dimensions = await page.evaluate(() => {
-    return {
-      title: document.title,
-      deviceScaleFactor: window.devicePixelRatio
-    };
+//   const dimensions = await page.evaluate(() => {
+//     return {
+//       title: document.title,
+//       deviceScaleFactor: window.devicePixelRatio
+//     };
+//   });
+  const text = await page.evaluate(() => {
+    const month = document.querySelector("#__next > div > main > div > div > div.notification_notificationWrapper__Kdf8t.mb-4.px-4.py-3.text-left.text-base.font-semibold.sm\\:text-lg.enableMargin.notification_tags__cFBxY > div > div");
+    return month?.textContent;
+    // return document.title;
   });
 
   await browser.close();
-  console.log(dimensions.title)
-  return dimensions;
+  
+  console.log(text)
+  return text;
 }
 
 export default async function handler(
@@ -54,7 +63,7 @@ export default async function handler(
   res: NextApiResponse<string>
 ) {
   // const { URL='https://www.hilton.com/en/book/reservation/flexibledates/?ctyhocn=TOYSHDI&arrivalDate=2023-11-01&departureDate=2023-11-02' } = req.query;
-  const { URL='http://abehiroshi.la.coocan.jp/' } = req.query;
-  const dimensions = await run(puppeteer, chrome, URL as string);
-  res.send(`${URL}'s title is'${dimensions.title}!`);
+//   const { URL=searchUrl } = req.query;
+  const text = await run(puppeteer, chrome, searchUrl);
+  res.send(`Month's title is ${text}!`);
 }
