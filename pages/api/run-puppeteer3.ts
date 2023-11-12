@@ -21,7 +21,9 @@ const run = async (puppeteer: any, chrome:any={}, URL: string) => {
 
   console.log(URL)
   const page = await browser.newPage();
+  console.log(page)
   await page.goto(URL);
+  console.log(page)
   
   // Get the "viewport" of the page, as reported by the page.
   const dimensions = await page.evaluate(() => {
@@ -33,6 +35,7 @@ const run = async (puppeteer: any, chrome:any={}, URL: string) => {
     };
   });
   await browser.close();
+  console.log(dimensions)
 
   return dimensions;
 }
@@ -46,7 +49,6 @@ if(process.env.AWS_LAMBDA_FUNCTION_VERSION){
   //Local Test
   console.log("local start")
   puppeteer = require('puppeteer');
-
   const URL = `https://www.yahoo.com/`;
   run(puppeteer,{},URL).then(res => console.log(res));
 }
