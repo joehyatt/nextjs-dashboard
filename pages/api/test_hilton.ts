@@ -69,7 +69,8 @@ const run = async (puppeteer: any, chrome:any={}) => {
                     const searchDate = ( '00' + (dayNum + 1) ).slice(-2);
                     let price;
                     if (document.querySelector(`button[data-testid='arrival-${searchMonth}-${searchDate}'] > div:nth-child(3) > div[data-testid='flexDatesRoomRate`)) {
-                        price = document.querySelector(`button[data-testid='arrival-${searchMonth}-${searchDate}'] > div:nth-child(3) > div[data-testid='flexDatesRoomRate`)?.innerText;
+                        const priceElement = document.querySelector(`button[data-testid='arrival-${searchMonth}-${searchDate}'] > div:nth-child(3) > div[data-testid='flexDatesRoomRate`)
+                        price = priceElement!.innerHTML;
                     } else if (document.querySelector(`button[data-testid='arrival-${searchMonth}-${searchDate}'] > div:nth-child(3) > div > span[data-testid='rateNotAvailable']`)) {
                         price = "sold out"
                     } else {
