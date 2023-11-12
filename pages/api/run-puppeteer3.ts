@@ -2,15 +2,12 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 let chrome = {};
 let puppeteer = {};
-console.log("let's puppeteer")
 
 //puppeteer main process
 const run = async (puppeteer: any, chrome:any={}, URL: string) => {
 
   console.log("run start")
   const browser = await puppeteer.launch({
-    // args: chrome.args,
-    // executablePath: await chrome.executablePath,
     args: [...chrome.args, '--hide-scrollbars', '--disable-web-security'],
     executablePath: await chrome.executablePath(
       `https://github.com/Sparticuz/chromium/releases/download/v116.0.0/chromium-v116.0.0-pack.tar`
@@ -19,23 +16,20 @@ const run = async (puppeteer: any, chrome:any={}, URL: string) => {
     ignoreHTTPSErrors: true,
   });
 
-  console.log(URL)
   const page = await browser.newPage();
-  console.log(page)
+  console.log("after newPage set")
   await page.goto(URL);
-  console.log(page)
+  console.log("after goto url")
   
   // Get the "viewport" of the page, as reported by the page.
   const dimensions = await page.evaluate(() => {
     return {
-      width: document.documentElement.clientWidth,
-      height: document.documentElement.clientHeight,
       title: document.title,
       deviceScaleFactor: window.devicePixelRatio
     };
   });
   await browser.close();
-  console.log(dimensions)
+  console.log(dimensions.title)
 
   return dimensions;
 }
@@ -59,5 +53,5 @@ export default async function handler(
 ) {
   const { URL='http://abehiroshi.la.coocan.jp/' } = req.query;
   const dimensions = await run(puppeteer, chrome, URL as string);
-  res.send(`${URL}'s title is'${dimensions.title}!`);
+  res.send(`${URL}'s title is'${dimensions.title.toString('UTF-8')}!`);
 }
