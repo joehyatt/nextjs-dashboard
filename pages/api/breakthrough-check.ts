@@ -85,6 +85,7 @@ const lineMessaging = async (breakthroughList: Breakthrough[]) => {
 async function main() {
     console.log("main start")
     const client = await db.connect();
+    console.log("connected db")
     const breakthroughList = await getBreakthrough(client);
     await lineMessaging(breakthroughList);
     await client.end();
@@ -94,6 +95,8 @@ export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
-    main().catch((err) => console.error('An error occurred while attempting to seed the database:',err,));
-    res.status(200).json({ message: 'get breakthrough watchlist' })
+    main()
+        .then(() => res.status(200).json({ message: 'get breakthrough watchlist' }))
+        .catch((err) => console.error('An error occurred while attempting to seed the database:',err,));
+    
 }
