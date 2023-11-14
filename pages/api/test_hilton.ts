@@ -1,17 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { sql } from '@vercel/postgres'
+const { db } = require('@vercel/postgres');
 
 type Prices = {
-    hotelId: string,
-    date: string,
-    price: string
+    hotel_id: string,
+    cid: string,
+    price: number,
+    is_soldout: boolean,
+    capture_date: string
 }
 
 let chrome = {};
 let puppeteer = {};
 let options = {};
-// const searchUrl = "https://www.marriott.com/reservation/availabilitySearch.mi?isRateCalendar=true&propertyCode=OSAAL&isSearch=true&currency=&fromToDate_submit=12/07/2023&fromDate=12/06/2023&toDate=12/07/2023&toDateDefaultFormat=12/07/2023";
-// const searchUrl = "https://www.hilton.com/en/book/reservation/flexibledates/?ctyhocn=TOYSHDI&arrivalDate=2023-11-01&departureDate=2023-11-02";
 
 const run = async (puppeteer: any, chrome:any={}) => {
 
@@ -42,61 +42,104 @@ const run = async (puppeteer: any, chrome:any={}) => {
         // Local --------------------------------------------- //
     }
 
+    // 変数設定
+    const hotel_id = "3041f199-0049-406b-b862-8422c48f7708";
+    const hotels = ["TYOHITW"];
+    const monthCount = 2;
+
+    // 仮想ブラウザの立ち上げ
     const browser = await puppeteer.launch(options)
     const page = await browser.newPage();
     await page.setUserAgent('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36');
 
-    const hotels = ["TYOHITW","HIJSHHI"];
-    const monthCount = 2;
-    // const baseUrl = "https://www.hilton.com/en/book/reservation/flexibledates/?";
-
+    // 検索ホテルの設定
     for (let hotelNum = 0; hotelNum < hotels.length; hotelNum++) {
-        const hotelId = hotels[hotelNum];
+        const hotel_code = hotels[hotelNum];
 
+        // 検索月の設定
         for (let monthNum = 0; monthNum < monthCount; monthNum++) {
-            let currentMonth = new Date();
-            const searchMonth = new Date(currentMonth.setMonth(currentMonth.getMonth() + monthNum)).toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit"}).replace('/', '-');
-            const searchUrl = `https://www.hilton.com/en/book/reservation/flexibledates/?ctyhocn=${hotelId}&arrivalDate=${searchMonth}-01&departureDate=${searchMonth}-02`;
+            const now = new Date();
+            const today = now.toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit",day: "2-digit"}).replaceAll('/', '-');
+            const searchMonth = new Date(now.setMonth(now.getMonth() + monthNum)).toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit"}).replace('/', '-');
+            const lastDay = new Date(Number(searchMonth.slice(0,4)), Number(searchMonth.slice(-2)),0).getDate();
             
-            console.log(`collecting ${hotelId} : ${searchMonth} prices...`);
+            // 検索URL決定
+            const searchUrl = `https://www.hilton.com/en/book/reservation/flexibledates/?ctyhocn=${hotel_code}&arrivalDate=${searchMonth}-01&departureDate=${searchMonth}-02`;
+            console.log(`collecting ${hotel_code} : ${searchMonth} prices...`);
 
+            // ページを開く-価格表示まで待機-価格取得
             await page.goto(searchUrl);
-            const getNumOfDaysInMonth = function(year: number, month:number) {  
-                return new Date(year, month, 0).getDate();
-            };
-            const lastDay = getNumOfDaysInMonth(Number(searchMonth.slice(0,4)), Number(searchMonth.slice(-2)))
             await page.waitForSelector("#flexibleDatesCalendar > div:nth-child(3) > div > div div[data-testid='flexDatesRoomRate'] > span", { hidden: true, timeout: 0 });
-            
-            const priceList = await page.evaluate((hotelId: string, lastDay: number, searchMonth: string) => {
-                const priceList:Prices[] = []
-
-                for (let dayNum = 0; dayNum < lastDay; dayNum++) {
-                    const searchDate = ( '00' + (dayNum + 1) ).slice(-2);
+            const prices = await page.evaluate((hotel_id: string, lastDay: number, searchMonth: string, today: string) => {
+                const prices:Prices[] = []
+                const startDate = today.slice(0,7) === searchMonth ? Number(today.slice(-2)) : 1;
+                for (let dayNum = startDate; dayNum < lastDay + 1; dayNum++) {
+                    const searchDate = ( '00' + dayNum ).slice(-2);
                     let price;
+                    let is_soldout;
                     if (document.querySelector(`button[data-testid='arrival-${searchMonth}-${searchDate}'] > div:nth-child(3) > div[data-testid='flexDatesRoomRate`)) {
                         const priceElement = document.querySelector(`button[data-testid='arrival-${searchMonth}-${searchDate}'] > div:nth-child(3) > div[data-testid='flexDatesRoomRate`)
-                        price = priceElement!.innerHTML;
+                        price = Number(priceElement!.innerHTML.replace("¥","").replace(",",""));
+                        is_soldout = false;
                     } else if (document.querySelector(`button[data-testid='arrival-${searchMonth}-${searchDate}'] > div:nth-child(3) > div > span[data-testid='rateNotAvailable']`)) {
-                        price = "sold out"
+                        price = 0;
+                        is_soldout = true;
                     } else {
-                        price = "unavailable date"
+                        price = 0
+                        is_soldout = true;
                     }
-                    priceList.push({hotelId, date:`${searchMonth}-${searchDate}`, price})
+                    prices.push({hotel_id, cid:`${searchMonth}-${searchDate}`, price, is_soldout, capture_date: today})
                 }
-                return priceList
-            },hotelId,lastDay,searchMonth);
-            console.log(priceList)
+                return prices
+            },hotel_id,lastDay,searchMonth,today);
+
+            // DBに格納
+            console.log(prices)
+            await main(prices).catch(err => console.error('An error occurred while attempting to seed the database:', err));
         }
     }
-
+    // 仮想ブラウザの終了
     await browser.close();
+}
+
+const addPrices = async (client:any, prices: Prices[]) => {
+    try {
+      const insertedPrices = await Promise.all(
+        prices.map(
+          (price) => client.sql`
+            INSERT INTO prices (hotel_id, cid, price, is_soldout, capture_date)
+            VALUES (${price.hotel_id}, ${price.cid}, ${price.price}, ${price.is_soldout}, ${price.capture_date})
+            ON CONFLICT ON CONSTRAINT unique_night DO UPDATE SET
+                hotel_id = EXCLUDED.hotel_id,
+                cid = EXCLUDED.cid,
+                price = EXCLUDED.price,
+                is_soldout = EXCLUDED.is_soldout,
+                capture_date = EXCLUDED.capture_date;
+        `,
+        ),
+      );
   
+      console.log(`Captured ${insertedPrices.length} prices`);
+  
+      return {
+        prices: insertedPrices,
+      };
+    } catch (error) {
+      console.error('Error capturing prices:', error);
+      throw error;
+    }
+}
+
+const main = async (prices: Prices[]) => {
+    const client = await db.connect();
+    await addPrices(client, prices);
+    await client.end();
 }
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<string>
 ) {
-  await run(puppeteer, chrome);
-  res.send(`DONE!`);
+    await run(puppeteer, chrome);
+    res.send(`DONE!`);
 }

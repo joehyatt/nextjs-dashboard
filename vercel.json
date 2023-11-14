@@ -1,8 +1,8 @@
 {
     "crons": [
       {
-        "path": "/api/run-puppeteer3",
-        "schedule": "0 3 * * *"
+        "path": "/api/breakthrough-check",
+        "schedule": "0 0 * * *"
       }
     ]
 }
