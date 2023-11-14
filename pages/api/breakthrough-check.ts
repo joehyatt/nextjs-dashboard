@@ -47,8 +47,6 @@ async function getBreakthrough(client:any) {
 
 
 // LINEメッセージ送信
-
-
 const lineMessaging = async (breakthroughList: Breakthrough[]) => {
 
     const config = {
@@ -61,27 +59,19 @@ const lineMessaging = async (breakthroughList: Breakthrough[]) => {
 
     const sendMessage = await Promise.resolve(breakthroughList.map( async (bt) => {
 
-        const hotelName = bt.hotel_name_jp
-        const checkInDate = bt.cid
-        const prevPrice = bt.threshold
-        const nextPrice = bt.price
-        const diffPrice = prevPrice - nextPrice
-        const lineId = bt.line_id
-        
         const messageText = `【価格下落アラート】
-🏨${hotelName}
-🗓${checkInDate}泊
-目標価格: ¥${prevPrice.toLocaleString()}
-最新価格: ¥${nextPrice.toLocaleString()}
-⏬¥${diffPrice.toLocaleString()}🉐`
-    
+🏨${bt.hotel_name_jp}
+🗓${bt.cid}泊
+目標価格: ¥${bt.threshold.toLocaleString()}
+最新価格: ¥${bt.price.toLocaleString()}
+⏬¥${(bt.threshold - bt.price).toLocaleString()}🉐`
         const messages = [{
             type: 'text',
             text: messageText
         }];
     
         try {
-            await client.pushMessage(lineId,messages,true);
+            await client.pushMessage(bt.line_id,messages,true);
             messageCount++;
         } catch (error: any) {
             console.log(`LINE-MessagingError: ${error.statusMessage}`);
@@ -90,8 +80,6 @@ const lineMessaging = async (breakthroughList: Breakthrough[]) => {
 
     }))
     console.log(`Sent ${sendMessage.length} messages`);
-
-    
 }
 
 async function main() {
