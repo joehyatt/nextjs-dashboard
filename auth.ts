@@ -18,11 +18,11 @@ async function getUser(email: string): Promise<User | undefined> {
 
 async function setLinkToken(email: string, linkToken: string, nonce: string) {
   try {
-    const updatedUser = await sql`UPDATE users SET link_token = ${linkToken} AND nonce = ${nonce} WHERE email = ${email}`;
+    const updatedUser = await sql`UPDATE users SET link_token = ${linkToken}, nonce = ${nonce} WHERE email = ${email}`;
     return null;
   } catch (error) {
-    console.error('Failed to set linkToken', error);
-    throw new Error('Failed to set linkToken.');
+    console.error('Failed to set linkToken and nonce', error);
+    throw new Error('Failed to set linkToken and nonce.');
   }
 }
  
@@ -45,8 +45,8 @@ export const { auth, signIn, signOut } = NextAuth({
               if (linkToken) {
                 console.log('認証成功');
                 // nonce生成
-                const {randomBytes} = require('crypto')
-                const N=16
+                const {randomBytes} = require('crypto');
+                const N=16;
                 const randomStrings = randomBytes(N).reduce((p: number,i: number)=> p+(i%36).toString(36),'');
                 const buf = Buffer.from(randomStrings);
                 const nonce = buf.toString('base64');
