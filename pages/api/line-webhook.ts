@@ -10,6 +10,5 @@ export default function handler(
 ) {
     console.log(JSON.stringify(req.body));
     console.log('======================');
-    res.send('res');
-    res.status(200).json('receive line message!')
+    res.status(200).json('receive line message!');
 }
