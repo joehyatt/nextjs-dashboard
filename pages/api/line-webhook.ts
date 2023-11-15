@@ -18,40 +18,40 @@ export default async function handler(
     console.log('======================');
 
     if (req.body.events && req.body.events[0].message.text === "アカウント連携") {
-        const userId = req.body.events[0].source.userId
+        const userId = req.body.events[0].source.userId;
 
-        await fetch(`https://api.line.me/v2/bot/user/${userId}/linkToken`, {
+        const getLinkToken = await fetch(`https://api.line.me/v2/bot/user/${userId}/linkToken`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${process.env.CHANNEL_ACCESS_TOKEN}`,
             }
-        }).then((event:any) => {
-            const linkToken = event.linkToken;
-            console.log(event);
-            console.log(req.body.events[0].replyToken);
-            return client.replyMessage(req.body.events[0].replyToken,{
-                "type":"flex",
-                "altText":"link",
-                "contents":
-                {
-                  "type": "bubble",
-                  "body": {
-                    "type": "box",
-                    "layout": "vertical",
-                    "contents": [
-                      {
-                        "type": "button",
-                        "action": {
-                          "type": "uri",
-                          "label": "自社HPログイン画面へ",
-                          "uri": `https://nextjs-dashboard-202311.vercel.app/login?linkToken=${linkToken}`
-                        }
-                      }
-                    ]
+        })
+        
+        const {linkToken} = await getLinkToken.json();
+
+        const sendLink = await client.replyMessage(req.body.events[0].replyToken,{
+            "type":"flex",
+            "altText":"link",
+            "contents":
+            {
+              "type": "bubble",
+              "body": {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [
+                  {
+                    "type": "button",
+                    "action": {
+                      "type": "uri",
+                      "label": "自社HPログイン画面へ",
+                      "uri": `https://nextjs-dashboard-202311.vercel.app/login?linkToken=${linkToken}`
+                    }
                   }
-                }
-            });
-        }).catch(e=>console.log(e))
+                ]
+              }
+            }
+        });
+
     }
     
     res.status(200).json('receive line message!');
