@@ -83,9 +83,7 @@ const lineMessaging = async (breakthroughList: Breakthrough[]) => {
 }
 
 async function main() {
-    console.log("main start")
     const client = await db.connect();
-    console.log("connected db")
     const breakthroughList = await getBreakthrough(client);
     await lineMessaging(breakthroughList);
     await client.end();
