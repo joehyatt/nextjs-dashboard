@@ -27,7 +27,7 @@ export default async function handler(
             }
         }).then((event:any) => {
             const linkToken = event.linkToken;
-            console.log(linkToken);
+            console.log(event);
             console.log(req.body.events[0].replyToken);
             return client.replyMessage(req.body.events[0].replyToken,{
                 "type":"flex",
