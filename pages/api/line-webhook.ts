@@ -1,25 +1,59 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
  
-// type ResponseData = {
-//   message: string
-// }
+type Event = {
+    linkToken: string
+}
+const line = require('@line/bot-sdk');
+const config = {
+    channelSecret: process.env.CHANNEL_SECRET,
+    channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN
+}
+const client = new line.Client(config);
  
-export default function handler(
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<string>
 ) {
     console.log(JSON.stringify(req.body));
     console.log('======================');
 
-    if (req.body.events) {
-        if (req.body.events[0].message.text === "アカウント連携") {
-            console.log("アカウント連携します！")
-        } else {
-            console.log(JSON.stringify(req.body.events[0]));
-            console.log(JSON.stringify(req.body.events[0].message));
-        }
+    if (req.body.events && req.body.events[0].message.text === "アカウント連携") {
+        const userId = req.body.events[0].source.userId
+
+        await fetch(`https://api.line.me/v2/bot/user/${userId}/linkToken`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${process.env.CHANNEL_ACCESS_TOKEN}`,
+            }
+        }).then((event:any) => {
+            const linkToken = event.linkToken;
+            console.log(linkToken);
+            console.log(req.body.events[0].replyToken);
+            return client.replyMessage(req.body.events[0].replyToken,{
+                "type":"flex",
+                "altText":"link",
+                "contents":
+                {
+                  "type": "bubble",
+                  "body": {
+                    "type": "box",
+                    "layout": "vertical",
+                    "contents": [
+                      {
+                        "type": "button",
+                        "action": {
+                          "type": "uri",
+                          "label": "自社HPログイン画面へ",
+                          "uri": `https://nextjs-dashboard-202311.vercel.app/login?linkToken=${linkToken}`
+                        }
+                      }
+                    ]
+                  }
+                }
+            });
+        }).catch(e=>console.log(e))
     }
-    // 連携用コードは
+    
     res.status(200).json('receive line message!');
 }
 
