@@ -10,5 +10,42 @@ export default function handler(
 ) {
     console.log(JSON.stringify(req.body));
     console.log('======================');
+
+    if (req.body.events) {
+        if (req.body.events[0].message.text === "アカウント連携") {
+            console.log("アカウント連携します！")
+        } else {
+            console.log(JSON.stringify(req.body.events[0]));
+            console.log(JSON.stringify(req.body.events[0].message));
+        }
+    }
+    // 連携用コードは
     res.status(200).json('receive line message!');
 }
+
+// // response sample
+// {
+//     "destination":"U9b278bf58a16d087e773eddd723e798e",
+//     "events":[
+//         {
+//             "type":"message",
+//             "message":{
+//                 "type":"text",
+//                 "id":"481864921253412952",
+//                 "quoteToken":"npF3l6VtAFkfyH6dYNWDttMtwhzjT6AjAHbyHMeNApdol720UoW_ODOT-Klrr_-tliKIBHdlhn_l-WI1CNT95ssbzjmR7ap9lp-NktBfpoJcPaYYPZ_yA9Dz63luRJm8Z7muVA9CqgC0BxwhdfttDw",
+//                 "text":"テスト"
+//             },
+//             "webhookEventId":"01HF99DHXYJTG8ZGQJQBMYB3WD",
+//             "deliveryContext":{
+//                 "isRedelivery":false
+//             },
+//             "timestamp":1700045178803,
+//             "source":{
+//                 "type":"user",
+//                 "userId":"U462d229787389a59c2e7bebc1f7cd6e6"
+//             },
+//             "replyToken":"79cb7c90c8d14b048110d8ef75e25a8e",
+//             "mode":"active"
+//         }
+//     ]
+// }
