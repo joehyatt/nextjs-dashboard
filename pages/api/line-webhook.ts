@@ -1,8 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
  
-type Event = {
-    linkToken: string
-}
 const line = require('@line/bot-sdk');
 const config = {
     channelSecret: process.env.CHANNEL_SECRET,

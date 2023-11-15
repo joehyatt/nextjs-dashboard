@@ -33,3 +33,10 @@ INNER JOIN users
     ON breakthroughlist.user_id = users.id
 INNER JOIN hotels
     ON breakthroughlist.hotel_id = hotels.id;
+
+
+-- カラムの追加
+ALTER TABLE users ADD COLUMN link_token VARCHAR(255); 
+
+
+UPDATE users SET link_token = ${linkToken} WHERE email = ${email}
