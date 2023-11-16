@@ -52,7 +52,6 @@ export const { auth, signIn, signOut } = NextAuth({
                 const nonce = buf.toString('base64');
                 console.log('nonce:',nonce);
                 await setLinkToken(email,linkToken,nonce);
-                // user.redirect_to = `https://access.line.me/dialog/bot/accountLink?linkToken=${linkToken}&nonce=${nonce}`
               };
               return user;
             }

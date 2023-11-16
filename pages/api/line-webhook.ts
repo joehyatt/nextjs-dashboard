@@ -64,7 +64,6 @@ export default async function handler(
             await dbClient.sql`UPDATE users SET line_id = ${userId} WHERE nonce = ${nonce}`
             await dbClient.end();
             console.log("LINEとHotteの連携が完了しました！");
-            // await client.pushMessage(userId,"LINEとHotteの連携が完了しました！");
         } else if (result === "failed") {
             console.log("LINEとHotteの連携に失敗しました");
         }
@@ -72,53 +71,3 @@ export default async function handler(
     
     res.status(200).json('receive line message!');
 }
-
-// https://access.line.me/dialog/bot/accountLink?linkToken=tvIOicSRtTVe4EXhbPLDWCPfIPZemjDX&nonce=YzlvYzVwejB3cGtsdGM2OA==
-
-
-// "events":[
-//     {
-//         "type":"accountLink",
-//         "link":{
-//             "result":"ok",
-//             "nonce":"ZXc3bHFldGd2cTdtbGprMg=="
-//         },
-//         "webhookEventId":"01HFB257J7SRWFJSFFZT4Z40RY",
-//         "deliveryContext":{
-//             "isRedelivery":false
-//         },
-//         "timestamp":1700104674887,
-//         "source":{
-//             "type":"user",
-//             "userId":"U462d229787389a59c2e7bebc1f7cd6e6"
-//         },
-//         "replyToken":"15ed31c2f9e74f1f8f7740f2b6633d90",
-//         "mode":"active"
-//     }]}
-
-// // response sample
-// {
-//     "destination":"U9b278bf58a16d087e773eddd723e798e",
-//     "events":[
-//         {
-//             "type":"message",
-//             "message":{
-//                 "type":"text",
-//                 "id":"481864921253412952",
-//                 "quoteToken":"npF3l6VtAFkfyH6dYNWDttMtwhzjT6AjAHbyHMeNApdol720UoW_ODOT-Klrr_-tliKIBHdlhn_l-WI1CNT95ssbzjmR7ap9lp-NktBfpoJcPaYYPZ_yA9Dz63luRJm8Z7muVA9CqgC0BxwhdfttDw",
-//                 "text":"テスト"
-//             },
-//             "webhookEventId":"01HF99DHXYJTG8ZGQJQBMYB3WD",
-//             "deliveryContext":{
-//                 "isRedelivery":false
-//             },
-//             "timestamp":1700045178803,
-//             "source":{
-//                 "type":"user",
-//                 "userId":"U462d229787389a59c2e7bebc1f7cd6e6"
-//             },
-//             "replyToken":"79cb7c90c8d14b048110d8ef75e25a8e",
-//             "mode":"active"
-//         }
-//     ]
-// }

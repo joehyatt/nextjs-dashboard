@@ -42,3 +42,5 @@ ALTER TABLE users ADD COLUMN link_token VARCHAR(255);
 UPDATE users SET link_token = ${linkToken} WHERE email = ${email}
 
 UPDATE users SET line_id = null, link_token = null, nonce = null  WHERE email = 'user@nextmail.com';
+
+INSERT INTO users (name, email, password) VALUES ('Test', 'test@nextmail.com', '$2b$10$fumaJC.VIR/NyWzWnJy3m.W/WRkJ.O49CwcDcxd8kIFESG2gVvHB6');
