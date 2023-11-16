@@ -53,10 +53,7 @@ export const { auth, signIn, signOut } = NextAuth({
                 console.log('nonce:',nonce);
                 await setLinkToken(email,linkToken,nonce);
                 await fetch(`https://access.line.me/dialog/bot/accountLink?linkToken=${linkToken}&nonce=${nonce}`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${process.env.CHANNEL_ACCESS_TOKEN}`,
-                    }
+                    method: 'GET'
                 });
               };
               return user;

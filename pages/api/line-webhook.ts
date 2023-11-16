@@ -15,7 +15,7 @@ export default async function handler(
     console.log(JSON.stringify(req.body));
     console.log('======================');
 
-    if (req.body.events && req.body.events[0].message.text === "アカウント連携") {
+    if (req.body.events && req.body.events[0].type === "message" && req.body.events[0].message.text === "アカウント連携") {
         const userId = req.body.events[0].source.userId;
 
         const getLinkToken = await fetch(`https://api.line.me/v2/bot/user/${userId}/linkToken`, {
@@ -71,6 +71,9 @@ export default async function handler(
     
     res.status(200).json('receive line message!');
 }
+
+// https://access.line.me/dialog/bot/accountLink?linkToken=ewbiqJoLNJoNZnO6NX6UAxPdKUUYTcI1&nonce=aWttdXM5emJwdmJyM3ptaw==
+
 
 // "events":[
 //     {
