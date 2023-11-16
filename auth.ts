@@ -52,11 +52,7 @@ export const { auth, signIn, signOut } = NextAuth({
                 const nonce = buf.toString('base64');
                 console.log('nonce:',nonce);
                 await setLinkToken(email,linkToken,nonce);
-                const lineAccountLink = await fetch(`https://access.line.me/dialog/bot/accountLink?linkToken=${linkToken}&nonce=${nonce}`);
-                if (lineAccountLink) {
-                  // console.log("accountLink",lineAccountLink);
-                  console.log("accountLinkjson",lineAccountLink.json());
-                }
+                await fetch(`https://access.line.me/dialog/bot/accountLink?linkToken=${linkToken}&nonce=${nonce}`);
               };
               return user;
             }

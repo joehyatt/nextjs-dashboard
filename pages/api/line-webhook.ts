@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
- 
+
+const { db } = require('@vercel/postgres');
 const line = require('@line/bot-sdk');
 const config = {
     channelSecret: process.env.CHANNEL_SECRET,
@@ -50,8 +51,22 @@ export default async function handler(
         });
 
     }
+
+    if (req.body.events && req.body.events[0].type === "accountLink") {
+        const userId = req.body.events[0].source.userId;
+        const {result, nonce} = req.body.events[0].link
+
+        if (result === "ok") {
+            const dbClient = await db.connect();
+            await dbClient.sql`UPDATE users SET line_id = ${userId} WHERE nonce = ${nonce}`
+            await dbClient.end();
+            await client.pushMessage(userId,"LINEとHotteの連携が完了しました！");
+        } else if (result === "failed") {
+            await client.pushMessage(userId,"LINEとHotteの連携に失敗しました");
+        }
+    }
     
-    res.status(200).json('receive line message!');
+    // res.status(200).json('receive line message!');
 }
 
 // // response sample
