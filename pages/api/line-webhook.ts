@@ -23,7 +23,7 @@ export default async function handler(
             headers: {
                 'Authorization': `Bearer ${process.env.CHANNEL_ACCESS_TOKEN}`,
             }
-        })
+        });
         
         const {linkToken} = await getLinkToken.json();
 
@@ -53,24 +53,44 @@ export default async function handler(
     }
 
     if (req.body.events && req.body.events[0].type === "accountLink") {
-        const userId = req.body.events[0].source.userId;
-        const {result, nonce} = req.body.events[0].link
-        console.log(userId)
-        console.log(result)
-        console.log(nonce)
+        console.log("accountLink webhook");
+        const {result, nonce} = req.body.events[0].link;
+        console.log(result);
+        console.log(nonce);
 
         if (result === "ok") {
+            const userId = req.body.events[0].source.userId;
             const dbClient = await db.connect();
             await dbClient.sql`UPDATE users SET line_id = ${userId} WHERE nonce = ${nonce}`
             await dbClient.end();
             await client.pushMessage(userId,"LINEとHotteの連携が完了しました！");
         } else if (result === "failed") {
-            await client.pushMessage(userId,"LINEとHotteの連携に失敗しました");
+            console.log("LINEとHotteの連携に失敗しました");
         }
     }
     
     res.status(200).json('receive line message!');
 }
+
+// "events":[
+//     {
+//         "type":"accountLink",
+//         "link":{
+//             "result":"ok",
+//             "nonce":"ZXc3bHFldGd2cTdtbGprMg=="
+//         },
+//         "webhookEventId":"01HFB257J7SRWFJSFFZT4Z40RY",
+//         "deliveryContext":{
+//             "isRedelivery":false
+//         },
+//         "timestamp":1700104674887,
+//         "source":{
+//             "type":"user",
+//             "userId":"U462d229787389a59c2e7bebc1f7cd6e6"
+//         },
+//         "replyToken":"15ed31c2f9e74f1f8f7740f2b6633d90",
+//         "mode":"active"
+//     }]}
 
 // // response sample
 // {
