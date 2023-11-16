@@ -29,7 +29,7 @@ async function getBreakthrough(client:any) {
                     INNER JOIN
                         (SELECT hotel_id, cid, price FROM prices WHERE capture_date = '2023-11-14' ) AS latestprices
                     ON watchinglist.hotel_id = latestprices.hotel_id AND watchinglist.cid = latestprices.cid
-                    WHERE threshold > price + 10000) AS breakthroughlist 
+                    WHERE threshold > price + 500) AS breakthroughlist 
                 INNER JOIN users
                     ON breakthroughlist.user_id = users.id
                 INNER JOIN hotels
