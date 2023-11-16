@@ -130,3 +130,15 @@ export async function authenticate(
     throw error;
   }
 }
+
+export async function completeAccountLink() {
+  try {
+    const linkInfo = await sql`SELECT link_token,nonce FROM users WHERE id = '410544b2-4001-4271-9855-fec4b6a6442a'`;
+    console.log(linkInfo);
+    if (linkInfo) {
+      redirect(`https://access.line.me/dialog/bot/accountLink?linkToken=${linkInfo.rows[0].link_token}&nonce=${linkInfo.rows[0].nonce}`);
+    }
+  } catch (error) {
+    return { message: 'Database Error: Failed to LINE account link.' };
+  }
+}
