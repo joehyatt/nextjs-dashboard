@@ -73,7 +73,7 @@ export default async function handler(
     res.status(200).json('receive line message!');
 }
 
-// https://access.line.me/dialog/bot/accountLink?linkToken=k7o2bP6wuH6s1tRn1OvRUpGC2dpQiMii&nonce=YjlmbzB0NzYxNnZic3BzYQ==
+// https://access.line.me/dialog/bot/accountLink?linkToken=tvIOicSRtTVe4EXhbPLDWCPfIPZemjDX&nonce=YzlvYzVwejB3cGtsdGM2OA==
 
 
 // "events":[
