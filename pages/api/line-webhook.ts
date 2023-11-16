@@ -55,6 +55,9 @@ export default async function handler(
     if (req.body.events && req.body.events[0].type === "accountLink") {
         const userId = req.body.events[0].source.userId;
         const {result, nonce} = req.body.events[0].link
+        console.log(userId)
+        console.log(result)
+        console.log(nonce)
 
         if (result === "ok") {
             const dbClient = await db.connect();
@@ -66,7 +69,7 @@ export default async function handler(
         }
     }
     
-    // res.status(200).json('receive line message!');
+    res.status(200).json('receive line message!');
 }
 
 // // response sample
