@@ -7,6 +7,7 @@ export type User = {
   name: string;
   email: string;
   password: string;
+  redirect_to: string | null
 };
 
 export type Customer = {

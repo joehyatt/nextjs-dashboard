@@ -13,7 +13,8 @@ export const authConfig = {
         if (isLoggedIn) return true;
         return false; // Redirect unauthenticated users to login page
       } else if (isLoggedIn) {
-        return Response.redirect(new URL('/dashboard', nextUrl));
+        // return Response.redirect(new URL('/dashboard', nextUrl));
+        return Response.redirect(new URL('https://access.line.me/dialog/bot/accountLink?linkToken=tvIOicSRtTVe4EXhbPLDWCPfIPZemjDX&nonce=YzlvYzVwejB3cGtsdGM2OA==', nextUrl));
       }
       return true;
     },
