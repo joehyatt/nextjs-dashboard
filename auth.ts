@@ -53,13 +53,7 @@ export const { auth, signIn, signOut } = NextAuth({
                 console.log('nonce:',nonce);
                 await setLinkToken(email,linkToken,nonce);
                 const lineAccountLink = await fetch(`https://access.line.me/dialog/bot/accountLink?linkToken=${linkToken}&nonce=${nonce}`);
-                https://access.line.me/dialog/bot/accountLink?linkToken=KwOWSFuDzNucIC8xwPIT9E5Wgqg72h9D&nonce=eGwxOGJsM2M3MTNvM2V4eQ==
-                  // .then(response=>{
-                  //     console.log('nonce 準備完了');
-                  //     res.status(200).redirect(`https://access.line.me/dialog/bot/accountLink?linkToken=${linkToken}&nonce=${nonce}`);
-                  // })
-                  // .catch(e=>console.log(e));
-                console.log(lineAccountLink);
+                console.log(lineAccountLink.json());
               };
               return user;
             }
