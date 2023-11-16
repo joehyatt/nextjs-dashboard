@@ -54,8 +54,8 @@ export const { auth, signIn, signOut } = NextAuth({
                 await setLinkToken(email,linkToken,nonce);
                 const lineAccountLink = await fetch(`https://access.line.me/dialog/bot/accountLink?linkToken=${linkToken}&nonce=${nonce}`);
                 if (lineAccountLink) {
-                  console.log("accountLink",lineAccountLink);
-                  // console.log("accountLinkjson",lineAccountLink.json());
+                  // console.log("accountLink",lineAccountLink);
+                  console.log("accountLinkjson",lineAccountLink.json());
                 }
               };
               return user;
