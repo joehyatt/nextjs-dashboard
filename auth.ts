@@ -53,7 +53,10 @@ export const { auth, signIn, signOut } = NextAuth({
                 console.log('nonce:',nonce);
                 await setLinkToken(email,linkToken,nonce);
                 const lineAccountLink = await fetch(`https://access.line.me/dialog/bot/accountLink?linkToken=${linkToken}&nonce=${nonce}`);
-                console.log(lineAccountLink.json());
+                if (lineAccountLink) {
+                  console.log("accountLink",lineAccountLink);
+                  // console.log("accountLinkjson",lineAccountLink.json());
+                }
               };
               return user;
             }
