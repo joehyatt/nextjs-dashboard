@@ -236,3 +236,13 @@ export async function getUser(email: string) {
     throw new Error('Failed to fetch user.');
   }
 }
+
+export async function completeAccountLink() {
+  try {
+    const user = await sql`SELECT link_token,nonce FROM users WHERE id = '410544b2-4001-4271-9855-fec4b6a6442a'`;
+    return user.rows[0]
+  } catch (error) {
+    console.error('Failed to fetch user:', error);
+    throw new Error('Failed to fetch user.');
+  }
+}
