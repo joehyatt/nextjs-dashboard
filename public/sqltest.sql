@@ -43,4 +43,8 @@ UPDATE users SET link_token = ${linkToken} WHERE email = ${email}
 
 UPDATE users SET line_id = null, link_token = null, nonce = null  WHERE email = 'user@nextmail.com';
 
+-- ユーザー追加
 INSERT INTO users (name, email, password) VALUES ('Test', 'test@nextmail.com', '$2b$10$fumaJC.VIR/NyWzWnJy3m.W/WRkJ.O49CwcDcxd8kIFESG2gVvHB6');
+
+-- watchlist追加
+INSERT INTO watchlist (user_id, hotel_id, cid, threshold, start_date, status) VALUES ('8022354a-e36e-4488-8736-d90802f99069', '3041f199-0049-406b-b862-8422c48f7708', '2023-12-20', 50000, '2023-11-13', 'watching');

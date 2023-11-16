@@ -29,7 +29,7 @@ async function getBreakthrough(client:any) {
                     INNER JOIN
                         (SELECT hotel_id, cid, price FROM prices WHERE capture_date = '2023-11-14' ) AS latestprices
                     ON watchinglist.hotel_id = latestprices.hotel_id AND watchinglist.cid = latestprices.cid
-                    WHERE threshold > price + 500) AS breakthroughlist 
+                    WHERE threshold > price + 10000) AS breakthroughlist 
                 INNER JOIN users
                     ON breakthroughlist.user_id = users.id
                 INNER JOIN hotels
@@ -62,7 +62,7 @@ const lineMessaging = async (breakthroughList: Breakthrough[]) => {
         const messageText = `【価格下落アラート】
 🏨${bt.hotel_name_jp}
 🗓${bt.cid}泊
-目標価格: ¥${bt.threshold.toLocaleString()}
+基準価格: ¥${bt.threshold.toLocaleString()}
 最新価格: ¥${bt.price.toLocaleString()}
 ⏬¥${(bt.threshold - bt.price).toLocaleString()}🉐`
         const messages = [{
