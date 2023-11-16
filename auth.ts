@@ -19,7 +19,7 @@ async function getUser(email: string): Promise<User | undefined> {
 async function setLinkToken(email: string, linkToken: string, nonce: string) {
   try {
     const updatedUser = await sql`UPDATE users SET link_token = ${linkToken}, nonce = ${nonce} WHERE email = ${email}`;
-    return null;
+    return updatedUser;
   } catch (error) {
     console.error('Failed to set linkToken and nonce', error);
     throw new Error('Failed to set linkToken and nonce.');
@@ -51,13 +51,19 @@ export const { auth, signIn, signOut } = NextAuth({
                 const buf = Buffer.from(randomStrings);
                 const nonce = buf.toString('base64');
                 console.log('nonce:',nonce);
-                // `https://access.line.me/dialog/bot/accountLink?linkToken=${linkToken}&nonce=${nonce}`
                 await setLinkToken(email,linkToken,nonce);
+                const lineAccountLink = await fetch(`https://access.line.me/dialog/bot/accountLink?linkToken=${linkToken}&nonce=${nonce}`);
+                https://access.line.me/dialog/bot/accountLink?linkToken=KwOWSFuDzNucIC8xwPIT9E5Wgqg72h9D&nonce=eGwxOGJsM2M3MTNvM2V4eQ==
+                  // .then(response=>{
+                  //     console.log('nonce 準備完了');
+                  //     res.status(200).redirect(`https://access.line.me/dialog/bot/accountLink?linkToken=${linkToken}&nonce=${nonce}`);
+                  // })
+                  // .catch(e=>console.log(e));
+                console.log(lineAccountLink);
               };
               return user;
             }
         }
-
         console.log('Invalid credentials');
         return null;
       },
