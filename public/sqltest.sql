@@ -48,3 +48,39 @@ INSERT INTO users (name, email, password) VALUES ('Test', 'test@nextmail.com', '
 
 -- watchlist追加
 INSERT INTO watchlist (user_id, hotel_id, cid, threshold, start_date, status) VALUES ('8022354a-e36e-4488-8736-d90802f99069', '3041f199-0049-406b-b862-8422c48f7708', '2023-12-20', 50000, '2023-11-13', 'watching');
+
+-- 価格取得（hotel_id & cidの組み合わせでCONSTRAINT）
+INSERT INTO prices (hotel_id, cid, price, is_soldout, capture_date)
+VALUES (${price.hotel_id}, ${price.cid}, ${price.price}, ${price.is_soldout}, ${price.capture_date})
+ON CONFLICT ON CONSTRAINT unique_night DO UPDATE SET
+    hotel_id = EXCLUDED.hotel_id,
+    cid = EXCLUDED.cid,
+    price = EXCLUDED.price,
+    is_soldout = EXCLUDED.is_soldout,
+    capture_date = EXCLUDED.capture_date;
+
+ALTER TABLE prices DROP CONSTRAINT unique_night;
+ALTER TABLE prices ADD CONSTRAINT capture_unit UNIQUE (hotel_id,cid,capture_date);
+
+-- 価格取得（hotel_id & cid & capture_dateの組み合わせでCONSTRAINT）
+INSERT INTO prices (hotel_id, cid, price, is_soldout, capture_date)
+VALUES (${price.hotel_id}, ${price.cid}, ${price.price}, ${price.is_soldout}, ${price.capture_date})
+ON CONFLICT ON CONSTRAINT capture_unit DO UPDATE SET
+    hotel_id = EXCLUDED.hotel_id,
+    cid = EXCLUDED.cid,
+    price = EXCLUDED.price,
+    is_soldout = EXCLUDED.is_soldout,
+    capture_date = EXCLUDED.capture_date;
+
+-- テーブル名変更
+ALTER TABLE prices RENAME TO rates;
+-- カラム名変更
+ALTER TABLE rates RENAME COLUMN is_soldout TO exception;
+ALTER TABLE watchlist RENAME COLUMN threshold TO basis;
+ALTER TABLE watchlist RENAME COLUMN start_date TO init_date;
+-- カラム型変更
+ALTER TABLE rates ALTER COLUMN exception TYPE VARCHAR(50);
+ALTER TABLE rates ALTER COLUMN price TYPE INT;
+-- NOT NULL制約解除
+ALTER TABLE rates ALTER COLUMN price DROP NOT NULL;
+ALTER TABLE rates ALTER COLUMN exception DROP NOT NULL;

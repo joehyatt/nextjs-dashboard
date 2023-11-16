@@ -2,16 +2,12 @@ const { db } = require('@vercel/postgres');
 const line = require('@line/bot-sdk');
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-type ResponseData = {
-    message: string
-}
-
 type Breakthrough = {
     line_id: string
     hotel_name_jp: string
     cid: string
-    threshold: number
-    price: number
+    basis: number
+    rate: number
 }
 
 const now = new Date();
@@ -21,15 +17,15 @@ async function getBreakthrough(client:any) {
     try {
         const breakthroughList = await Promise.resolve(
             client.sql`
-                SELECT line_id, hotel_name_jp, cid, threshold, price
+                SELECT line_id, hotel_name_jp, cid, basis, rate
                 FROM 
-                    (SELECT user_id, watchinglist.hotel_id, watchinglist.cid, threshold, price
+                    (SELECT user_id, watchinglist.hotel_id, watchinglist.cid, basis, rate
                     FROM
-                        (SELECT user_id, hotel_id, cid, threshold FROM watchlist WHERE status = 'watching' ) AS watchinglist
+                        (SELECT user_id, hotel_id, cid, basis FROM watchlist WHERE status = 'watching' ) AS watchinglist
                     INNER JOIN
-                        (SELECT hotel_id, cid, price FROM prices WHERE capture_date = '2023-11-14' ) AS latestprices
-                    ON watchinglist.hotel_id = latestprices.hotel_id AND watchinglist.cid = latestprices.cid
-                    WHERE threshold > price + 500) AS breakthroughlist 
+                        (SELECT hotel_id, cid, rate FROM rates WHERE capture_date = ${today} ) AS latestrates
+                    ON watchinglist.hotel_id = latestrates.hotel_id AND watchinglist.cid = latestrates.cid
+                    WHERE basis > rate + 10000) AS breakthroughlist 
                 INNER JOIN users
                     ON breakthroughlist.user_id = users.id
                 INNER JOIN hotels
@@ -44,7 +40,6 @@ async function getBreakthrough(client:any) {
       throw error;
     }
 }
-
 
 // LINEメッセージ送信
 const lineMessaging = async (breakthroughList: Breakthrough[]) => {
@@ -62,9 +57,9 @@ const lineMessaging = async (breakthroughList: Breakthrough[]) => {
         const messageText = `【価格下落アラート】
 🏨${bt.hotel_name_jp}
 🗓${bt.cid}泊
-基準価格: ¥${bt.threshold.toLocaleString()}
-最新価格: ¥${bt.price.toLocaleString()}
-⏬¥${(bt.threshold - bt.price).toLocaleString()}🉐`
+基準価格: ¥${bt.basis.toLocaleString()}
+最新価格: ¥${bt.rate.toLocaleString()}
+⏬¥${(bt.basis - bt.rate).toLocaleString()}🉐`
         const messages = [{
             type: 'text',
             text: messageText
@@ -81,20 +76,14 @@ const lineMessaging = async (breakthroughList: Breakthrough[]) => {
     }))
     console.log(`Sent ${sendMessage.length} messages`);
 }
-
-async function main() {
+ 
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<string>
+) {
     const client = await db.connect();
     const breakthroughList = await getBreakthrough(client);
     await lineMessaging(breakthroughList);
     await client.end();
-}
- 
-export default function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<ResponseData>
-) {
-    main()
-        .then(() => res.status(200).json({ message: 'get breakthrough watchlist' }))
-        .catch((err) => console.error('An error occurred while attempting to seed the database:',err,));
-    
+    res.send(`DONE!`);
 }

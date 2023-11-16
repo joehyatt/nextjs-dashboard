@@ -1,11 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 const { db } = require('@vercel/postgres');
 
-type Prices = {
+type Rates = {
     hotel_id: string,
     cid: string,
-    price: number,
-    is_soldout: boolean,
+    rate: number | null,
+    exception: string | null,
     capture_date: string
 }
 
@@ -57,7 +57,7 @@ const run = async (puppeteer: any, chrome:any={}) => {
         const hotel_code = hotels[hotelNum];
 
         // 検索月の設定
-        for (let monthNum = 0; monthNum < monthCount; monthNum++) {
+        for (let monthNum = 1; monthNum < monthCount; monthNum++) {
             const now = new Date();
             const today = now.toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit",day: "2-digit"}).replaceAll('/', '-');
             const searchMonth = new Date(now.setMonth(now.getMonth() + monthNum)).toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit"}).replace('/', '-');
@@ -65,74 +65,72 @@ const run = async (puppeteer: any, chrome:any={}) => {
             
             // 検索URL決定
             const searchUrl = `https://www.hilton.com/en/book/reservation/flexibledates/?ctyhocn=${hotel_code}&arrivalDate=${searchMonth}-01&departureDate=${searchMonth}-02`;
-            console.log(`collecting ${hotel_code} : ${searchMonth} prices...`);
+            console.log(`collecting ${hotel_code} : ${searchMonth} rates...`);
 
             // ページを開く-価格表示まで待機-価格取得
             await page.goto(searchUrl);
             await page.waitForSelector("#flexibleDatesCalendar > div:nth-child(3) > div > div div[data-testid='flexDatesRoomRate'] > span", { hidden: true, timeout: 0 });
-            const prices = await page.evaluate((hotel_id: string, lastDay: number, searchMonth: string, today: string) => {
-                const prices:Prices[] = []
+            const rates = await page.evaluate((hotel_id: string, lastDay: number, searchMonth: string, today: string) => {
+                const rates:Rates[] = []
                 const startDate = today.slice(0,7) === searchMonth ? Number(today.slice(-2)) : 1;
                 for (let dayNum = startDate; dayNum < lastDay + 1; dayNum++) {
                     const searchDate = ( '00' + dayNum ).slice(-2);
-                    let price;
-                    let is_soldout;
+                    let rate = null;
+                    let exception = null;
                     if (document.querySelector(`button[data-testid='arrival-${searchMonth}-${searchDate}'] > div:nth-child(3) > div[data-testid='flexDatesRoomRate`)) {
-                        const priceElement = document.querySelector(`button[data-testid='arrival-${searchMonth}-${searchDate}'] > div:nth-child(3) > div[data-testid='flexDatesRoomRate`)
-                        price = Number(priceElement!.innerHTML.replace("¥","").replace(",",""));
-                        is_soldout = false;
+                        const rateElement = document.querySelector(`button[data-testid='arrival-${searchMonth}-${searchDate}'] > div:nth-child(3) > div[data-testid='flexDatesRoomRate`)
+                        rate = Number(rateElement!.innerHTML.replace("¥","").replace(",",""));
                     } else if (document.querySelector(`button[data-testid='arrival-${searchMonth}-${searchDate}'] > div:nth-child(3) > div > span[data-testid='rateNotAvailable']`)) {
-                        price = 0;
-                        is_soldout = true;
+                        exception = "Sold Out";
                     } else {
-                        price = 0
-                        is_soldout = true;
+                        rate = 0
+                        exception = "Invalid Date";
                     }
-                    prices.push({hotel_id, cid:`${searchMonth}-${searchDate}`, price, is_soldout, capture_date: today})
+                    rates.push({hotel_id, cid:`${searchMonth}-${searchDate}`, rate, exception, capture_date: today})
                 }
-                return prices
+                return rates
             },hotel_id,lastDay,searchMonth,today);
 
             // DBに格納
-            console.log(prices)
-            await main(prices).catch(err => console.error('An error occurred while attempting to seed the database:', err));
+            console.log(rates)
+            await main(rates).catch(err => console.error('An error occurred while attempting to seed the database:', err));
         }
     }
     // 仮想ブラウザの終了
     await browser.close();
 }
 
-const addPrices = async (client:any, prices: Prices[]) => {
+const addRates = async (client:any, rates: Rates[]) => {
     try {
-      const insertedPrices = await Promise.all(
-        prices.map(
-          (price) => client.sql`
-            INSERT INTO prices (hotel_id, cid, price, is_soldout, capture_date)
-            VALUES (${price.hotel_id}, ${price.cid}, ${price.price}, ${price.is_soldout}, ${price.capture_date})
-            ON CONFLICT ON CONSTRAINT unique_night DO UPDATE SET
+      const insertedRates = await Promise.all(
+        rates.map(
+          (rate) => client.sql`
+            INSERT INTO rates (hotel_id, cid, rate, exception, capture_date)
+            VALUES (${rate.hotel_id}, ${rate.cid}, ${rate.rate}, ${rate.exception}, ${rate.capture_date})
+            ON CONFLICT ON CONSTRAINT capture_unit DO UPDATE SET
                 hotel_id = EXCLUDED.hotel_id,
                 cid = EXCLUDED.cid,
-                price = EXCLUDED.price,
-                is_soldout = EXCLUDED.is_soldout,
+                rate = EXCLUDED.rate,
+                exception = EXCLUDED.exception,
                 capture_date = EXCLUDED.capture_date;
         `,
         ),
       );
   
-      console.log(`Captured ${insertedPrices.length} prices`);
+      console.log(`Captured ${insertedRates.length} rates`);
   
       return {
-        prices: insertedPrices,
+        rates: insertedRates,
       };
     } catch (error) {
-      console.error('Error capturing prices:', error);
+      console.error('Error capturing rates:', error);
       throw error;
     }
 }
 
-const main = async (prices: Prices[]) => {
+const main = async (rates: Rates[]) => {
     const client = await db.connect();
-    await addPrices(client, prices);
+    await addRates(client, rates);
     await client.end();
 }
 
