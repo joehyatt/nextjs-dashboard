@@ -63,7 +63,8 @@ export default async function handler(
             const dbClient = await db.connect();
             await dbClient.sql`UPDATE users SET line_id = ${userId} WHERE nonce = ${nonce}`
             await dbClient.end();
-            await client.pushMessage(userId,"LINEとHotteの連携が完了しました！");
+            console.log("LINEとHotteの連携が完了しました！");
+            // await client.pushMessage(userId,"LINEとHotteの連携が完了しました！");
         } else if (result === "failed") {
             console.log("LINEとHotteの連携に失敗しました");
         }
@@ -72,7 +73,7 @@ export default async function handler(
     res.status(200).json('receive line message!');
 }
 
-// https://access.line.me/dialog/bot/accountLink?linkToken=ewbiqJoLNJoNZnO6NX6UAxPdKUUYTcI1&nonce=aWttdXM5emJwdmJyM3ptaw==
+// https://access.line.me/dialog/bot/accountLink?linkToken=k7o2bP6wuH6s1tRn1OvRUpGC2dpQiMii&nonce=YjlmbzB0NzYxNnZic3BzYQ==
 
 
 // "events":[
