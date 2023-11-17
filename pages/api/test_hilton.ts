@@ -43,8 +43,8 @@ const run = async (puppeteer: any, chrome:any={}) => {
     }
 
     // 変数設定
-    const hotel_id = "88e3b89d-4032-4e8a-bec6-6e82b8958372";
-    const hotels = ["TYOODHI"];
+    const hotel_id = "5d8ff021-f0dd-4296-9269-b30aff8da3aa";
+    const hotels = ["CTSNVHI"];
     const monthCount = 2;
 
     // 仮想ブラウザの立ち上げ

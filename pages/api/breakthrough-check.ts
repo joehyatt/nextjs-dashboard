@@ -10,9 +10,6 @@ type Breakthrough = {
     rate: number
 }
 
-const now = new Date();
-const today = now.toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit",day: "2-digit"}).replaceAll('/', '-');
-
 async function getBreakthrough(client:any) {
     try {
         const breakthroughList = await Promise.resolve(
@@ -23,9 +20,9 @@ async function getBreakthrough(client:any) {
                     FROM
                         (SELECT user_id, hotel_id, cid, basis FROM watchlist WHERE status = 'watching' ) AS watchinglist
                     INNER JOIN
-                        (SELECT hotel_id, cid, rate FROM rates WHERE capture_date = ${today} ) AS latestrates
+                        (SELECT hotel_id, cid, rate FROM rates WHERE capture_date = (SELECT MAX(capture_date) FROM rates) ) AS latestrates
                     ON watchinglist.hotel_id = latestrates.hotel_id AND watchinglist.cid = latestrates.cid
-                    WHERE basis > rate + 10000) AS breakthroughlist 
+                    WHERE basis > rate + 500) AS breakthroughlist 
                 INNER JOIN users
                     ON breakthroughlist.user_id = users.id
                 INNER JOIN hotels

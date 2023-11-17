@@ -108,3 +108,11 @@ export type InvoiceForm = {
   amount: number;
   status: 'pending' | 'paid';
 };
+
+export type WatchitemForm = {
+  id: string;
+  hotel_id: string;
+  cid: string;
+  basis: number;
+};
+

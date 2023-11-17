@@ -3,6 +3,7 @@ import {
   HotelField,
   RateField,
   WatchitemField,
+  WatchitemForm,
   CustomerField,
   CustomersTable,
   InvoiceForm,
@@ -287,7 +288,6 @@ export async function fetchAllWhatchlist() {
   }
 }
 
-
 export async function fetchHotels() {
   try {
     const data = await sql<HotelField>`
@@ -303,5 +303,26 @@ export async function fetchHotels() {
   } catch (err) {
     console.error('Database Error:', err);
     throw new Error('Failed to fetch all hotels.');
+  }
+}
+
+export async function fetchWatchitemById(id: string) {
+  noStore();
+  try {
+    const data = await sql<WatchitemForm>`
+      SELECT id, hotel_id, cid, basis
+      FROM watchlist
+      WHERE id = ${id};
+    `;
+
+    const watchitem = data.rows.map((watchitem) => ({
+      ...watchitem,
+      // Convert amount from cents to dollars
+      basis: watchitem.basis,
+    }));
+    console.log(watchitem);
+    return watchitem[0];
+  } catch (error) {
+    console.error('Database Error:', error);
   }
 }

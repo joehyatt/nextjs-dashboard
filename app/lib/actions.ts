@@ -132,7 +132,6 @@ export async function authenticate(
 }
 
 
-
 export type WatchitemState = {
   errors?: {
     hotel_id?: string[];
@@ -157,7 +156,6 @@ const WatchitemSchema = z.object({
 
 
 const CreateWatchitem = WatchitemSchema.omit({ id: true });
-// const UpdateWatchitem = WatchitemSchema.omit({ date: true, id: true });
 
 export async function createWatchitem(prevState: WatchitemState, formData: FormData) {
 
@@ -196,6 +194,43 @@ export async function createWatchitem(prevState: WatchitemState, formData: FormD
   }
  
   // Revalidate the cache for the watchlist page and redirect the user.
+  revalidatePath('/dashboard/watchlist');
+  redirect('/dashboard/watchlist');
+}
+
+const UpdateWatchitem = WatchitemSchema.omit({ id: true });
+
+export async function updateWatchitem(
+  id: string,
+  prevState: WatchitemState,
+  formData: FormData,
+) {
+
+  const validatedFields = UpdateWatchitem.safeParse({
+    hotel_id: formData.get('hotel'),
+    cid: formData.get('cid'),
+    basis: formData.get('basis'),
+  });
+ 
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Update Watchitem.',
+    };
+  }
+ 
+  const { hotel_id, cid, basis } = validatedFields.data;
+ 
+  try {
+    await sql`
+      UPDATE watchlist
+      SET hotel_id = ${hotel_id}, cid = ${cid}, basis = ${basis}
+      WHERE id = ${id}
+    `;
+  } catch (error) {
+    return { message: 'Database Error: Failed to Update Watchitem.' };
+  }
+ 
   revalidatePath('/dashboard/watchlist');
   redirect('/dashboard/watchlist');
 }
