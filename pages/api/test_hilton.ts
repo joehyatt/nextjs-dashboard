@@ -43,8 +43,8 @@ const run = async (puppeteer: any, chrome:any={}) => {
     }
 
     // 変数設定
-    const hotel_id = "3041f199-0049-406b-b862-8422c48f7708";
-    const hotels = ["TYOHITW"];
+    const hotel_id = "88e3b89d-4032-4e8a-bec6-6e82b8958372";
+    const hotels = ["TYOODHI"];
     const monthCount = 2;
 
     // 仮想ブラウザの立ち上げ
@@ -54,10 +54,11 @@ const run = async (puppeteer: any, chrome:any={}) => {
 
     // 検索ホテルの設定
     for (let hotelNum = 0; hotelNum < hotels.length; hotelNum++) {
+
         const hotel_code = hotels[hotelNum];
 
         // 検索月の設定
-        for (let monthNum = 1; monthNum < monthCount; monthNum++) {
+        for (let monthNum = 0; monthNum < monthCount; monthNum++) {
             const now = new Date();
             const today = now.toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit",day: "2-digit"}).replaceAll('/', '-');
             const searchMonth = new Date(now.setMonth(now.getMonth() + monthNum)).toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit"}).replace('/', '-');

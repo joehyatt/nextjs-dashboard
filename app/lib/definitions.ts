@@ -80,6 +80,28 @@ export type CustomerField = {
   name: string;
 };
 
+export type HotelField = {
+  id: string;
+  hotel_name_jp: string;
+};
+
+export type RateField = {
+  id: string;
+  hotel_name_jp: string;
+  cid: string;
+  rate: number | null;
+  exception: string | null;
+  capture_date: string;
+};
+
+export type WatchitemField = {
+  id: string;
+  hotel_name_jp: string;
+  cid: string;
+  basis: number;
+  status: 'watching' | 'canceled' | 'breakthrough';
+};
+
 export type InvoiceForm = {
   id: string;
   customer_id: string;

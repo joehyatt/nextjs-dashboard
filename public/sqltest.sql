@@ -38,7 +38,6 @@ INNER JOIN hotels
 -- カラムの追加
 ALTER TABLE users ADD COLUMN link_token VARCHAR(255); 
 
-
 UPDATE users SET link_token = ${linkToken} WHERE email = ${email}
 
 UPDATE users SET line_id = null, link_token = null, nonce = null  WHERE email = 'user@nextmail.com';
@@ -84,3 +83,12 @@ ALTER TABLE rates ALTER COLUMN price TYPE INT;
 -- NOT NULL制約解除
 ALTER TABLE rates ALTER COLUMN price DROP NOT NULL;
 ALTER TABLE rates ALTER COLUMN exception DROP NOT NULL;
+
+-- 古いキャプチャを削除
+DELETE FROM rates WHERE capture_date = '2023-11-13'
+
+-- デフォルト値の追加
+ALTER TABLE watchlist ALTER COLUMN status SET DEFAULT 'watching'
+
+-- カラム削除
+ALTER TABLE watchlist DROP COLUMN init_date; 

@@ -130,3 +130,83 @@ export async function authenticate(
     throw error;
   }
 }
+
+
+
+export type WatchitemState = {
+  errors?: {
+    hotel_id?: string[];
+    cid?: string[];
+    basis?: string[];
+  };
+  message?: string | null;
+};
+
+const WatchitemSchema = z.object({
+    id: z.string(),
+    hotel_id: z.string({
+      invalid_type_error: 'Please select a hotel.',
+    }),
+    cid: z.string({
+      invalid_type_error: 'Please select a check-in date.',
+    }),
+    basis: z.coerce
+      .number()
+      .gt(0, { message: 'Please enter a rate greater than ¥0.' }),
+});
+
+
+const CreateWatchitem = WatchitemSchema.omit({ id: true });
+// const UpdateWatchitem = WatchitemSchema.omit({ date: true, id: true });
+
+export async function createWatchitem(prevState: WatchitemState, formData: FormData) {
+
+  // Validate form using Zod
+  const validatedFields = CreateWatchitem.safeParse({
+    hotel_id: formData.get('hotel'),
+    cid: formData.get('cid'),
+    basis: formData.get('basis'),
+  });
+
+  // If form validation fails, return errors early. Otherwise, continue.
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Create Watchitem.',
+    };
+  }
+ 
+  // Prepare data for insertion into the database
+  const { hotel_id, cid, basis } = validatedFields.data;
+  // const amountInCents = amount * 100;
+  const user_id = "410544b2-4001-4271-9855-fec4b6a6442a"
+  // const date = new Date().toISOString().split('T')[0];
+ 
+  // Insert data into the database
+  try {
+    await sql`
+      INSERT INTO watchlist (user_id, hotel_id, cid, basis)
+      VALUES (${user_id}, ${hotel_id}, ${cid}, ${basis})
+    `;
+  } catch (error) {
+    // If a database error occurs, return a more specific error.
+    return {
+      message: 'Database Error: Failed to Create Watchitem.',
+    };
+  }
+ 
+  // Revalidate the cache for the watchlist page and redirect the user.
+  revalidatePath('/dashboard/watchlist');
+  redirect('/dashboard/watchlist');
+}
+
+
+export async function deleteWatchitem(id: string) {
+  try {
+    await sql`DELETE FROM watchlist WHERE id = ${id}`;
+    revalidatePath('/dashboard/watchlist');
+    return { message: 'Deleted Watchitem.' };
+  } catch (error) {
+    return { message: 'Database Error: Failed to Delete Watchitem.' };
+  }
+}

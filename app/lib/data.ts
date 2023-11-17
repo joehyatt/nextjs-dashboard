@@ -1,5 +1,8 @@
 import { sql } from '@vercel/postgres';
 import {
+  HotelField,
+  RateField,
+  WatchitemField,
   CustomerField,
   CustomersTable,
   InvoiceForm,
@@ -244,5 +247,61 @@ export async function completeAccountLink() {
   } catch (error) {
     console.error('Failed to fetch user:', error);
     throw new Error('Failed to fetch user.');
+  }
+}
+
+export async function fetchAllRates() {
+  try {
+    const data = await sql<RateField>`
+      SELECT rates.id, hotel_name_jp, cid, rate, exception, capture_date
+      FROM rates
+        INNER JOIN hotels
+        ON rates.hotel_id = hotels.id
+      WHERE capture_date = (SELECT MAX(capture_date) FROM rates)
+      ORDER BY cid ASC
+    `;
+
+    const rates = data.rows;
+    return rates;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch all rates.');
+  }
+}
+
+export async function fetchAllWhatchlist() {
+  try {
+    const data = await sql<WatchitemField>`
+      SELECT watchlist.id, hotel_name_jp, cid, basis, status
+      FROM watchlist
+        INNER JOIN hotels
+        ON watchlist.hotel_id = hotels.id
+      ORDER BY cid ASC
+    `;
+
+    const watchlist = data.rows;
+    return watchlist;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch all watchlist.');
+  }
+}
+
+
+export async function fetchHotels() {
+  try {
+    const data = await sql<HotelField>`
+      SELECT
+        id,
+        hotel_name_jp
+      FROM hotels
+      ORDER BY hotel_name_jp ASC
+    `;
+
+    const hotels = data.rows;
+    return hotels;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch all hotels.');
   }
 }
