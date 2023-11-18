@@ -35,8 +35,7 @@ INNER JOIN hotels
     ON breakthroughlist.hotel_id = hotels.id;
 
 
--- カラムの追加
-ALTER TABLE users ADD COLUMN link_token VARCHAR(255); 
+
 
 UPDATE users SET link_token = ${linkToken} WHERE email = ${email}
 
@@ -73,6 +72,11 @@ ON CONFLICT ON CONSTRAINT capture_unit DO UPDATE SET
 
 -- テーブル名変更
 ALTER TABLE prices RENAME TO rates;
+
+-- カラムの追加
+ALTER TABLE hotels ADD COLUMN capture_script VARCHAR(50); 
+ALTER TABLE hotels ADD COLUMN capture_month_count INT NOT NULL DEFAULT 2; 
+
 -- カラム名変更
 ALTER TABLE rates RENAME COLUMN is_soldout TO exception;
 ALTER TABLE watchlist RENAME COLUMN threshold TO basis;
@@ -80,6 +84,7 @@ ALTER TABLE watchlist RENAME COLUMN start_date TO init_date;
 -- カラム型変更
 ALTER TABLE rates ALTER COLUMN exception TYPE VARCHAR(50);
 ALTER TABLE rates ALTER COLUMN price TYPE INT;
+
 -- NOT NULL制約解除
 ALTER TABLE rates ALTER COLUMN price DROP NOT NULL;
 ALTER TABLE rates ALTER COLUMN exception DROP NOT NULL;

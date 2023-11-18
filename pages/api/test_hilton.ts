@@ -1,4 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { fetchCaptureHotels } from '@/app/lib/data'
+
 const { db } = require('@vercel/postgres');
 
 type Rates = {
@@ -12,6 +14,10 @@ type Rates = {
 let chrome = {};
 let puppeteer = {};
 let options = {};
+
+const captureScriptId = "hilton004";
+
+
 
 const run = async (puppeteer: any, chrome:any={}) => {
 
@@ -43,10 +49,19 @@ const run = async (puppeteer: any, chrome:any={}) => {
     }
 
     // 変数設定
-    const hotel_id = "5d8ff021-f0dd-4296-9269-b30aff8da3aa";
-    const hotels = ["CTSNVHI"];
-    const monthCount = 2;
+    // const hotel_id = "5d8ff021-f0dd-4296-9269-b30aff8da3aa";
+    // const monthCount = 2;
+    // const hotels = ["CTSNVHI"];
 
+    // 取得対象設定
+    // hotelテーブルからhilton004を登録しているホテルの id, hotel_code, capture_month_count を取得
+    const hotels = await fetchCaptureHotels(captureScriptId)
+    // const hotels = [
+    //     { hotel_id: "3041f199-0049-406b-b862-8422c48f7708", hotel_code: "TYOHITW", monthCount: 2},
+    //     { hotel_id: "900e56e2-5f36-4cfa-945b-4eb7a955b2be", hotel_code: "HIJSHHI", monthCount: 2},
+    //     { hotel_id: "41606ef0-c9a4-406a-92b7-5510949dd862", hotel_code: "TOYSHDI", monthCount: 2},
+    // ]
+    
     // 仮想ブラウザの立ち上げ
     const browser = await puppeteer.launch(options)
     const page = await browser.newPage();
@@ -55,7 +70,7 @@ const run = async (puppeteer: any, chrome:any={}) => {
     // 検索ホテルの設定
     for (let hotelNum = 0; hotelNum < hotels.length; hotelNum++) {
 
-        const hotel_code = hotels[hotelNum];
+        const { hotel_id, hotel_code, monthCount } = hotels[hotelNum];
 
         // 検索月の設定
         for (let monthNum = 0; monthNum < monthCount; monthNum++) {

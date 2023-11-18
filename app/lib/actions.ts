@@ -131,7 +131,6 @@ export async function authenticate(
   }
 }
 
-
 export type WatchitemState = {
   errors?: {
     hotel_id?: string[];
@@ -153,7 +152,6 @@ const WatchitemSchema = z.object({
       .number()
       .gt(0, { message: 'Please enter a rate greater than ¥0.' }),
 });
-
 
 const CreateWatchitem = WatchitemSchema.omit({ id: true });
 
@@ -235,7 +233,6 @@ export async function updateWatchitem(
   redirect('/dashboard/watchlist');
 }
 
-
 export async function deleteWatchitem(id: string) {
   try {
     await sql`DELETE FROM watchlist WHERE id = ${id}`;
@@ -244,4 +241,58 @@ export async function deleteWatchitem(id: string) {
   } catch (error) {
     return { message: 'Database Error: Failed to Delete Watchitem.' };
   }
+}
+
+export type HotelState = {
+  errors?: {
+    capture_script?: string[];
+    capture_month_count?: string[];
+  };
+  message?: string | null;
+};
+
+const HotelSchema = z.object({
+    id: z.string(),
+    capture_script: z.string({
+      invalid_type_error: 'Please select a hotel.',
+    }),
+    capture_month_count: z.coerce
+      .number()
+      .gt(0, { message: 'Please enter a rate greater than 0.' }),
+});
+
+const UpdateHotel = HotelSchema.omit({ id: true });
+
+export async function updateHotel(
+  id: string,
+  prevState: HotelState,
+  formData: FormData,
+) {
+
+  const validatedFields = UpdateHotel.safeParse({
+    capture_script: formData.get('capture_script'),
+    capture_month_count: formData.get('capture_month_count'),
+  });
+ 
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Update Hotel.',
+    };
+  }
+ 
+  const { capture_script, capture_month_count } = validatedFields.data;
+ 
+  try {
+    await sql`
+      UPDATE hotels
+      SET capture_script = ${capture_script}, capture_month_count = ${capture_month_count}
+      WHERE id = ${id}
+    `;
+  } catch (error) {
+    return { message: 'Database Error: Failed to Update Hotel.' };
+  }
+ 
+  revalidatePath('/admin');
+  redirect('/admin');
 }

@@ -1,6 +1,8 @@
 import { sql } from '@vercel/postgres';
 import {
   HotelField,
+  HotelForm,
+  CaptureHotelField,
   RateField,
   WatchitemField,
   WatchitemForm,
@@ -324,5 +326,58 @@ export async function fetchWatchitemById(id: string) {
     return watchitem[0];
   } catch (error) {
     console.error('Database Error:', error);
+  }
+}
+
+export async function fetchHotelById(id: string) {
+  noStore();
+  try {
+    const data = await sql<HotelForm>`
+      SELECT id, hotel_name_jp, capture_script, capture_month_count
+      FROM hotels
+      WHERE id = ${id};
+    `;
+
+    const hotels = data.rows
+    console.log(hotels);
+    return hotels[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+  }
+}
+
+export async function fetchAllHotels() {
+  try {
+    const data = await sql<HotelField>`
+      SELECT
+        id,
+        hotel_name_jp,
+        capture_script,
+        capture_month_count
+      FROM hotels
+      ORDER BY hotel_name_jp ASC
+    `;
+
+    const hotels = data.rows;
+    return hotels;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch all hotels.');
+  }
+}
+
+export async function fetchCaptureHotels(capture_script: string)  {
+  try {
+    const data = await sql<CaptureHotelField>`
+      SELECT id as hotel_id, hotel_code, capture_month_count as monthCount
+      FROM hotels
+      WHERE capture_script = ${capture_script}
+    `;
+
+    const hotels = data.rows;
+    return hotels;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch capture hotels.');
   }
 }

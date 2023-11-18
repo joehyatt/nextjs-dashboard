@@ -83,6 +83,8 @@ export type CustomerField = {
 export type HotelField = {
   id: string;
   hotel_name_jp: string;
+  capture_script: string;
+  capture_month_count: number;
 };
 
 export type RateField = {
@@ -116,3 +118,16 @@ export type WatchitemForm = {
   basis: number;
 };
 
+export type HotelForm = {
+  id: string;
+  hotel_name_jp: string;
+  capture_script: string;
+  capture_month_count: number;
+};
+
+export type CaptureHotelField = {
+  hotel_id: string;
+  hotel_code: string;
+  capture_script: string;
+  monthCount: number;
+};
