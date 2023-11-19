@@ -23,31 +23,19 @@ export default function Search() {
 
   return (
     <div className="relative flex flex-1 flex-shrink-0">
-      <label htmlFor="search" className="sr-only">
+      {/* <label htmlFor="search" className="sr-only">
         Search
-      </label>
+      </label> */}
       {/* <input
         className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
         placeholder={placeholder}
         onChange={(e) => {handleSearch(e.target.value);}}
         defaultValue={searchParams!.get('query')?.toString()}
       /> */}
-      <select
-        id="status"
-        name="status"
-        className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-        defaultValue=""
-        aria-describedby="status-error"
-        onChange={(e) => {
-          handleSearch(e.target.value);
-        }}
-      >
-        <option value="" disabled>Select a Status</option>
-        <option key="watching" value="watching">Whatching</option>
-        <option key="breakthrough" value="breakthrough">Breakthrough</option>
-        <option key="canceled" value="canceled">Canceled</option>
-      </select>
-      <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+
+      <button className='block px-3 py-2 mr-3 rounded-md border border-blue-800' onClick={() => handleSearch("watching")}>Watching</button>
+      <button className='block px-3 py-2 mr-3 rounded-md border border-blue-800' onClick={() => handleSearch("breakthrough")}>BreakThrough</button>
+      <button className='block px-3 py-2 mr-3 rounded-md border border-blue-800' onClick={() => handleSearch("canceled")}>Canceled</button>
     </div>
   );
 }
