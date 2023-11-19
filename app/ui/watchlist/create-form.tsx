@@ -11,7 +11,7 @@ import {
 import { Button } from '@/app/ui/button';
 import { createWatchitem } from '@/app/lib/actions';
 
-export default function Form({ hotels }: { hotels: HotelField[] }) {
+export default function Form( {hotels, hotel_id, cid, rate}: { hotels: HotelField[], hotel_id?: string, cid?: string, rate?:number} ) {
   const initialState = { message: null, errors: {} };
   const [state, dispatch] = useFormState(createWatchitem, initialState);
   return (
@@ -27,7 +27,7 @@ export default function Form({ hotels }: { hotels: HotelField[] }) {
               id="hotel"
               name="hotel"
               className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              defaultValue=""
+              defaultValue={hotel_id}
               aria-describedby="hotel-error"
             >
               <option value="" disabled>
@@ -65,6 +65,7 @@ export default function Form({ hotels }: { hotels: HotelField[] }) {
                 id="cid"
                 name="cid"
                 type="date"
+                defaultValue={cid}
                 // step="0.01"
                 placeholder="Choose Check-in Date"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
@@ -97,6 +98,7 @@ export default function Form({ hotels }: { hotels: HotelField[] }) {
                 id="basis"
                 name="basis"
                 type="number"
+                defaultValue={rate}
                 step="1"
                 placeholder="Enter JPY basis rate"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
