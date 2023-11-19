@@ -62,21 +62,19 @@ const lineMessaging = async (breakthroughList: Breakthrough[]) => {
 ⏬¥${(bt.basis - bt.rate).toLocaleString()}🉐`
 
         const messages = [{type: 'text', text: messageText}];
-
-        console.log(bt.line_id)
-        console.log(messages)
         
         try {
-            const test = await client.pushMessage(bt.line_id,messages,true);
-            console.log(test)
-            messageCount++;
+            const mes = await client.pushMessage(bt.line_id,messages,true);
+            console.log(mes)
+            console.log(mes?.sentMessage)
+            messageCount = mes?.sentMessage.length
         } catch (error: any) {
             console.log(`LINE-MessagingError: ${error.statusMessage}`);
             console.log(error.originalError.response.data)
         }
 
     }))
-    console.log(`Sent ${sendMessage.length} messages`);
+    console.log(`Sent ${messageCount} messages`);
 }
  
 export default async function handler(
