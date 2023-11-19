@@ -38,6 +38,7 @@ INNER JOIN hotels
 
 
 UPDATE users SET link_token = ${linkToken} WHERE email = ${email}
+UPDATE hotels SET capture_script = ${linkToken} WHERE id = ${email}
 
 UPDATE users SET line_id = null, link_token = null, nonce = null  WHERE email = 'user@nextmail.com';
 
@@ -83,7 +84,7 @@ ALTER TABLE watchlist RENAME COLUMN threshold TO basis;
 ALTER TABLE watchlist RENAME COLUMN start_date TO init_date;
 
 -- カラム型変更
-ALTER TABLE rates ALTER COLUMN exception TYPE VARCHAR(50);
+ALTER TABLE logs ALTER COLUMN result TYPE VARCHAR(50);
 ALTER TABLE rates ALTER COLUMN price TYPE INT;
 ALTER TABLE logs ALTER COLUMN capture_datetime TYPE timestamp;
 

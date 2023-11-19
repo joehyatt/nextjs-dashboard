@@ -1,6 +1,8 @@
+import type { NextApiRequest, NextApiResponse } from 'next'
+import { withTimeout } from '@/app/lib/utils'
+
 const { db } = require('@vercel/postgres');
 const line = require('@line/bot-sdk');
-import type { NextApiRequest, NextApiResponse } from 'next'
 
 type Breakthrough = {
     line_id: string
@@ -49,7 +51,8 @@ const lineMessaging = async (breakthroughList: Breakthrough[]) => {
 
     let messageCount = 0;
 
-    const sendMessage = await Promise.resolve(breakthroughList.map( async (bt) => {
+    const sendMessage = await Promise.resolve(
+        breakthroughList.map( async (bt) => {
 
         const messageText = `【価格下落アラート】
 🏨${bt.hotel_name_jp}
@@ -57,13 +60,15 @@ const lineMessaging = async (breakthroughList: Breakthrough[]) => {
 基準価格: ¥${bt.basis.toLocaleString()}
 最新価格: ¥${bt.rate.toLocaleString()}
 ⏬¥${(bt.basis - bt.rate).toLocaleString()}🉐`
-        const messages = [{
-            type: 'text',
-            text: messageText
-        }];
-    
+
+        const messages = [{type: 'text', text: messageText}];
+
+        console.log(bt.line_id)
+        console.log(messages)
+        
         try {
-            await client.pushMessage(bt.line_id,messages,true);
+            const test = await client.pushMessage(bt.line_id,messages,true);
+            console.log(test)
             messageCount++;
         } catch (error: any) {
             console.log(`LINE-MessagingError: ${error.statusMessage}`);
@@ -80,7 +85,8 @@ export default async function handler(
 ) {
     const client = await db.connect();
     const breakthroughList = await getBreakthrough(client);
-    await lineMessaging(breakthroughList);
     await client.end();
+    await lineMessaging(breakthroughList);
+    console.log('DONE');
     res.send(`DONE!`);
 }

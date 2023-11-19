@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { fetchCaptureHotels } from '@/app/lib/data'
+import { withTimeout } from '@/app/lib/utils'
 
 const { db } = require('@vercel/postgres');
 
@@ -82,6 +83,7 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
 
             try{
                 // ページを開く-価格表示まで待機-価格取得
+                
                 await page.goto(searchUrl);
                 await page.waitForSelector("#flexibleDatesCalendar > div:nth-child(3) > div > div div[data-testid='flexDatesRoomRate'] > span", { hidden: true, timeout: 0 });
                 
@@ -128,7 +130,7 @@ const saveRates = async (rates: Rate[]) => {
     console.log(`Saving ${rates.length} rates...`);
     try {
         const client = await db.connect();
-        const insertedRates = await Promise.all(
+        const insertedRates = await withTimeout(Promise.all(
             rates.map(
                 (rate) => client.sql`
                 INSERT INTO rates (hotel_id, cid, rate, exception, capture_date)
@@ -141,7 +143,7 @@ const saveRates = async (rates: Rate[]) => {
                     capture_date = EXCLUDED.capture_date;
                 `
             ),
-        );
+        ), 30000);
         await client.end();
         // log
         console.log(`Saved ${insertedRates.length} rates successfully!`);
@@ -157,7 +159,7 @@ const saveLogs = async (logs: Log[]) => {
     console.log(`Saving ${logs.length} logs...`);
     try {
         const client = await db.connect();
-        const insertedLogs = await Promise.all(
+        const insertedLogs = await withTimeout(Promise.all(
             logs.map(
                 (log) => client.sql`
                 INSERT INTO logs (hotel_id, capture_month, result, capture_timestamp, save_timestamp)
@@ -165,7 +167,7 @@ const saveLogs = async (logs: Log[]) => {
                 ON CONFLICT DO NOTHING;
                 `
             ),
-        );
+        ), 30000);
         await client.end();
         // log
         console.log(`Saved ${insertedLogs.length} logs successfully!`);

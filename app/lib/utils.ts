@@ -67,3 +67,14 @@ export const generatePagination = (currentPage: number, totalPages: number) => {
     totalPages,
   ];
 };
+
+export function withTimeout<T>(promise: Promise<T>, timeout: number) {
+  const errorMessage = `Timeout(${timeout}ms)`;
+  const timeoutPromise: Promise<T> = new Promise((_, reject) =>
+    setTimeout(() => reject(errorMessage), timeout),
+  );
+  return Promise.race([
+    promise,
+    timeoutPromise,
+  ]);
+}
