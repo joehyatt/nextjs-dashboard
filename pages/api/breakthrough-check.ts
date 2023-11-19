@@ -51,7 +51,7 @@ const lineMessaging = async (breakthroughList: Breakthrough[]) => {
 
     let messageCount = 0;
 
-    const sendMessage = await Promise.resolve(
+    const sendMessage = await Promise.all(
         breakthroughList.map( async (bt) => {
 
         const messageText = `【価格下落アラート】
@@ -66,8 +66,7 @@ const lineMessaging = async (breakthroughList: Breakthrough[]) => {
         try {
             const mes = await client.pushMessage(bt.line_id,messages,true);
             console.log(mes)
-            console.log(mes?.sentMessage)
-            messageCount = mes?.sentMessage.length
+            if (mes) messageCount += mes.sentMessages.length;
         } catch (error: any) {
             console.log(`LINE-MessagingError: ${error.statusMessage}`);
             console.log(error.originalError.response.data)
