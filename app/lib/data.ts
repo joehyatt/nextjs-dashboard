@@ -5,6 +5,7 @@ import {
   CaptureHotelField,
   RateField,
   WatchitemField,
+  WatchlistTable,
   WatchitemForm,
   CustomerField,
   CustomersTable,
@@ -435,5 +436,32 @@ export async function fetchCapturedMonths(
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch rates.');
+  }
+}
+
+export async function fetchFilteredWatchlist(
+  status: string,
+) {
+  noStore();
+
+  try {
+    const watchlist = await sql<WatchlistTable>`
+      SELECT
+        watchlist.id,
+        watchlist.hotel_id,
+        hotel_name_jp,
+        cid,
+        basis,
+        status
+      FROM watchlist
+      JOIN hotels ON watchlist.hotel_id = hotels.id
+      WHERE watchlist.status = ${status}
+      ORDER BY cid ASC
+    `;
+
+    return watchlist.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch watchlist.');
   }
 }

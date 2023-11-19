@@ -4,7 +4,7 @@ import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
 
-export default function Search({ months }: { months: {cim:string}[] }) {
+export default function Search() {
 
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -14,9 +14,9 @@ export default function Search({ months }: { months: {cim:string}[] }) {
     console.log(`Searching... ${term}`);
     const params = new URLSearchParams(searchParams!);
     if (term) {
-      params.set('cim', term);
+      params.set('status', term);
     } else {
-      params.delete('cim');
+      params.delete('status');
     }
     replace(`${pathname}?${params.toString()}`);
   }, 500);
@@ -33,23 +33,19 @@ export default function Search({ months }: { months: {cim:string}[] }) {
         defaultValue={searchParams!.get('query')?.toString()}
       /> */}
       <select
-        id="hotel_id"
-        name="hotel_id"
+        id="status"
+        name="status"
         className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
         defaultValue=""
-        aria-describedby="hotel_id-error"
+        aria-describedby="status-error"
         onChange={(e) => {
           handleSearch(e.target.value);
         }}
       >
-        <option value="" disabled>
-          Select a month
-        </option>
-        {months.map((month) => (
-          <option key={month.cim} value={month.cim}>
-            {month.cim}
-          </option>
-        ))}
+        <option value="" disabled>Select a Status</option>
+        <option key="watching" value="watching">Whatching</option>
+        <option key="breakthrough" value="breakthrough">Breakthrough</option>
+        <option key="canceled" value="canceled">Canceled</option>
       </select>
       <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
     </div>

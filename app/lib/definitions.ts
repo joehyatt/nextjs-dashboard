@@ -140,3 +140,12 @@ export type RatesTable = {
   exception: string | null;
   capture_date: string;
 };
+
+export type WatchlistTable = {
+  id: string;
+  hotel_id: string;
+  hotel_name_jp: string;
+  cid: string;
+  basis: number;
+  status: 'watching' | 'canceled' | 'breakthrough';
+};
