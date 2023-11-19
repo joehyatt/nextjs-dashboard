@@ -81,9 +81,11 @@ ALTER TABLE hotels ADD COLUMN capture_month_count INT NOT NULL DEFAULT 2;
 ALTER TABLE rates RENAME COLUMN is_soldout TO exception;
 ALTER TABLE watchlist RENAME COLUMN threshold TO basis;
 ALTER TABLE watchlist RENAME COLUMN start_date TO init_date;
+
 -- カラム型変更
 ALTER TABLE rates ALTER COLUMN exception TYPE VARCHAR(50);
 ALTER TABLE rates ALTER COLUMN price TYPE INT;
+ALTER TABLE logs ALTER COLUMN capture_datetime TYPE timestamp;
 
 -- NOT NULL制約解除
 ALTER TABLE rates ALTER COLUMN price DROP NOT NULL;
@@ -97,3 +99,19 @@ ALTER TABLE watchlist ALTER COLUMN status SET DEFAULT 'watching'
 
 -- カラム削除
 ALTER TABLE watchlist DROP COLUMN init_date; 
+
+
+-- テーブル作成
+CREATE TABLE IF NOT EXISTS logs (
+    id SERIAL PRIMARY KEY,
+    hotel_id UUID NOT NULL,
+    capture_month VARCHAR(11) NOT NULL,
+    result VARCHAR(11) NOT NULL,
+    capture_time DATE NOT NULL,
+    save_time DATE
+);
+
+-- サンプルデータ挿入
+INSERT INTO logs (hotel_id, capture_month, result, capture_timestamp, save_timestamp)
+VALUES ('857817cd-0cfa-4f01-babc-aff31b6e0224', '2023-11', 'success', '2023-11-18 15:45:20', '2023-11-18 15:46:37')
+ON CONFLICT DO NOTHING;

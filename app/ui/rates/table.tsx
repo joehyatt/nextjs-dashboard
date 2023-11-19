@@ -2,20 +2,19 @@ import Image from 'next/image';
 import { UpdateInvoice, DeleteInvoice } from '@/app/ui/invoices/buttons';
 import InvoiceStatus from '@/app/ui/invoices/status';
 import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
-import { fetchFilteredInvoices, fetchAllRates } from '@/app/lib/data';
+import { fetchFilteredRates, fetchAllRates } from '@/app/lib/data';
 
 export default async function RatesTable(
-//   {
-//   query,
-//   currentPage,
-// }: {
-//   query: string;
-//   currentPage: number;
-// }
+  {
+  hotel_id,
+  cim,
+}: {
+  hotel_id: string;
+  cim: string;
+}
 ) {
   // const invoices = await fetchFilteredInvoices(query, currentPage);
-
-  const rates = await fetchAllRates();
+  const rates = await fetchFilteredRates(hotel_id,cim);
 
   return (
     <div className="mt-6 flow-root">

@@ -10,6 +10,7 @@ import {
   CustomersTable,
   InvoiceForm,
   InvoicesTable,
+  RatesTable,
   LatestInvoiceRaw,
   User,
   Revenue,
@@ -369,7 +370,7 @@ export async function fetchAllHotels() {
 export async function fetchCaptureHotels(capture_script: string)  {
   try {
     const data = await sql<CaptureHotelField>`
-      SELECT id as hotel_id, hotel_code, capture_month_count as monthCount
+      SELECT id as hotel_id, hotel_code, capture_month_count
       FROM hotels
       WHERE capture_script = ${capture_script}
     `;
@@ -379,5 +380,60 @@ export async function fetchCaptureHotels(capture_script: string)  {
   } catch (err) {
     console.error('Database Error:', err);
     throw new Error('Failed to fetch capture hotels.');
+  }
+}
+
+export async function fetchFilteredRates(
+  hotel_id: string,
+  cim: string,
+) {
+  noStore();
+
+  try {
+    const rates = await sql<RatesTable>`
+      SELECT
+        rates.id,
+        rates.hotel_id,
+        hotel_name_jp,
+        rates.cid,
+        rate,
+        exception,
+        capture_date
+      FROM rates
+      JOIN hotels ON rates.hotel_id = hotels.id
+      WHERE
+        rates.hotel_id = ${hotel_id} AND
+        rates.cid ILIKE ${`${cim}%`} AND
+        capture_date = (SELECT MAX(capture_date) FROM rates)
+      ORDER BY rates.cid ASC
+    `;
+
+    return rates.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch rates.');
+  }
+}
+
+export async function fetchCapturedMonths(
+  hotel_id: string
+) {
+  noStore();
+
+  try {
+    const months = await sql<{cim: string}>`
+      SELECT left(cid,7) as cim
+      FROM rates
+      WHERE
+        hotel_id = ${hotel_id} AND
+        capture_date = (SELECT MAX(capture_date) FROM rates)
+      GROUP BY cim
+      ORDER BY cim ASC
+    `;
+
+    return months.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch rates.');
   }
 }

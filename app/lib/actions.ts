@@ -280,9 +280,9 @@ export async function updateHotel(
       message: 'Missing Fields. Failed to Update Hotel.',
     };
   }
- 
+
   const { capture_script, capture_month_count } = validatedFields.data;
- 
+  
   try {
     await sql`
       UPDATE hotels
@@ -290,6 +290,7 @@ export async function updateHotel(
       WHERE id = ${id}
     `;
   } catch (error) {
+    console.log("Database Error: Failed to Update Hotel.")
     return { message: 'Database Error: Failed to Update Hotel.' };
   }
  

@@ -80,13 +80,6 @@ export type CustomerField = {
   name: string;
 };
 
-export type HotelField = {
-  id: string;
-  hotel_name_jp: string;
-  capture_script: string;
-  capture_month_count: number;
-};
-
 export type RateField = {
   id: string;
   hotel_name_jp: string;
@@ -120,6 +113,12 @@ export type WatchitemForm = {
 
 export type HotelForm = {
   id: string;
+  capture_script: string;
+  capture_month_count: number;
+};
+
+export type HotelField = {
+  id: string;
   hotel_name_jp: string;
   capture_script: string;
   capture_month_count: number;
@@ -129,5 +128,15 @@ export type CaptureHotelField = {
   hotel_id: string;
   hotel_code: string;
   capture_script: string;
-  monthCount: number;
+  capture_month_count: number;
+};
+
+export type RatesTable = {
+  id: string;
+  hotel_id: string;
+  hotel_name_jp: string;
+  cid: string;
+  rate: number | null;
+  exception: string | null;
+  capture_date: string;
 };
