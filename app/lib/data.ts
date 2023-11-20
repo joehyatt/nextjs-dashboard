@@ -450,11 +450,15 @@ export async function fetchFilteredWatchlist(
         watchlist.id,
         watchlist.hotel_id,
         hotel_name_jp,
-        cid,
+        watchlist.cid,
         basis,
+        rate,
+        exception,
         status
       FROM watchlist
-      JOIN hotels ON watchlist.hotel_id = hotels.id
+      INNER JOIN hotels ON watchlist.hotel_id = hotels.id
+      LEFT OUTER JOIN (SELECT hotel_id,cid,rate,exception FROM rates WHERE capture_date = (SELECT MAX(capture_date) FROM rates)) as latest_rates
+        ON watchlist.hotel_id = latest_rates.hotel_id AND watchlist.cid = latest_rates.cid
       WHERE watchlist.status = ${status}
       ORDER BY cid ASC
     `;

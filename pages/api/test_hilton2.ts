@@ -24,7 +24,7 @@ let puppeteer = {};
 let options = {};
 const capturedRates:Rate[] = [];
 const captureLogs:Log[] = [];
-const captureScriptId = "hilton003";
+const captureScriptId = "hilton002";
 
 const captureRates = async (puppeteer: any, chrome:any={}) => {
 
@@ -125,11 +125,11 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
     await browser.close();
 }
 
-const saveRates = async (rates: Rate[]) => {
+const saveRates = async (client:any, rates: Rate[]) => {
     const save_timestamp = new Date().toISOString().replace("T"," ").slice(0,-5);
     console.log(`Saving ${rates.length} rates...`);
     try {
-        const client = await db.connect();
+        // const client = await db.connect();
         const insertedRates = await withTimeout(Promise.all(
             rates.map(
                 (rate) => client.sql`
@@ -143,8 +143,8 @@ const saveRates = async (rates: Rate[]) => {
                     capture_date = EXCLUDED.capture_date;
                 `
             ),
-        ), 30000);
-        await client.end();
+        ), 50000);
+        // await client.end();
         // log
         console.log(`Saved ${insertedRates.length} rates successfully!`);
         captureLogs.map(log=> log.save_timestamp = save_timestamp);
@@ -155,10 +155,10 @@ const saveRates = async (rates: Rate[]) => {
     }
 }
 
-const saveLogs = async (logs: Log[]) => {
+const saveLogs = async (client: any, logs: Log[]) => {
     console.log(`Saving ${logs.length} logs...`);
     try {
-        const client = await db.connect();
+        // const client = await db.connect();
         const insertedLogs = await withTimeout(Promise.all(
             logs.map(
                 (log) => client.sql`
@@ -168,7 +168,7 @@ const saveLogs = async (logs: Log[]) => {
                 `
             ),
         ), 30000);
-        await client.end();
+        // await client.end();
         // log
         console.log(`Saved ${insertedLogs.length} logs successfully!`);
     } catch (error) {
@@ -182,8 +182,10 @@ export default async function handler(
   res: NextApiResponse<string>
 ) {
     await captureRates(puppeteer, chrome);
-    await saveRates(capturedRates);
-    await saveLogs(captureLogs);
+    const client = await db.connect();
+    await saveRates(client,capturedRates);
+    await saveLogs(client,captureLogs);
+    await client.end();
     console.log("DONE");
     res.send("DONE");
 }

@@ -11,7 +11,6 @@ export default async function WatchlistTable(
   status: string;
 }
 ) {
-  // const invoices = await fetchFilteredInvoices(query, currentPage);
 
   // const watchlist = await fetchAllWhatchlist();
   const watchlist = await fetchFilteredWatchlist(status);
@@ -46,6 +45,7 @@ export default async function WatchlistTable(
                   <div>
                     <p className="text-xl font-medium">
                       {formatCurrency(watchitem.basis)}
+                      {watchitem.rate !== null ? formatCurrency(watchitem.rate) : watchitem.exception}
                     </p>
                     <p>{watchitem.status}</p>
                   </div>
@@ -69,6 +69,9 @@ export default async function WatchlistTable(
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
                   基準価格
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  最新価格
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
                   ステータス
@@ -104,6 +107,9 @@ export default async function WatchlistTable(
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     {formatCurrency(watchitem.basis)}
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-3">
+                    {watchitem.rate !== null ? formatCurrency(watchitem.rate) : watchitem.exception}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     {watchitem.status}

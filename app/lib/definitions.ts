@@ -147,5 +147,7 @@ export type WatchlistTable = {
   hotel_name_jp: string;
   cid: string;
   basis: number;
+  rate: number | null;
+  exception: string | null;
   status: 'watching' | 'canceled' | 'breakthrough';
 };
