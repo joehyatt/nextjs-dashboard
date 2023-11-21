@@ -151,3 +151,9 @@ export type WatchlistTable = {
   exception: string | null;
   status: 'watching' | 'canceled' | 'breakthrough';
 };
+
+export type HotelWithLogField = {
+  hotel_id: string;
+  capture_month: string;
+  timestamp: string;
+}

@@ -21,6 +21,23 @@ export const formatDateToLocal = (
   return formatter.format(date);
 };
 
+export const formatDateTimeToLocal = (
+  dateStr: Date,
+  locale: string = 'ja-JP',
+) => {
+  // const date = new Date(dateStr);
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+  };
+  const formatter = new Intl.DateTimeFormat(locale, options);
+  return formatter.format(dateStr);
+};
+
 export const generateYAxis = (revenue: Revenue[]) => {
   // Calculate what labels we need to display on the y-axis
   // based on highest record and in 1000s

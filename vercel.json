@@ -1,6 +1,26 @@
 {
     "crons": [
       {
+        "path": "/api/hilton-001",
+        "schedule": "0 20 * * *"
+      },
+      {
+        "path": "/api/hilton-002",
+        "schedule": "30 20 * * *"
+      },
+      {
+        "path": "/api/hilton-003",
+        "schedule": "0 21 * * *"
+      },
+      {
+        "path": "/api/hilton-004",
+        "schedule": "30 21 * * *"
+      },
+      {
+        "path": "/api/hilton-005",
+        "schedule": "0 22 * * *"
+      },
+      {
         "path": "/api/breakthrough-check",
         "schedule": "0 0 * * *"
       }

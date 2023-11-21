@@ -24,7 +24,7 @@ let puppeteer = {};
 let options = {};
 const capturedRates:Rate[] = [];
 const captureLogs:Log[] = [];
-const captureScriptId = "hilton005";
+const captureScriptId = "hilton002";
 
 const captureRates = async (puppeteer: any, chrome:any={}) => {
 

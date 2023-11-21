@@ -116,3 +116,36 @@ CREATE TABLE IF NOT EXISTS logs (
 INSERT INTO logs (hotel_id, capture_month, result, capture_timestamp, save_timestamp)
 VALUES ('857817cd-0cfa-4f01-babc-aff31b6e0224', '2023-11', 'success', '2023-11-18 15:45:20', '2023-11-18 15:46:37')
 ON CONFLICT DO NOTHING;
+
+
+SELECT hotel.id, hotel_name_jp, capture_script, capture_month_count, capture_month, timestamp
+FROM hotels INNER JOIN 
+    (SELECT hotel_id, capture_month, result, MAX(capture_timestamp) as timestamp
+    FROM logs
+    GROUP BY hotel_id, capture_month, result
+    HAVING result = 'success') as latestlogs
+ON hotels.id = latestlogs.hotel_id
+
+SELECT hotels.id, hotel_name_jp, capture_script, capture_month_count, capture_month, timestamp
+FROM hotels RIGHT OUTER JOIN 
+    (SELECT hotel_id, capture_month, result, MAX(capture_timestamp) as timestamp
+    FROM logs
+    GROUP BY hotel_id, capture_month, result
+    HAVING result = 'success') as latestlogs
+ON hotels.id = latestlogs.hotel_id
+ORDER BY hotels.id
+
+(SELECT hotel_id, capture_month, result, MAX(capture_timestamp) as timestamp
+    FROM logs
+    GROUP BY hotel_id, capture_month, result
+    HAVING result = 'success') as latestlogs
+
+
+SELECT hotels.id, hotel_name_jp, capture_script, capture_month_count, capture_month, timestamp
+FROM (SELECT hotel_id, capture_month, result, MAX(capture_timestamp) as timestamp
+    FROM logs
+    GROUP BY hotel_id, capture_month, result
+    HAVING result = 'success') as latestlogs
+LEFT JOIN hotels
+ON latestlogs.hotel_id = hotels.id
+ORDER BY hotel_name_jp

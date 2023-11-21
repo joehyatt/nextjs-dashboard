@@ -2,6 +2,7 @@ import { sql } from '@vercel/postgres';
 import {
   HotelField,
   HotelForm,
+  HotelWithLogField,
   CaptureHotelField,
   RateField,
   WatchitemField,
@@ -467,5 +468,22 @@ export async function fetchFilteredWatchlist(
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch watchlist.');
+  }
+}
+
+export async function fetchAllHotelsWithLog() {
+  try {
+    const data = await sql<HotelWithLogField>`
+    SELECT hotel_id, capture_month, MAX(to_char(timezone('JST',capture_timestamp::timestamptz), 'yyyy/mm/dd hh24:mm:ss')) as timestamp
+    FROM logs
+    GROUP BY hotel_id, capture_month, result
+    HAVING result = 'success'
+    `;
+
+    const hotels = data.rows;
+    return hotels;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch all hotels with latest capture logs.');
   }
 }
