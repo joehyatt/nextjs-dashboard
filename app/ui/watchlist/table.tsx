@@ -23,28 +23,21 @@ export default async function WatchlistTable(
             {watchlist?.map((watchitem) => (
               <div
                 key={watchitem.id}
-                className="mb-2 w-full rounded-md bg-white p-4"
+                className="mb-3 w-full rounded-md bg-white p-4 flex-row"
               >
-                <div className="flex items-center justify-between border-b pb-4">
+                <p className="text-sm text-gray-500">{formatDateToLocal(watchitem.cid)}泊</p>
+                <div className="flex items-center justify-between pb-4">
                   <div>
                     <div className="mb-2 flex items-center">
-                      {/* <Image
-                        src={invoice.image_url}
-                        className="mr-2 rounded-full"
-                        width={28}
-                        height={28}
-                        alt={`${invoice.name}'s profile picture`}
-                      /> */}
                       <p>{watchitem.hotel_name_jp}</p>
+                      <p>{formatCurrency(watchitem.basis)}</p>
                     </div>
-                    <p className="text-sm text-gray-500">{formatDateToLocal(watchitem.cid)}</p>
                   </div>
-                  {/* <InvoiceStatus status={watchitem.status} /> */}
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
                     <p className="text-xl font-medium">
-                      {formatCurrency(watchitem.basis)}
+                      {formatCurrency(watchitem.basis)} 
                       {watchitem.rate !== null ? formatCurrency(watchitem.rate) : watchitem.exception}
                     </p>
                     <p>{watchitem.status}</p>
