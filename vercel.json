@@ -7,27 +7,27 @@
   "crons": [
     {
       "path": "/api/hilton-001",
-      "schedule": "0 20 * * *"
+      "schedule": "30 0 * * *"
     },
     {
       "path": "/api/hilton-002",
-      "schedule": "30 20 * * *"
+      "schedule": "0 1 * * *"
     },
     {
       "path": "/api/hilton-003",
-      "schedule": "0 21 * * *"
+      "schedule": "30 1 * * *"
     },
     {
       "path": "/api/hilton-004",
-      "schedule": "30 21 * * *"
+      "schedule": "0 2 * * *"
     },
     {
       "path": "/api/hilton-005",
-      "schedule": "0 22 * * *"
+      "schedule": "30 2 * * *"
     },
     {
       "path": "/api/breakthrough-check",
-      "schedule": "0 0 * * *"
+      "schedule": "0 3 * * *"
     }
   ]
 }

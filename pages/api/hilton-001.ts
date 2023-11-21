@@ -71,7 +71,7 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
 
         // 検索月の設定
         for (let monthNum = 0; monthNum < capture_month_count; monthNum++) {
-            const now = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
+            const now = new Date();
             const today = now.toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit",day: "2-digit"}).replaceAll('/', '-');
             const capture_timestamp = now.toISOString().replace("T"," ").slice(0,-5);
             const capture_month = new Date(now.setMonth(now.getMonth() + monthNum)).toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit"}).replace('/', '-');
