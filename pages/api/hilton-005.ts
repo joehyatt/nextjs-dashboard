@@ -85,7 +85,7 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
                 // ページを開く-価格表示まで待機-価格取得
                 
                 await page.goto(searchUrl);
-                await page.waitForSelector("#flexibleDatesCalendar > div:nth-child(3) > div > div div[data-testid='flexDatesRoomRate'] > span", { hidden: true, timeout: 0 });
+                await page.waitForSelector("#flexibleDatesCalendar > div:nth-child(3) > div > div div[data-testid='flexDatesRoomRate'] > span", { hidden: true, timeout: 30000 });
                 
                 const monthlyRates = await page.evaluate((hotel_id: string, lastDay: number, capture_month: string, today: string) => {
                     const monthlyRates:Rate[] = []
@@ -100,7 +100,6 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
                         } else if (document.querySelector(`button[data-testid='arrival-${capture_month}-${searchDate}'] > div:nth-child(3) > div > span[data-testid='rateNotAvailable']`)) {
                             exception = "Sold Out";
                         } else {
-                            rate = 0
                             exception = "Invalid Date";
                         }
                         monthlyRates.push({hotel_id, cid:`${capture_month}-${searchDate}`, rate, exception, capture_date: today})

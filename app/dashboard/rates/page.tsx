@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { lusitana } from '@/app/ui/fonts';
 import Table from '@/app/ui/rates/table';
+import Calendar from '@/app/ui/rates/calendar';
 import HotelSelect from '@/app/ui/rates/hotel-select';
 import MonthSelect from '@/app/ui/rates/month-select';
 import { fetchAllHotels, fetchCapturedMonths } from '@/app/lib/data';
@@ -28,6 +29,8 @@ export default async function Page({
         <div className="flex w-full items-center justify-between">
             <h1 className={`${lusitana.className} text-2xl`}>Rates</h1>
         </div>
+        {/* SP用カレンダー表示 */}
+        <Calendar />
         <HotelSelect hotels={hotels}/>
         <MonthSelect months={months}/>
         <Table hotel_id={hotel_id} cim={cim} />

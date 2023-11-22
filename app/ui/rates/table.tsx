@@ -1,9 +1,7 @@
-import Image from 'next/image';
-import { UpdateInvoice, DeleteInvoice } from '@/app/ui/invoices/buttons';
-import InvoiceStatus from '@/app/ui/invoices/status';
 import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
-import { fetchFilteredRates, fetchAllRates } from '@/app/lib/data';
+import { fetchFilteredRates } from '@/app/lib/data';
 import CreateWatchitem from '@/app/ui/rates/buttons';
+
 
 export default async function RatesTable(
   {
@@ -14,46 +12,13 @@ export default async function RatesTable(
   cim: string;
 }
 ) {
-  // const invoices = await fetchFilteredInvoices(query, currentPage);
   const rates = await fetchFilteredRates(hotel_id,cim);
 
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
-          {/* SP用カレンダー表示 */}
-          <table>
-            <thead>
-              <tr>
-                <td>日</td>
-                <td>月</td>
-                <td>火</td>
-                <td>水</td>
-                <td>木</td>
-                <td>金</td>
-                <td>土</td>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>4</td>
-              </tr>
-              <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
+          
           {/* SP用リスト表示 */}
           <div className="md:hidden">
             {rates?.map((rate) => (

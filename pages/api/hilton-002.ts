@@ -100,7 +100,6 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
                         } else if (document.querySelector(`button[data-testid='arrival-${capture_month}-${searchDate}'] > div:nth-child(3) > div > span[data-testid='rateNotAvailable']`)) {
                             exception = "Sold Out";
                         } else {
-                            rate = 0
                             exception = "Invalid Date";
                         }
                         monthlyRates.push({hotel_id, cid:`${capture_month}-${searchDate}`, rate, exception, capture_date: today})
