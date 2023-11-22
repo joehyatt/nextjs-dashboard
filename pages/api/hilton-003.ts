@@ -51,7 +51,7 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
         options = {
         args: chrome.args,
         executablePath: await chrome.executablePath,
-        headless: true,
+        headless: false,
         slowMo: 100,
         }
         // Local --------------------------------------------- //
