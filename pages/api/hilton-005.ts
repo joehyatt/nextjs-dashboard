@@ -85,6 +85,7 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
                 // ページを開く-価格表示まで待機-価格取得
                 
                 await page.goto(searchUrl);
+                await page.waitForSelector("#flexibleDatesCalendar > div:nth-child(3) > div > div div[data-testid='flexDatesRoomRate'] > span", { visible: true, timeout: 10000 });
                 await page.waitForSelector("#flexibleDatesCalendar > div:nth-child(3) > div > div div[data-testid='flexDatesRoomRate'] > span", { hidden: true, timeout: 30000 });
                 
                 const monthlyRates = await page.evaluate((hotel_id: string, lastDay: number, capture_month: string, today: string) => {
