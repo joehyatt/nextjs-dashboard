@@ -85,8 +85,9 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
                 // ページを開く-価格表示まで待機-価格取得
                 
                 await page.goto(searchUrl);
-                await new Promise(resolve => setTimeout(resolve, 3000));
+                await new Promise(resolve => setTimeout(resolve, 1000));
                 await page.waitForSelector("#flexibleDatesCalendar > div:nth-child(3) > div > div div[data-testid='flexDatesRoomRate'] > span", { hidden: true, timeout: 30000 });
+                await new Promise(resolve => setTimeout(resolve, 1000));
                 
                 const monthlyRates = await page.evaluate((hotel_id: string, lastDay: number, capture_month: string, today: string) => {
                     const monthlyRates:Rate[] = []
@@ -97,7 +98,11 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
                         let exception = null;
                         if (document.querySelector(`button[data-testid='arrival-${capture_month}-${searchDate}'] > div:nth-child(3) > div[data-testid='flexDatesRoomRate`)) {
                             const rateElement = document.querySelector(`button[data-testid='arrival-${capture_month}-${searchDate}'] > div:nth-child(3) > div[data-testid='flexDatesRoomRate`)
-                            rate = Number(rateElement!.innerHTML.replace("¥","").replace(",",""));
+                            if (rateElement && !rateElement.innerHTML.includes("<span>")) {
+                                rate = Number(rateElement.textContent!.trim().replace("¥","").replaceAll(",",""));
+                            } else {
+                                throw new Error("Still Blurring ...");
+                            }
                         } else if (document.querySelector(`button[data-testid='arrival-${capture_month}-${searchDate}'] > div:nth-child(3) > div > span[data-testid='rateNotAvailable']`)) {
                             exception = "Sold Out";
                         } else {

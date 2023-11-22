@@ -44,3 +44,6 @@ export default function handler(
 //     <div class="text-text-disabled leading-none lg:hidden text-primary">--</div>
 //   </div>
 // </button>
+
+// https://www.hilton.com/en/book/reservation/flexibledates/?ctyhocn=OKAMIHI&arrivalDate=2023-12-01&departureDate=2023-12-02
+// const rateElement = document.querySelector(`button[data-testid='arrival-2023-12-01'] > div:nth-child(3) > div[data-testid='flexDatesRoomRate`)
