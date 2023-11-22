@@ -40,7 +40,7 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
         executablePath: await chrome.executablePath(
             `https://github.com/Sparticuz/chromium/releases/download/v116.0.0/chromium-v116.0.0-pack.tar`
         ),
-        headless: false,
+        headless: true,
         ignoreHTTPSErrors: true,
         }
         // Production --------------------------------------------- //
@@ -51,7 +51,7 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
         options = {
         args: chrome.args,
         executablePath: await chrome.executablePath,
-        headless: false,
+        headless: true,
         slowMo: 100,
         }
         // Local --------------------------------------------- //
