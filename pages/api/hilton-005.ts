@@ -40,7 +40,7 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
         executablePath: await chrome.executablePath(
             `https://github.com/Sparticuz/chromium/releases/download/v116.0.0/chromium-v116.0.0-pack.tar`
         ),
-        headless: true,
+        headless: false,
         ignoreHTTPSErrors: true,
         }
         // Production --------------------------------------------- //
@@ -96,7 +96,6 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
                         const searchDate = ( '00' + dayNum ).slice(-2);
                         let rate = null;
                         let exception = null;
-                        
                         if (document.querySelector(`button[data-testid='arrival-${capture_month}-${searchDate}'] > div:nth-child(3) > div[data-testid='flexDatesRoomRate`)) {
                             const rateElement = document.querySelector(`button[data-testid='arrival-${capture_month}-${searchDate}'] > div:nth-child(3) > div[data-testid='flexDatesRoomRate`)
                             if (rateElement && !rateElement.innerHTML.includes("<span>")) {
@@ -109,12 +108,10 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
                         } else {
                             exception = "Invalid Date";
                         }
-                        
                         monthlyRates.push({hotel_id, cid:`${capture_month}-${searchDate}`, rate, exception, capture_date: today})
                     }
                     return monthlyRates
                 },hotel_id,lastDay,capture_month,today);
-
 
                 // capturedRatesに各月のRatesを格納
                 capturedRates.push(...monthlyRates)
