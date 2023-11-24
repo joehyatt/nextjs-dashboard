@@ -40,7 +40,7 @@ export default async function Calendar({
 export const Month = (props: any) => {
     const { month } = props;
     return (
-      <div className="flex-1 grid grid-cols-7 grid-rows-5 h-10">
+      <div className="flex-1 grid grid-cols-7 grid-rows-5">
         {month.map((row:any, i:number) => (
           <React.Fragment key={i}>
             {row.map((day:any, idx:number) => (
@@ -60,8 +60,9 @@ export const Day = (props:any) => {
           {/* 1行目に曜日を表示 */}
           {rowIdx === 0 && <p className="text-sm mt-1">{day.format("ddd")}</p>}
           <p className={"text-sm p-1 my-1 text-center"}>{day.format("DD")}</p>
-          <p className={"text-xs md:text-sm p-1 my-3 align-middle text-center"}>{day.$R}</p>
         </header>
+        <p className={"text-xs md:text-sm p-1 my-3 align-middle text-center"}>{day.$R}</p>
+        
       </div>
     );
 };

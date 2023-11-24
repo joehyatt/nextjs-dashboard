@@ -85,7 +85,7 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
                 // ページを開く-価格表示まで待機-価格取得
                 
                 await page.goto(searchUrl);
-                await new Promise(resolve => setTimeout(resolve, 1000));
+                await new Promise(resolve => setTimeout(resolve, 3000));
                 await page.waitForSelector("#flexibleDatesCalendar > div:nth-child(3) > div > div div[data-testid='flexDatesRoomRate'] > span", { hidden: true, timeout: 30000 });
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 
