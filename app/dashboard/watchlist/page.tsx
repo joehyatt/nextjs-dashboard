@@ -12,7 +12,7 @@ export default function Page({
     searchParams,
 }: {
     searchParams?: {
-    status?: string;
+        status?: string;
     };
 }) {
     const status = searchParams?.status || 'watching';
@@ -23,13 +23,10 @@ export default function Page({
             <h1 className={`${lusitana.className} text-2xl`}>Watchlist</h1>
         </div>
         <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-            {/* <Search placeholder="Search invoices..." /> */}
             <CreateWatchitem />
         </div>
         <StatusFilter />
-        
         <Table status={status} />
-        {/* <Table query={query} currentPage={currentPage} /> */}
         </div>
     );
 }

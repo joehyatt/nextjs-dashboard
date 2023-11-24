@@ -30,9 +30,9 @@ export default async function Page({
             <h1 className={`${lusitana.className} text-2xl`}>Rates</h1>
         </div>
         {/* SP用カレンダー表示 */}
-        <Calendar hotel_id={hotel_id} cim={cim} />
         <HotelSelect hotels={hotels}/>
         <MonthSelect months={months}/>
+        <Calendar hotel_id={hotel_id} cim={cim} />
         <Table hotel_id={hotel_id} cim={cim} />
         </div>
     );

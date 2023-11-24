@@ -97,8 +97,8 @@ export function withTimeout<T>(promise: Promise<T>, timeout: number) {
   ]);
 }
 
-export function getMonth(month = dayjs().month()) {
-  const year = dayjs().year();
+export function getMonth(year = dayjs().year(), month = dayjs().month()) {
+  // const year = dayjs().year();
   const firstDayOfTheMonth = dayjs(new Date(year, month, 1)).day();
   let currentMonthCount = 0 - firstDayOfTheMonth;
   const daysMatrix = new Array(5).fill([]).map(() => {
