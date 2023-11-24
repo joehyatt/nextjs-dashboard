@@ -2,22 +2,6 @@ import React from "react";
 import { getMonth } from "@/app/lib/utils"
 import { fetchFilteredRates } from '@/app/lib/data';
 import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
-import { boolean, object } from "zod";
-
-type Day = {
-    '$L': string,
-    '$d': Date,
-    '$y': number,
-    '$M': number,
-    '$D': number,
-    '$W': number,
-    '$H': number,
-    '$m': number,
-    '$s': number,
-    '$ms': number,
-    '$x': object,
-    '$isDayjsObject': boolean
-}
 
 export default async function Calendar({
     hotel_id,
@@ -33,7 +17,7 @@ export default async function Calendar({
             const rateByDate = rates.find(rate => Number(rate.cid.split("-")[0]) === day.$y && Number(rate.cid.split("-")[1]) === (day.$M + 1) && Number(rate.cid.split("-")[2]) === day.$D)
             if (rateByDate) {
                 if (rateByDate.rate) {
-                    day['$R']= formatCurrency(rateByDate.rate)
+                    day['$R']= rateByDate.rate
                 } else {
                     day['$R']= rateByDate.exception
                 }
@@ -56,7 +40,7 @@ export default async function Calendar({
 export const Month = (props: any) => {
     const { month } = props;
     return (
-      <div className="flex-1 grid grid-cols-7 grid-rows-5">
+      <div className="flex-1 grid grid-cols-7 grid-rows-5 h-10">
         {month.map((row:any, i:number) => (
           <React.Fragment key={i}>
             {row.map((day:any, idx:number) => (
@@ -76,7 +60,7 @@ export const Day = (props:any) => {
           {/* 1行目に曜日を表示 */}
           {rowIdx === 0 && <p className="text-sm mt-1">{day.format("ddd")}</p>}
           <p className={"text-sm p-1 my-1 text-center"}>{day.format("DD")}</p>
-          <p className={"text-sm p-1 my-8 text-center"}>{day.$R}</p>
+          <p className={"text-xs md:text-sm p-1 my-3 align-middle text-center"}>{day.$R}</p>
         </header>
       </div>
     );
