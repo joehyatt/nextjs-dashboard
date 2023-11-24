@@ -15,9 +15,11 @@ import { updateWatchitem } from '@/app/lib/actions';
 export default function EditWatchitemForm({
   watchitem,
   hotels,
+  oldRates,
 }: {
   watchitem: WatchitemForm;
   hotels: HotelField[];
+  oldRates: {capture_date: string, rate: number | null, exception: string | null}[];
 }) {
   const initialState = { message: null, errors: {} };
   const updateWatchitemWithId = updateWatchitem.bind(null, watchitem.id);
@@ -113,6 +115,17 @@ export default function EditWatchitemForm({
               ))}
             </div>
           ) : null}
+        </div>
+      </div>
+      <div>
+        <p>過去14日間の価格推移</p>
+        <div>
+          {oldRates.map((rate) => (
+            <div key={rate.capture_date}>
+              <span className='mr-4'>{rate.capture_date}</span>
+              <span>{rate.rate ? rate.rate : rate.exception}</span>
+            </div>
+          ))}
         </div>
       </div>
       <div className="mt-6 flex justify-end gap-4">

@@ -63,9 +63,9 @@ export default async function WatchlistTable(
                 {/* <th scope="col" className="px-3 py-5 font-medium">
                   価格取得日
                 </th> */}
-                {/* <th scope="col" className="relative py-3 pl-6 pr-3">
+                <th scope="col" className="relative py-3 pl-6 pr-3">
                   <span className="sr-only">Edit</span>
-                </th> */}
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white">
@@ -96,10 +96,10 @@ export default async function WatchlistTable(
                     <InvoiceStatus status={invoice.status} />
                   </td> */}
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                    {/* <div className="flex justify-end gap-3">
+                    <div className="flex justify-end gap-3">
                       <UpdateWatchitem id={watchitem.id} />
                       <DeleteWatchitem id={watchitem.id} />
-                    </div> */}
+                    </div>
                   </td>
                 </tr>
               ))}

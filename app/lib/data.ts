@@ -440,6 +440,20 @@ export async function fetchCapturedMonths(
   }
 }
 
+export async function fetchOldRates(hotel_id: string, cid: string) {
+  noStore();
+  try {
+    const oldRates = await sql<{capture_date: string, rate: number | null, exception: string | null}>`
+      SELECT capture_date, rate, exception FROM rates
+      WHERE hotel_id = ${hotel_id} AND cid = ${cid}
+    `;
+    return oldRates.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch old rates.');
+  }
+}
+
 export async function fetchFilteredWatchlist(
   status: string,
 ) {

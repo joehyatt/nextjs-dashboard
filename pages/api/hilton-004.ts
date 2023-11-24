@@ -87,7 +87,7 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
                 await page.goto(searchUrl);
                 await new Promise(resolve => setTimeout(resolve, 3000));
                 await page.waitForSelector("#flexibleDatesCalendar > div:nth-child(3) > div > div div[data-testid='flexDatesRoomRate'] > span", { hidden: true, timeout: 30000 });
-                await new Promise(resolve => setTimeout(resolve, 1000));
+                await new Promise(resolve => setTimeout(resolve, 3000));
 
                 const monthlyRates = await page.evaluate((hotel_id: string, lastDay: number, capture_month: string, today: string) => {
                     const monthlyRates:Rate[] = []

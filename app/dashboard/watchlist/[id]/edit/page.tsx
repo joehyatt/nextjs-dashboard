@@ -1,18 +1,20 @@
 import Form from '@/app/ui/watchlist/edit-form';
 import Breadcrumbs from '@/app/ui/watchlist/breadcrumbs';
-import { fetchWatchitemById, fetchHotels } from '@/app/lib/data';
+import { fetchWatchitemById, fetchHotels, fetchOldRates } from '@/app/lib/data';
 import { notFound } from 'next/navigation';
  
 export default async function Page({ params }: { params: { id: string } }) {
     const id = params.id;
     const [watchitem, hotels] = await Promise.all([
         fetchWatchitemById(id),
-        fetchHotels(),
+        fetchHotels()
     ]);
 
     if (!watchitem) {
         notFound();
     }
+
+    const oldRates = await fetchOldRates(watchitem.hotel_id, watchitem.cid)
       
     return (
         <main>
@@ -26,7 +28,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             },
             ]}
         />
-        <Form watchitem={watchitem} hotels={hotels} />
+        <Form watchitem={watchitem} hotels={hotels} oldRates={oldRates}/>
         </main>
     );
 }
