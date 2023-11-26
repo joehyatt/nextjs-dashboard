@@ -320,13 +320,13 @@ export async function fetchWatchitemById(id: string) {
       WHERE id = ${id};
     `;
 
-    const watchitem = data.rows.map((watchitem) => ({
-      ...watchitem,
-      // Convert amount from cents to dollars
-      basis: watchitem.basis,
-    }));
-    console.log(watchitem);
-    return watchitem[0];
+    // const watchitem = data.rows.map((watchitem) => ({
+    //   ...watchitem,
+    //   // Convert amount from cents to dollars
+    //   basis: watchitem.basis,
+    // }));
+    // console.log(watchitem);
+    return data.rows[0];
   } catch (error) {
     console.error('Database Error:', error);
   }
@@ -341,9 +341,8 @@ export async function fetchHotelById(id: string) {
       WHERE id = ${id};
     `;
 
-    const hotels = data.rows
-    console.log(hotels);
-    return hotels[0];
+    // const hotels = data.rows
+    return data.rows[0];
   } catch (error) {
     console.error('Database Error:', error);
   }

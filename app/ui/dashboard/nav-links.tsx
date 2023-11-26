@@ -3,7 +3,6 @@
 import {
   EyeIcon,
   HomeIcon,
-  DocumentDuplicateIcon,
   CurrencyYenIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
@@ -16,7 +15,6 @@ const links = [
   { name: 'Home', href: '/dashboard', icon: HomeIcon },
   { name: 'Rates', href: '/dashboard/rates', icon: CurrencyYenIcon },
   { name: 'Watchlist', href: '/dashboard/watchlist', icon: EyeIcon },
-  { name: 'Invoices', href: '/dashboard/invoices', icon: DocumentDuplicateIcon,},
 ];
 
 export default function NavLinks() {

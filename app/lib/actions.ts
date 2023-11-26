@@ -226,6 +226,7 @@ export async function updateWatchitem(
       WHERE id = ${id}
     `;
   } catch (error) {
+    console.log("Database Error: Failed to Update Watchitem.")
     return { message: 'Database Error: Failed to Update Watchitem.' };
   }
  
@@ -282,7 +283,7 @@ export async function updateHotel(
   }
 
   const { capture_script, capture_month_count } = validatedFields.data;
-  
+
   try {
     await sql`
       UPDATE hotels
