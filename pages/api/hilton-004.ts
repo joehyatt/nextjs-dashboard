@@ -87,8 +87,7 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
                 await page.goto(searchUrl);
                 await new Promise(resolve => setTimeout(resolve, 3000));
                 await page.waitForSelector("#flexibleDatesCalendar > div:nth-child(3) > div > div div[data-testid='flexDatesRoomRate'] > span", { hidden: true, timeout: 30000 });
-                await new Promise(resolve => setTimeout(resolve, 3000));
-
+                
                 const monthlyRates = await page.evaluate((hotel_id: string, lastDay: number, capture_month: string, today: string) => {
                     const monthlyRates:Rate[] = []
                     const startDate = today.slice(0,7) === capture_month ? Number(today.slice(-2)) : 1;
@@ -106,7 +105,7 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
                         } else if (document.querySelector(`button[data-testid='arrival-${capture_month}-${searchDate}'] > div:nth-child(3) > div > span[data-testid='rateNotAvailable']`)) {
                             exception = "Sold Out";
                         } else {
-                            exception = "Invalid Date";
+                            throw new Error("Invalid Date ...");
                         }
                         monthlyRates.push({hotel_id, cid:`${capture_month}-${searchDate}`, rate, exception, capture_date: today})
                     }

@@ -501,3 +501,18 @@ export async function fetchAllHotelsWithLog() {
     throw new Error('Failed to fetch all hotels with latest capture logs.');
   }
 }
+
+export async function fetchHotelCodeById(hotel_id: string) {
+  try {
+    const data = await sql`
+    SELECT hotel_code FROM hotels
+    WHERE id = ${hotel_id}
+    `;
+
+    const hotel_code = data.rows[0]['hotel_code'];
+    return hotel_code;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch hotel_code by id.');
+  }
+}

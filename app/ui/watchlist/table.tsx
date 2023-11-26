@@ -37,6 +37,7 @@ export default async function WatchlistTable(
                   <p className="text-xl font-medium align-middle">
                     {watchitem.rate !== null ? formatCurrency(watchitem.rate) : watchitem.exception}
                   </p>
+                  <UpdateWatchitem id={watchitem.id} />
                 </div>
               </div>
             ))}
