@@ -90,11 +90,12 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
         // cal: https://www.marriott.com/reservation/availabilitySearch.mi?isRateCalendar=true&propertyCode=UKBFI&isSearch=true&currency=
         
         try{
-            await Promise.all([
-                // page.click("li.shop-pagination-next:not([class*='disabled'])"),
-                page.goto("https://www.marriott.com/search/findHotels.mi?fromDate=12/19/2023&toDate=12/20/2023&destinationAddress.destination=Japan&view=list",{ waitUntil: 'networkidle0' }),
-                page.waitForNavigation({ waitUntil: 'networkidle2' }),
-            ]);
+            // await Promise.all([
+            //     // page.click("li.shop-pagination-next:not([class*='disabled'])"),
+            //     page.goto("https://www.marriott.com/search/findHotels.mi?fromDate=12/19/2023&toDate=12/20/2023&destinationAddress.destination=Japan&view=list",{ waitUntil: 'networkidle0' }),
+            //     page.waitForNavigation({ waitUntil: 'networkidle2' }),
+            // ]);
+            await page.goto("https://www.marriott.com/search/findHotels.mi?fromDate=12/19/2023&toDate=12/20/2023&destinationAddress.destination=Japan&view=list",{ waitUntil: 'networkidle0' });
             await new Promise(resolve => setTimeout(resolve, 3000));
             const title = await page.title();
             console.log("page title: ",title);
