@@ -107,11 +107,11 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
             
             for (let p = 0; p < pages; p++) {
                 if (p !== 0) {
+                    console.log(`transferring to ${p+1}-page...`);
                     await Promise.all([
-                        page.waitForNavigation(),
+                        page.waitForNavigation({ waitUntil:"domcontentloaded" }),
                         page.click("li.shop-pagination-next:not([class*='disabled'])"),
                     ]);
-                    console.log(`transferred to ${p+1}-page`);
                 }
                 await page.waitForSelector("#main-content span.m-price", { timeout: 30000 });
                 await page.mouse.wheel({deltaY: 500});
