@@ -95,8 +95,7 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
             //     page.goto("https://www.marriott.com/search/findHotels.mi?fromDate=12/19/2023&toDate=12/20/2023&destinationAddress.destination=Japan&view=list",{ waitUntil: 'networkidle0' }),
             //     page.waitForNavigation({ waitUntil: 'networkidle2' }),
             // ]);
-            await page.goto("https://www.marriott.com/search/findHotels.mi?fromDate=12/19/2023&toDate=12/20/2023&destinationAddress.destination=Japan&view=list",{ "waitUntil":"domcontentloaded" });
-            await new Promise(resolve => setTimeout(resolve, 3000));
+            await page.goto("https://www.marriott.com/search/findHotels.mi?fromDate=12/11/2023&toDate=12/12/2023&destinationAddress.destination=Japan&view=list",{ waitUntil:"domcontentloaded" });
             const title = await page.title();
             console.log("page title: ",title);
             await page.waitForSelector("#main-content span.m-price", { timeout: 30000 });
@@ -141,6 +140,7 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
                     }
                     return rateByHotels
                 },cid,capture_date,hotels)
+                console.log(`${rate_list.length} captured on page ${p+1}`);
     
                 // capturedRatesに日毎のRatesを格納
                 capturedRatesByDate.push(...rate_list);
