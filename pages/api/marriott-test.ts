@@ -41,7 +41,7 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
         executablePath: await chrome.executablePath(
             `https://github.com/Sparticuz/chromium/releases/download/v116.0.0/chromium-v116.0.0-pack.tar`
         ),
-        headless: false,
+        headless: true,
         ignoreHTTPSErrors: true,
         }
         // Production --------------------------------------------- //
@@ -52,8 +52,8 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
         options = {
         args: chrome.args,
         executablePath: await chrome.executablePath,
-        headless: false,
-        slowMo: 500,
+        headless: true,
+        // slowMo: 100,
         }
         // Local --------------------------------------------- //
     }
@@ -86,7 +86,7 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
         // 検索URL決定
         const searchUrl = `https://www.marriott.com/search/findHotels.mi?fromDate=${capture_cid.slice(-5)}/${capture_cid.slice(0,4)}&toDate=${capture_cod.slice(-5)}/${capture_cod.slice(0,4)}&destinationAddress.destination=Japan`
         console.log(`Start capturing ${cid} rates...`);
-        console.log(searchUrl);
+        // console.log(searchUrl);
 
         try{
             await page.goto(searchUrl);
