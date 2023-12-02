@@ -53,13 +53,13 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
         args: chrome.args,
         executablePath: await chrome.executablePath,
         headless: true,
-        // slowMo: 100,
+        slowMo: 100,
         }
         // Local --------------------------------------------- //
     }
 
     // 取得対象日数設定
-    const captureScriptNumber = 3;
+    const captureScriptNumber = 5;
     const capture_date_count = 4;
     const dateOffset = capture_date_count * (captureScriptNumber-1);
     
@@ -90,6 +90,9 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
 
         try{
             await page.goto(searchUrl);
+            await new Promise(resolve => setTimeout(resolve, 3000));
+            const title = await page.title();
+            console.log(title);
             await page.waitForSelector("#main-content span.m-price", { timeout: 30000 });
             const pages: number = await page.evaluate(()=>{
                 const pagenationNodes = Array.from(document.querySelectorAll("li.shop-pagination-item"));
