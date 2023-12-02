@@ -95,7 +95,7 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
             //     page.goto("https://www.marriott.com/search/findHotels.mi?fromDate=12/19/2023&toDate=12/20/2023&destinationAddress.destination=Japan&view=list",{ waitUntil: 'networkidle0' }),
             //     page.waitForNavigation({ waitUntil: 'networkidle2' }),
             // ]);
-            await page.goto("https://www.marriott.com/search/findHotels.mi?fromDate=12/11/2023&toDate=12/12/2023&destinationAddress.destination=Japan&view=list",{ waitUntil:"domcontentloaded" });
+            await page.goto("https://www.marriott.com/search/findHotels.mi?fromDate=12/06/2023&toDate=12/07/2023&destinationAddress.destination=Japan&view=list",{ waitUntil:"domcontentloaded" });
             const title = await page.title();
             console.log("page title: ",title);
             await page.waitForSelector("#main-content span.m-price", { timeout: 30000 });
@@ -166,7 +166,7 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
         }
     }
 
-    console.log(capturedRates)
+    console.log(capturedRates.length)
     console.log(captureLogs)
     // 仮想ブラウザの終了
     await browser.close();
