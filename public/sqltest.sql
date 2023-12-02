@@ -85,6 +85,7 @@ ALTER TABLE watchlist RENAME COLUMN start_date TO init_date;
 
 -- カラム型変更
 ALTER TABLE logs ALTER COLUMN result TYPE VARCHAR(50);
+ALTER TABLE hotels ALTER COLUMN brand_code TYPE VARCHAR(20);
 ALTER TABLE rates ALTER COLUMN price TYPE INT;
 ALTER TABLE logs ALTER COLUMN capture_datetime TYPE timestamp;
 

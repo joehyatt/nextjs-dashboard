@@ -515,3 +515,16 @@ export async function fetchHotelCodeById(hotel_id: string) {
     throw new Error('Failed to fetch hotel_code by id.');
   }
 }
+
+export async function fetchGroupHotels(group_code: string) {
+  try {
+    const data = await sql<{id:string,hotel_code:string}>`
+      SELECT id, hotel_code
+      FROM hotels
+      WHERE group_code = ${group_code};
+    `;
+    return data.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+  }
+}

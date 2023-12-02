@@ -1,6 +1,6 @@
 const { db } = require('@vercel/postgres');
 const {
-  watchlist,
+  // watchlist,
   hotels
 } = require('../app/lib/placeholder-data2.js');
 // const bcrypt = require('bcrypt');
