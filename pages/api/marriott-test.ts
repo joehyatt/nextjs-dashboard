@@ -59,8 +59,8 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
     }
 
     // 取得対象日数設定
-    const captureScriptNumber = 5;
-    const capture_date_count = 4;
+    const captureScriptNumber = 3;
+    const capture_date_count = 3;
     const dateOffset = capture_date_count * (captureScriptNumber-1);
     
     // hotel_id, hotel_codeの対応表をDBからfetch
@@ -112,7 +112,6 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
                         page.waitForNavigation({ waitUntil:"domcontentloaded" }),
                         page.click("li.shop-pagination-next:not([class*='disabled'])"),
                     ]);
-                    console.log(`transferred to ${p+1}-page!`);
                 }
                 await page.waitForSelector("#main-content span.m-price", { timeout: 30000 });
                 await page.mouse.wheel({deltaY: 500});
