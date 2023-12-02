@@ -60,7 +60,7 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
 
     // 取得対象日数設定
     const captureScriptNumber = 5;
-    const capture_date_count = 4;
+    const capture_date_count = 1;
     const dateOffset = capture_date_count * (captureScriptNumber-1);
     
     // hotel_id, hotel_codeの対応表をDBからfetch
@@ -92,8 +92,8 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
         try{
             await Promise.all([
                 // page.click("li.shop-pagination-next:not([class*='disabled'])"),
-                page.goto("https://www.marriott.com/search/findHotels.mi?fromDate=12/19/2023&toDate=12/20/2023&destinationAddress.destination=Japan&view=list"),
-                page.waitForNavigation(),
+                page.goto("https://www.marriott.com/search/findHotels.mi?fromDate=12/19/2023&toDate=12/20/2023&destinationAddress.destination=Japan&view=list",{ waitUntil: 'networkidle0' }),
+                page.waitForNavigation({ waitUntil: 'networkidle2' }),
             ]);
             await new Promise(resolve => setTimeout(resolve, 3000));
             const title = await page.title();
@@ -226,8 +226,8 @@ export default async function handler(
             new Promise((_, reject) => setTimeout(() => reject("DB connect timeout!"), 10000))
         ])
         await captureRates(puppeteer, chrome);
-        await saveRates(client,capturedRates);
-        await saveLogs(client,captureLogs);
+        // await saveRates(client,capturedRates);
+        // await saveLogs(client,captureLogs);
         await client.end();
         console.log("DONE successfully!");
         res.send("DONE successfully!");
