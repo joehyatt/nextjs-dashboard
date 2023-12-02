@@ -89,11 +89,11 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
         console.log(searchUrl);
 
         try{
-            await page.goto("https://developer.chrome.com/");
+            await page.goto("https://www.marriott.com/default.mi");
             await new Promise(resolve => setTimeout(resolve, 3000));
             const title = await page.title();
             console.log("page title: ",title);
-            await page.waitForSelector("#main-content span.m-price", { timeout: 35000 });
+            await page.waitForSelector("#main-content span.m-price", { timeout: 30000 });
             const pages: number = await page.evaluate(()=>{
                 const pagenationNodes = Array.from(document.querySelectorAll("li.shop-pagination-item"));
                 return pagenationNodes.length;
