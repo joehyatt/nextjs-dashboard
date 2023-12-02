@@ -89,7 +89,7 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
         console.log(searchUrl);
 
         try{
-            await page.goto("https://www.marriott.com/search/findHotels.mi?fromDate=12/18/2023&toDate=12/19/2023&destinationAddress.destination=Japan");
+            await page.goto("https://www.marriott.com/search/findHotels.mi?fromDate=12/18/2023&toDate=12/19/2023");
             await new Promise(resolve => setTimeout(resolve, 3000));
             const title = await page.title();
             console.log("page title: ",title);
