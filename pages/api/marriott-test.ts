@@ -112,10 +112,12 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
                         page.waitForNavigation({ waitUntil:"domcontentloaded" }),
                         page.click("li.shop-pagination-next:not([class*='disabled'])"),
                     ]);
+                    console.log(`transferred to ${p+1}-page!`);
                 }
                 await page.waitForSelector("#main-content span.m-price", { timeout: 30000 });
                 await page.mouse.wheel({deltaY: 500});
 
+                console.log("evaluating page...")
                 const rate_list: Rate[]  = await page.evaluate((cid: string, capture_date: string, hotels:{id:string,hotel_code:string}[])=>{
                     const rateByHotels:Rate[] = [];
                     const hotel_node_list = Array.from(document.querySelectorAll("#main-content div.property-card"));
@@ -131,7 +133,8 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
                         } else if (hotel_node_list[h].querySelector("span.opening-soon-font")) {
                             exception = "Opening Soon"
                         } else {
-                            throw new Error("Invalid Rate");
+                            // throw new Error("Invalid Rate");
+                            exception = "other"
                         }
                         if (hotels!.find(hotel => hotel.hotel_code === hotel_code)) {
                             const hotel_id = hotels!.find(hotel => hotel.hotel_code === hotel_code)!.id
@@ -163,7 +166,7 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
         }
     }
 
-    console.log(capturedRates.length)
+    console.log(capturedRates)
     console.log(captureLogs)
     // 仮想ブラウザの終了
     await browser.close();
