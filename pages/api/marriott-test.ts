@@ -37,12 +37,12 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
         chrome = require('@sparticuz/chromium-min');
         puppeteer = require('puppeteer-core');
         options = {
-        args: [...chrome?.args, '--hide-scrollbars', '--disable-web-security'],
-        executablePath: await chrome.executablePath(
-            `https://github.com/Sparticuz/chromium/releases/download/v116.0.0/chromium-v116.0.0-pack.tar`
-        ),
-        headless: true,
-        ignoreHTTPSErrors: true,
+            args: [...chrome?.args, '--hide-scrollbars', '--disable-web-security'],
+            executablePath: await chrome.executablePath(
+                `https://github.com/Sparticuz/chromium/releases/download/v116.0.0/chromium-v116.0.0-pack.tar`
+            ),
+            headless: false,
+            ignoreHTTPSErrors: true,
         }
         // Production --------------------------------------------- //
     } else {
@@ -86,14 +86,14 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
         // 検索URL決定
         const searchUrl = `https://www.marriott.com/search/findHotels.mi?fromDate=${capture_cid.slice(-5)}/${capture_cid.slice(0,4)}&toDate=${capture_cod.slice(-5)}/${capture_cod.slice(0,4)}&destinationAddress.destination=Japan`
         console.log(`Start capturing ${cid} rates...`);
-        // console.log(searchUrl);
+        console.log(searchUrl);
 
         try{
             await page.goto(searchUrl);
             await new Promise(resolve => setTimeout(resolve, 3000));
             const title = await page.title();
             console.log("page title: ",title);
-            await page.waitForSelector("#main-content span.m-price", { timeout: 30000 });
+            await page.waitForSelector("#main-content span.m-price", { timeout: 35000 });
             const pages: number = await page.evaluate(()=>{
                 const pagenationNodes = Array.from(document.querySelectorAll("li.shop-pagination-item"));
                 return pagenationNodes.length;
