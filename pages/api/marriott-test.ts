@@ -17,7 +17,7 @@ type Log = {
     cid: string | null,
     capture_month: string | null,
     captured_hotels: number | null,
-    result: 'success' | 'capturing_failure' | 'saving_failure' | null,
+    result: 'success' | 'capturing_failure' | 'saving_failure',
     capture_timestamp: string,
     save_timestamp: string | null,
 }
@@ -144,7 +144,7 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
             console.log("Capture Success!")
             console.log(`Captured ${capturedRatesByDate.length} Hotels (SoldOut: ${soldOutCount}, OpeningSoon: ${openingSoonCount})`);
             const capture_timestamp = new Date().toISOString().replace("T"," ").slice(0,-5);
-            captureLogs.push({hotel_id: null, capture_month: null, cid, result: null, captured_hotels: capturedRatesByDate.length, capture_timestamp, save_timestamp: null })
+            captureLogs.push({hotel_id: null, capture_month: null, cid, result: 'success', captured_hotels: capturedRatesByDate.length, capture_timestamp, save_timestamp: null })
 
         } catch (e) {
             // log
@@ -218,8 +218,8 @@ export default async function handler(
             new Promise((_, reject) => setTimeout(() => reject("DB connect timeout!"), 10000))
         ])
         await captureRates(puppeteer, chrome);
-        // await saveRates(client,capturedRates);
-        // await saveLogs(client,captureLogs);
+        await saveRates(client,capturedRates);
+        await saveLogs(client,captureLogs);
         await client.end();
         console.log("DONE successfully!");
         res.send("DONE successfully!");

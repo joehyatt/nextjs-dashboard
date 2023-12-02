@@ -349,6 +349,7 @@ export async function fetchHotelById(id: string) {
 }
 
 export async function fetchAllHotels() {
+  noStore();
   try {
     const data = await sql<HotelField>`
       SELECT

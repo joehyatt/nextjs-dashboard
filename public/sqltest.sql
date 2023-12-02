@@ -77,6 +77,8 @@ ALTER TABLE prices RENAME TO rates;
 -- カラムの追加
 ALTER TABLE hotels ADD COLUMN capture_script VARCHAR(50); 
 ALTER TABLE hotels ADD COLUMN capture_month_count INT NOT NULL DEFAULT 2; 
+ALTER TABLE logs ADD COLUMN cid VARCHAR(20);
+ALTER TABLE logs ADD COLUMN captured_hotels INT;
 
 -- カラム名変更
 ALTER TABLE rates RENAME COLUMN is_soldout TO exception;
@@ -92,6 +94,7 @@ ALTER TABLE logs ALTER COLUMN capture_datetime TYPE timestamp;
 -- NOT NULL制約解除
 ALTER TABLE rates ALTER COLUMN price DROP NOT NULL;
 ALTER TABLE rates ALTER COLUMN exception DROP NOT NULL;
+ALTER TABLE logs ALTER COLUMN hotel_id,capture_month DROP NOT NULL;
 
 -- 古いキャプチャを削除
 DELETE FROM rates WHERE capture_date = '2023-11-13'
