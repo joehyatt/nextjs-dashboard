@@ -52,7 +52,7 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
         options = {
         args: chrome.args,
         executablePath: await chrome.executablePath,
-        headless: true,
+        headless: false,
         slowMo: 100,
         }
         // Local --------------------------------------------- //
@@ -87,9 +87,10 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
         const searchUrl = `https://www.marriott.com/search/findHotels.mi?fromDate=${capture_cid.slice(-5)}/${capture_cid.slice(0,4)}&toDate=${capture_cod.slice(-5)}/${capture_cod.slice(0,4)}&destinationAddress.destination=Japan`
         console.log(`Start capturing ${cid} rates...`);
         console.log(searchUrl);
-
+        // cal: https://www.marriott.com/reservation/availabilitySearch.mi?isRateCalendar=true&propertyCode=UKBFI&isSearch=true&currency=
+        
         try{
-            await page.goto("https://www.marriott.com/reservation/availabilitySearch.mi?isRateCalendar=true&propertyCode=UKBFI&isSearch=true&currency=");
+            await page.goto("https://www.marriott.com/search/findHotels.mi?fromDate=12/19/2023&toDate=12/20/2023&destinationAddress.destination=Japan&view=list");
             await new Promise(resolve => setTimeout(resolve, 3000));
             const title = await page.title();
             console.log("page title: ",title);
