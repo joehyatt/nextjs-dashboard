@@ -60,7 +60,7 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
 
     // 取得対象日数設定
     const captureScriptNumber = 3;
-    const capture_date_count = 3;
+    const capture_date_count = 2;
     const dateOffset = capture_date_count * (captureScriptNumber-1);
     
     // hotel_id, hotel_codeの対応表をDBからfetch
@@ -116,7 +116,6 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
                 await page.waitForSelector("#main-content span.m-price", { timeout: 30000 });
                 await page.mouse.wheel({deltaY: 500});
 
-                console.log("evaluating page...")
                 const rate_list: Rate[]  = await page.evaluate((cid: string, capture_date: string, hotels:{id:string,hotel_code:string}[])=>{
                     const rateByHotels:Rate[] = [];
                     const hotel_node_list = Array.from(document.querySelectorAll("#main-content div.property-card"));
@@ -239,3 +238,4 @@ export default async function handler(
         res.send("DB Connection Error!");
     }
 }
+
