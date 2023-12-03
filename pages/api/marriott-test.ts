@@ -86,7 +86,6 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
         // 検索URL決定
         const searchUrl = `https://www.marriott.com/search/findHotels.mi?fromDate=${capture_cid.slice(-5)}/${capture_cid.slice(0,4)}&toDate=${capture_cod.slice(-5)}/${capture_cod.slice(0,4)}&destinationAddress.destination=Japan`
         console.log(`Start capturing ${cid} rates...`);
-        console.log(searchUrl);
         // cal: https://www.marriott.com/reservation/availabilitySearch.mi?isRateCalendar=true&propertyCode=UKBFI&isSearch=true&currency=
         
         try{
@@ -95,7 +94,7 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
             //     page.goto("https://www.marriott.com/search/findHotels.mi?fromDate=12/19/2023&toDate=12/20/2023&destinationAddress.destination=Japan&view=list",{ waitUntil: 'networkidle0' }),
             //     page.waitForNavigation({ waitUntil: 'networkidle2' }),
             // ]);
-            await page.goto(searchUrl,{ waitUntil:"domcontentloaded" });
+            await page.goto(searchUrl,{ waitUntil:"networkidle2" });
             const title = await page.title();
             console.log("page title: ",title);
             await page.waitForSelector("#main-content span.m-price", { timeout: 30000 });
