@@ -59,7 +59,7 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
     }
 
     // 取得対象日数設定
-    const captureScriptNumber = 3;
+    const captureScriptNumber = 1;
     const capture_date_count = 2;
     const dateOffset = capture_date_count * (captureScriptNumber-1);
     
@@ -89,11 +89,6 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
         // cal: https://www.marriott.com/reservation/availabilitySearch.mi?isRateCalendar=true&propertyCode=UKBFI&isSearch=true&currency=
         
         try{
-            // await Promise.all([
-            //     // page.click("li.shop-pagination-next:not([class*='disabled'])"),
-            //     page.goto("https://www.marriott.com/search/findHotels.mi?fromDate=12/19/2023&toDate=12/20/2023&destinationAddress.destination=Japan&view=list",{ waitUntil: 'networkidle0' }),
-            //     page.waitForNavigation({ waitUntil: 'networkidle2' }),
-            // ]);
             await page.goto(searchUrl,{ timeout:0 });
             const title = await page.title();
             console.log("page title: ",title);
@@ -227,8 +222,8 @@ export default async function handler(
             new Promise((_, reject) => setTimeout(() => reject("DB connect timeout!"), 10000))
         ])
         await captureRates(puppeteer, chrome);
-        // await saveRates(client,capturedRates);
-        // await saveLogs(client,captureLogs);
+        await saveRates(client,capturedRates);
+        await saveLogs(client,captureLogs);
         await client.end();
         console.log("DONE successfully!");
         res.send("DONE successfully!");
