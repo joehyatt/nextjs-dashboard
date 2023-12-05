@@ -49,99 +49,109 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
         // Local --------------------------------------------- //
         console.log("local start")
         puppeteer = require('puppeteer');
+        // puppeteer = require('puppeteer-extra');
+        // const pluginStealth = require(`puppeteer-extra-plugin-stealth`)();
+        // pluginStealth.enabledEvasions.delete(`chrome.runtime`);
+        // pluginStealth.enabledEvasions.delete(`iframe.contentWindow`);
+        // puppeteer.use(pluginStealth);
         options = {
-        args: chrome.args,
-        executablePath: await chrome.executablePath,
-        headless: false,
-        slowMo: 100,
+            args: chrome.args,
+            // args: ['--disable-webgl'],
+            executablePath: await chrome.executablePath,
+            // executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+            // args: [
+            //     // ゲストセッションで操作する。
+            //     "--guest",
+            //     '--lang=bn-BD,bn',
+            //     // ウインドウサイズをデフォルトより大きめに。
+            //     '--window-size=1280,800',
+            // ],
+            headless: false,
+            slowMo: 500,
         }
         // Local --------------------------------------------- //
     }
 
     // 取得対象日数設定
     const captureScriptNumber = 1;
-    const capture_date_count = 2;
-    const dateOffset = capture_date_count * (captureScriptNumber-1);
+    const capture_date_count = 1;
+    const dateOffset = 0;
+    // const dateOffset = capture_date_count * (captureScriptNumber-1);
     
     // hotel_id, hotel_codeの対応表をDBからfetch
-    const hotels = await fetchGroupHotels('marriott');
+    const hotels = await fetchGroupHotels('hyatt');
 
-    // baseUrl = https://www.marriott.com/reservation/availabilitySearch.mi?isRateCalendar=true&propertyCode=OSAAL&fromDate=01/01/2024&toDate=01/02/2024
+    // baseUrl = https://www.hyatt.com/ja-JP/search/Japan?checkinDate=2023-12-03&checkoutDate=2023-12-04
 
     // 仮想ブラウザの立ち上げ
     const browser = await puppeteer.launch(options)
+    
     const page = await browser.newPage();
-    await page.setUserAgent('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36');
+    // const page = (await browser.pages())[0] || (await browser.newPage());
+    // await page.setViewport({
+    //     width: 1920 - 0,
+    //     height: 1080 - 74
+    // });
+    // await page.setExtraHTTPHeaders({
+    //     'Accept-Language': 'en-US,en;q=0.9'
+    // });
 
+    // await page.setUserAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36");
+    await page.setUserAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36");
+    // await page.setUserAgent("Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)");
+    
     const capture_date = new Date().toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit",day: "2-digit"}).replaceAll('/', '-');
 
     // 検索日の設定
     for (let dateNum = 0; dateNum < capture_date_count; dateNum++) {
         let capturedRatesByDate: Rate[] = [];
-        const capture_cid = new Date(new Date().setDate(new Date().getDate() + dateOffset + dateNum)).toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit",day: "2-digit"});
-        const capture_cod = new Date(new Date().setDate(new Date().getDate() + dateOffset + dateNum + 1)).toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit",day: "2-digit"});
+        const capture_cid = new Date(new Date().setDate(new Date().getDate() + dateOffset + dateNum)).toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit",day: "2-digit"}).replaceAll('/', '-');;
+        const capture_cod = new Date(new Date().setDate(new Date().getDate() + dateOffset + dateNum + 1)).toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit",day: "2-digit"}).replaceAll('/', '-');;
         const cid = capture_cid.replaceAll('/', '-');
-        
 
         // 検索URL決定
-        const searchUrl = `https://www.marriott.com/search/findHotels.mi?fromDate=${capture_cid.slice(-5)}/${capture_cid.slice(0,4)}&toDate=${capture_cod.slice(-5)}/${capture_cod.slice(0,4)}&destinationAddress.destination=Japan`
+        const searchUrl = `https://www.hyatt.com/ja-JP/search/Japan?checkinDate=${capture_cid}&checkoutDate=${capture_cod}`;
+        // const searchUrl = `https://www.marriott.com/search/findHotels.mi?fromDate=${capture_cid.slice(-5)}/${capture_cid.slice(0,4)}&toDate=${capture_cod.slice(-5)}/${capture_cod.slice(0,4)}&destinationAddress.destination=Japan`
         console.log(`Start capturing ${cid} rates...`);
-        // cal: https://www.marriott.com/reservation/availabilitySearch.mi?isRateCalendar=true&propertyCode=UKBFI&isSearch=true&currency=
-        
+        console.log(searchUrl);
+
         try{
-            await page.goto(searchUrl,{ timeout:0 });
+            await page.goto(searchUrl);
+            await page.waitForSelector("*[data-js='hotel-card']", { timeout: 30000 });
             const title = await page.title();
             console.log("page title: ",title);
-            await page.waitForSelector("#main-content span.m-price", { timeout: 30000 });
-            const pages: number = await page.evaluate(()=>{
-                const pagenationNodes = Array.from(document.querySelectorAll("li.shop-pagination-item"));
-                return pagenationNodes.length;
-            })
-            console.log(`will capture ${pages} page(s)`);
-            
-            for (let p = 0; p < pages; p++) {
-                if (p !== 0) {
-                    console.log(`transferring to ${p+1}-page...`);
-                    await Promise.all([
-                        page.waitForNavigation({ waitUntil:"domcontentloaded" }),
-                        page.click("li.shop-pagination-next:not([class*='disabled'])"),
-                    ]);
-                }
-                await page.waitForSelector("#main-content span.m-price", { timeout: 30000 });
-                await page.mouse.wheel({deltaY: 500});
 
-                const rate_list: Rate[]  = await page.evaluate((cid: string, capture_date: string, hotels:{id:string,hotel_code:string}[])=>{
-                    const rateByHotels:Rate[] = [];
-                    const hotel_node_list = Array.from(document.querySelectorAll("#main-content div.property-card"));
-                    
-                    for (let h = 0; h < hotel_node_list.length; h++) {
-                        let rate = null;
-                        let exception = null;
-                        const hotel_code = hotel_node_list[h].getAttribute("data-marsha")!;
-                        if (hotel_node_list[h].querySelector("span.m-price")) {
-                            rate = Number(hotel_node_list[h].querySelector("span.m-price")!.textContent!.replace(",",""));
-                        } else if (hotel_node_list[h].querySelector("div.unavailable-text")) {
-                            exception = "Sold Out"
-                        } else if (hotel_node_list[h].querySelector("span.opening-soon-font")) {
-                            exception = "Opening Soon"
-                        } else {
-                            // throw new Error("Invalid Rate");
-                            exception = "other"
-                        }
-                        if (hotels!.find(hotel => hotel.hotel_code === hotel_code)) {
-                            const hotel_id = hotels!.find(hotel => hotel.hotel_code === hotel_code)!.id
-                            rateByHotels.push({hotel_id,cid,rate,exception,capture_date});
-                        }
-                    }
-                    return rateByHotels
-                },cid,capture_date,hotels)
-                console.log(`${rate_list.length} captured on page ${p+1}`);
-    
-                // capturedRatesに日毎のRatesを格納
-                capturedRatesByDate.push(...rate_list);
-                capturedRates.push(...rate_list);
+            const rate_list: Rate[]  = await page.evaluate((cid: string, capture_date: string, hotels:{id:string,hotel_code:string}[])=>{
+                const rateByHotels:Rate[] = [];
+                const hotel_node_list = Array.from(document.querySelectorAll("*[data-js='hotel-card']"));
                 
-            }
+                for (let h = 0; h < hotel_node_list.length; h++) {
+                    let rate = null;
+                    let exception = null;
+                    const hotel_code = hotel_node_list[h].getAttribute("data-spirit-code")!;
+                    if (hotel_node_list[h].getAttribute("data-booking-status") === "BOOKABLE") {
+                        rate = Number(hotel_node_list[h].getAttribute("data-rate"));
+                    } else if (hotel_node_list[h].getAttribute("data-booking-status") === "SOLD_OUT") {
+                        exception = "Sold Out"
+                    } else if (hotel_node_list[h].getAttribute("data-booking-status") === "NOT_BOOKABLE") {
+                        exception = "--"
+                    } else {
+                        // throw new Error("Invalid Rate");
+                        exception = "other"
+                    }
+                    if (hotels!.find(hotel => hotel.hotel_code === hotel_code)) {
+                        const hotel_id = hotels!.find(hotel => hotel.hotel_code === hotel_code)!.id
+                        rateByHotels.push({hotel_id,cid,rate,exception,capture_date});
+                    }
+                }
+                return rateByHotels
+            },cid,capture_date,hotels)
+            // console.log(`${rate_list.length} captured on page ${p+1}`);
+
+            // capturedRatesに日毎のRatesを格納
+            capturedRatesByDate.push(...rate_list);
+            capturedRates.push(...rate_list);
+                
             // log
             const soldOutCount = capturedRatesByDate.filter(rate=>rate.exception === "Sold Out").length
             const openingSoonCount = capturedRatesByDate.filter(rate=>rate.exception === "Opening Soon").length
@@ -181,7 +191,7 @@ const saveRates = async (client:any, rates: Rate[]) => {
                     capture_date = EXCLUDED.capture_date;
                 `
             ),
-        ), 100000);
+        ), 300000);
         // log
         console.log(`Saved ${insertedRates.length} rates successfully!`);
         captureLogs.map(log=> log.save_timestamp = save_timestamp);
@@ -217,14 +227,14 @@ export default async function handler(
   res: NextApiResponse<string>
 ) { 
     try {
-        const client = await Promise.race([
-            db.connect(),
-            new Promise((_, reject) => setTimeout(() => reject("DB connect timeout!"), 10000))
-        ])
+        // const client = await Promise.race([
+        //     db.connect(),
+        //     new Promise((_, reject) => setTimeout(() => reject("DB connect timeout!"), 10000))
+        // ])
         await captureRates(puppeteer, chrome);
-        await saveRates(client,capturedRates);
-        await saveLogs(client,captureLogs);
-        await client.end();
+        // await saveRates(client,capturedRates);
+        // await saveLogs(client,captureLogs);
+        // await client.end();
         console.log("DONE successfully!");
         res.send("DONE successfully!");
     } catch (error) {
@@ -232,4 +242,3 @@ export default async function handler(
         res.send("DB Connection Error!");
     }
 }
-

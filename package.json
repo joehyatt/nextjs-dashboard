@@ -22,7 +22,7 @@
     "dayjs": "^1.11.10",
     "next": "^14.0.0",
     "next-auth": "^5.0.0-beta.3",
-    "nodemailer": "^6.9.1",
+    "node-html-parser": "^6.1.11",
     "postcss": "8.4.31",
     "puppeteer-autoscroll-down": "^2.0.0",
     "puppeteer-core": "^6.0.0",
