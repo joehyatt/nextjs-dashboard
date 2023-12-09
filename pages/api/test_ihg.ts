@@ -44,7 +44,7 @@ const capturedRates:Rate[] = [];
 
 const areas = ["Hokkaido","Central","Kyushu","Okinawa"];
 const capture_date = new Date().toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit",day: "2-digit"}).replaceAll('/', '-');
-const capture_date_count = 84;
+const capture_date_count = 23;
 const dateOffset = 0;
 
 const captureRates = async (puppeteer: any, chrome:any={}, client:any) => {
