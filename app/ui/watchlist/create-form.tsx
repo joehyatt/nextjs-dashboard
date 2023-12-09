@@ -19,13 +19,11 @@ export default function Form( {groups, hotels, group_code, hotel_id, cid, rate, 
   cid?: string, rate?:number,
   oldRates: {capture_date: string, rate: number | null, exception: string | null}[];
 } ) {
-  
+
+  const today = new Date().toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit",day: "2-digit"}).replaceAll('/', '-');
+
   const initialState = { message: null, errors: {} };
   const [state, dispatch] = useFormState(createWatchitem, initialState);
-
-  // const latestRate = oldRates[oldRates.length - 1].rate
-  // const [rateX, setRate] = useState(0)
-
 
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -42,7 +40,7 @@ export default function Form( {groups, hotels, group_code, hotel_id, cid, rate, 
       params.delete('group_code');
     }
     replace(`${pathname}?${params.toString()}`);
-  }, 500);
+  }, 100);
 
   const handleHotelSearch = useDebouncedCallback((term) => {
     const params = new URLSearchParams(searchParams!);
@@ -54,7 +52,7 @@ export default function Form( {groups, hotels, group_code, hotel_id, cid, rate, 
       params.delete('hotel_id');
     }
     replace(`${pathname}?${params.toString()}`);
-  }, 500);
+  }, 100);
 
   const handleCidSearch = useDebouncedCallback((term) => {
     const params = new URLSearchParams(searchParams!);
@@ -65,7 +63,17 @@ export default function Form( {groups, hotels, group_code, hotel_id, cid, rate, 
       params.delete('cid');
     }
     replace(`${pathname}?${params.toString()}`);
-  }, 500);
+  }, 100);
+
+  // const handleBasisRate = useDebouncedCallback((term) => {
+  //   const params = new URLSearchParams(searchParams!);
+  //   if (term) {
+  //     params.set('rate', term);
+  //   }
+  //   replace(`${pathname}?${params.toString()}`);
+  // }, 100);
+
+  const latestRate = oldRates[oldRates.length-1]?.rate
 
   return (
     <form action={dispatch}>
@@ -74,7 +82,7 @@ export default function Form( {groups, hotels, group_code, hotel_id, cid, rate, 
         {/* Group Select */}
         <div className="mb-4">
           <label htmlFor="hotel" className="mb-2 block text-sm font-medium">
-            Choose hotel
+            ホテルグループを選択
           </label>
           <div className="relative">
             <select
@@ -88,7 +96,7 @@ export default function Form( {groups, hotels, group_code, hotel_id, cid, rate, 
               }}
             >
               <option value="" hidden>
-                Select a Group
+                ホテルグループを選択してください
               </option>
               {groups.map((group) => (
                 <option key={group.group_code} value={group.group_code}>
@@ -114,7 +122,7 @@ export default function Form( {groups, hotels, group_code, hotel_id, cid, rate, 
         {/* Hotel Name */}
         <div className="mb-4">
           <label htmlFor="hotel" className="mb-2 block text-sm font-medium">
-            Choose hotel
+            ホテルを選択
           </label>
           <div className="relative">
             <select
@@ -128,7 +136,7 @@ export default function Form( {groups, hotels, group_code, hotel_id, cid, rate, 
               }}
             >
               <option value="" hidden>
-                Select a hotel
+                ホテルを選択してください
               </option>
               {hotels.map((hotel) => (
                 <option key={hotel.id} value={hotel.id}>
@@ -154,7 +162,7 @@ export default function Form( {groups, hotels, group_code, hotel_id, cid, rate, 
         {/* Check in Date  */}
         <div className="mb-4">
           <label htmlFor="cid" className="mb-2 block text-sm font-medium">
-            Choose Check-in Date
+            チェックイン日を選択
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
@@ -162,9 +170,9 @@ export default function Form( {groups, hotels, group_code, hotel_id, cid, rate, 
                 id="cid"
                 name="cid"
                 type="date"
-                min="2023-12-09"
-                max="2024-03-31"
-                defaultValue={cid}
+                min={today}
+                max="2024-02-29"
+                defaultValue={cid ? cid : ""}
                 // step="0.01"
                 placeholder="Choose Check-in Date"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
@@ -192,7 +200,7 @@ export default function Form( {groups, hotels, group_code, hotel_id, cid, rate, 
         {/* Basis Rate */}
         <div className="mb-4">
           <label htmlFor="basis" className="mb-2 block text-sm font-medium">
-            Choose a Basis Rate
+            アラート基準価格の設定
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
@@ -221,6 +229,14 @@ export default function Form( {groups, hotels, group_code, hotel_id, cid, rate, 
             </div>
           ) : null}
         </div>
+
+        {/* <div>
+          {latestRate ?
+          <button onClick={() => handleBasisRate(latestRate)}>
+            最新価格（{latestRate}）を基準価格に設定する
+          </button>
+          : <></>}
+        </div> */}
         
       </div>
 

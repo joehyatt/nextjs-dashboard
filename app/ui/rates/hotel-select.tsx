@@ -24,7 +24,7 @@ export default function Search({ hotels }: { hotels: HotelField[] }) {
   }, 500);
 
   return (
-    <div className="relative flex flex-1 flex-shrink-0">
+    <div className="relative flex flex-1 flex-shrink-0 mb-4">
       <label htmlFor="search" className="sr-only">
         Search
       </label>
@@ -45,7 +45,7 @@ export default function Search({ hotels }: { hotels: HotelField[] }) {
         }}
       >
         <option value="" hidden>
-          Select a hotel
+          ホテルを選択してください
         </option>
         {hotels.map((hotel) => (
           <option key={hotel.id} value={hotel.id}>

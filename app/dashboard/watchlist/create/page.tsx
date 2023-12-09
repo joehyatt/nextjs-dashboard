@@ -1,6 +1,7 @@
 import Form from '@/app/ui/watchlist/create-form';
 import Breadcrumbs from '@/app/ui/watchlist/breadcrumbs';
 import { fetchAllGroups, fetchAllHotels, fetchHotels, fetchOldRates } from '@/app/lib/data';
+import RateTransition from '@/app/ui/watchlist/rate-transition';
  
 export default async function Page({
   searchParams,
@@ -19,7 +20,8 @@ export default async function Page({
   
   // const hotels = await fetchHotels();
   // const hotel_id = searchParams?.hotel_id || "";
-  const cid = searchParams?.cid || "2023-12-15";
+  let cid = searchParams?.cid || undefined;
+  if (cid === null) cid = undefined;
   let rate = searchParams?.rate || undefined;
   if (rate === null) rate = undefined;
 
@@ -38,6 +40,7 @@ export default async function Page({
         ]}
       />
       <Form groups={groups} hotels={hotels} hotel_id={hotel_id} cid={cid} rate={rate} oldRates={oldRates}/>
+      <RateTransition oldRates={oldRates} />
     </main>
   );
 }

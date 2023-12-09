@@ -30,14 +30,14 @@ export default async function Page({
 
     return (
         <div className="w-full">
-        <div className="flex w-full items-center justify-between">
+        <div className="flex w-full items-center justify-between mb-10">
             <h1 className={`${lusitana.className} text-2xl`}>Rates</h1>
         </div>
         <GroupSelect groups={groups}/>
-        {group_code ? <HotelSelect hotels={hotels}/> : <div>---</div>}
-        {months ? <MonthSelect months={months}/> : <div>---</div>}
-        {hotel_id && cim ? <Calendar hotel_id={hotel_id} cim={cim} /> : <div>...</div>}
-        {hotel_id && cim ? <Table hotel_id={hotel_id} cim={cim} /> : <div>...</div>}
+        {group_code ? <HotelSelect hotels={hotels} /> : <div></div>}
+        {months ? <MonthSelect months={months}/> : <div></div>}
+        {hotel_id && cim ? <Calendar hotel_id={hotel_id} cim={cim} /> : <div></div>}
+        {hotel_id && cim ? <Table hotel_id={hotel_id} cim={cim} /> : <div></div>}
         </div>
     );
 }
