@@ -1,11 +1,11 @@
 'use client';
 
-import { HotelField } from '@/app/lib/definitions';
+import { GroupField } from '@/app/lib/definitions';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
 
-export default function Search({ hotels }: { hotels: HotelField[] }) {
+export default function Search({ groups }: { groups: GroupField[] }) {
 
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -15,10 +15,11 @@ export default function Search({ hotels }: { hotels: HotelField[] }) {
     console.log(`Searching... ${term}`);
     const params = new URLSearchParams(searchParams!);
     if (term) {
-      params.set('hotel_id', term);
+      params.set('group_code', term);
+      params.delete('hotel_id');
       params.delete('cim');
     } else {
-      params.delete('hotel_id');
+      params.delete('group_code');
     }
     replace(`${pathname}?${params.toString()}`);
   }, 500);
@@ -35,21 +36,21 @@ export default function Search({ hotels }: { hotels: HotelField[] }) {
         defaultValue={searchParams!.get('query')?.toString()}
       /> */}
       <select
-        id="hotel_id"
-        name="hotel_id"
+        id="group_code"
+        name="group_code"
         className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
         defaultValue=""
-        aria-describedby="hotel_id-error"
+        aria-describedby="group_code-error"
         onChange={(e) => {
           handleSearch(e.target.value);
         }}
       >
-        <option value="" hidden>
-          Select a hotel
+        <option value="" disabled>
+          Select a group
         </option>
-        {hotels.map((hotel) => (
-          <option key={hotel.id} value={hotel.id}>
-            {hotel.hotel_name_jp}
+        {groups.map((group) => (
+          <option key={group.group_code} value={group.group_code}>
+            {group.group_name_jp}
           </option>
         ))}
       </select>

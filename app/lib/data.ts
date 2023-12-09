@@ -348,7 +348,26 @@ export async function fetchHotelById(id: string) {
   }
 }
 
-export async function fetchAllHotels() {
+export async function fetchAllGroups() {
+  noStore();
+  try {
+    const data = await sql<{group_code:string,group_name_jp:string}>`
+      SELECT DISTINCT
+        group_code,
+        group_name_jp
+      FROM hotels
+      ORDER BY group_name_jp ASC
+    `;
+
+    const groups = data.rows;
+    return groups;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch all hotels.');
+  }
+}
+
+export async function fetchAllHotels(group_code: string) {
   noStore();
   try {
     const data = await sql<HotelField>`
@@ -358,6 +377,7 @@ export async function fetchAllHotels() {
         capture_script,
         capture_month_count
       FROM hotels
+      WHERE group_code = ${group_code}
       ORDER BY hotel_name_jp ASC
     `;
 

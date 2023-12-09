@@ -117,6 +117,11 @@ export type HotelForm = {
   capture_month_count: number;
 };
 
+export type GroupField = {
+  group_code: string;
+  group_name_jp: string;
+};
+
 export type HotelField = {
   id: string;
   hotel_name_jp: string;

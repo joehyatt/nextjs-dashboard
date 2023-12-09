@@ -92,7 +92,7 @@ export async function HotelsTable(
 ) {
   // const invoices = await fetchFilteredInvoices(query, currentPage);
 
-  const hotels = await fetchAllHotels();
+  const hotels = await fetchAllHotels("hilton");
   const logs = await fetchAllHotelsWithLog();
 
   return (
