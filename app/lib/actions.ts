@@ -133,6 +133,7 @@ export async function authenticate(
 
 export type WatchitemState = {
   errors?: {
+    group_code?: string[];
     hotel_id?: string[];
     cid?: string[];
     basis?: string[];

@@ -1,7 +1,7 @@
 'use client';
 
 import { useFormState } from 'react-dom';
-import { HotelField } from '@/app/lib/definitions';
+import { GroupField, HotelField } from '@/app/lib/definitions';
 import Link from 'next/link';
 import {
   BuildingOffice2Icon,
@@ -10,13 +10,107 @@ import {
 } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
 import { createWatchitem } from '@/app/lib/actions';
+import { useSearchParams, usePathname, useRouter } from 'next/navigation';
+import { useDebouncedCallback } from 'use-debounce';
 
-export default function Form( {hotels, hotel_id, cid, rate}: { hotels: HotelField[], hotel_id?: string, cid?: string, rate?:number} ) {
+export default function Form( {groups, hotels, group_code, hotel_id, cid, rate, oldRates}: { 
+  groups: GroupField[], hotels: HotelField[], 
+  group_code?: string, hotel_id?: string, 
+  cid?: string, rate?:number,
+  oldRates: {capture_date: string, rate: number | null, exception: string | null}[];
+} ) {
+  
   const initialState = { message: null, errors: {} };
   const [state, dispatch] = useFormState(createWatchitem, initialState);
+
+  // const latestRate = oldRates[oldRates.length - 1].rate
+  // const [rateX, setRate] = useState(0)
+
+
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const { replace } = useRouter();
+
+  const handleGroupSearch = useDebouncedCallback((term) => {
+    const params = new URLSearchParams(searchParams!);
+    if (term) {
+      params.set('group_code', term);
+      params.delete('hotel_id');
+      params.delete('cid');
+      params.delete('rate');
+    } else {
+      params.delete('group_code');
+    }
+    replace(`${pathname}?${params.toString()}`);
+  }, 500);
+
+  const handleHotelSearch = useDebouncedCallback((term) => {
+    const params = new URLSearchParams(searchParams!);
+    if (term) {
+      params.set('hotel_id', term);
+      params.delete('cid');
+      params.delete('rate');
+    } else {
+      params.delete('hotel_id');
+    }
+    replace(`${pathname}?${params.toString()}`);
+  }, 500);
+
+  const handleCidSearch = useDebouncedCallback((term) => {
+    const params = new URLSearchParams(searchParams!);
+    if (term) {
+      params.set('cid', term);
+      params.delete('rate');
+    } else {
+      params.delete('cid');
+    }
+    replace(`${pathname}?${params.toString()}`);
+  }, 500);
+
   return (
     <form action={dispatch}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
+
+        {/* Group Select */}
+        <div className="mb-4">
+          <label htmlFor="hotel" className="mb-2 block text-sm font-medium">
+            Choose hotel
+          </label>
+          <div className="relative">
+            <select
+              id="group"
+              name="group"
+              className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+              defaultValue={group_code}
+              aria-describedby="group-error"
+              onChange={(e) => {
+                handleGroupSearch(e.target.value);
+              }}
+            >
+              <option value="" hidden>
+                Select a Group
+              </option>
+              {groups.map((group) => (
+                <option key={group.group_code} value={group.group_code}>
+                  {group.group_name_jp}
+                </option>
+              ))}
+            </select>
+            <BuildingOffice2Icon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+          </div>
+          {state.errors?.group_code ? (
+            <div
+              id="group-error"
+              aria-live="polite"
+              className="mt-2 text-sm text-red-500"
+            >
+              {state.errors.group_code.map((error: string) => (
+                <p key={error}>{error}</p>
+              ))}
+            </div>
+          ) : null}
+        </div>
+
         {/* Hotel Name */}
         <div className="mb-4">
           <label htmlFor="hotel" className="mb-2 block text-sm font-medium">
@@ -29,8 +123,11 @@ export default function Form( {hotels, hotel_id, cid, rate}: { hotels: HotelFiel
               className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               defaultValue={hotel_id}
               aria-describedby="hotel-error"
+              onChange={(e) => {
+                handleHotelSearch(e.target.value);
+              }}
             >
-              <option value="" disabled>
+              <option value="" hidden>
                 Select a hotel
               </option>
               {hotels.map((hotel) => (
@@ -65,11 +162,16 @@ export default function Form( {hotels, hotel_id, cid, rate}: { hotels: HotelFiel
                 id="cid"
                 name="cid"
                 type="date"
+                min="2023-12-09"
+                max="2024-03-31"
                 defaultValue={cid}
                 // step="0.01"
                 placeholder="Choose Check-in Date"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="cid-error"
+                onChange={(e) => {
+                  handleCidSearch(e.target.value);
+                }}
               />
               <CalendarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
@@ -121,6 +223,17 @@ export default function Form( {hotels, hotel_id, cid, rate}: { hotels: HotelFiel
         </div>
         
       </div>
+
+      <p>過去14日間の価格推移</p>
+        <div>
+          {oldRates.map((rate) => (
+            <div key={rate.capture_date}>
+              <span className='mr-4'>{rate.capture_date}</span>
+              <span>{rate.rate ? rate.rate : rate.exception}</span>
+            </div>
+          ))}
+      </div>
+
       <div className="mt-6 flex justify-end gap-4">
         <Link
           href="/dashboard/watchlist"

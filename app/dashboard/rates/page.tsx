@@ -26,7 +26,7 @@ export default async function Page({
     const hotels = group_code ? await fetchAllHotels(group_code) : [];
     const hotel_id = searchParams?.hotel_id;
     const months = hotel_id ? await fetchCapturedMonths(hotel_id) : [];
-    const cim = searchParams?.cim;
+    const cim = searchParams?.cim || months[0]?.cim;
 
     return (
         <div className="w-full">

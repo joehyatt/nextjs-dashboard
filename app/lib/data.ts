@@ -479,6 +479,8 @@ export async function fetchFilteredWatchlist(
 ) {
   noStore();
 
+  const today = new Date().toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit",day: "2-digit"}).replaceAll('/', '-');
+
   try {
     const watchlist = await sql<WatchlistTable>`
       SELECT
@@ -494,7 +496,7 @@ export async function fetchFilteredWatchlist(
       INNER JOIN hotels ON watchlist.hotel_id = hotels.id
       LEFT OUTER JOIN (SELECT hotel_id,cid,rate,exception FROM rates WHERE capture_date = (SELECT MAX(capture_date) FROM rates)) as latest_rates
         ON watchlist.hotel_id = latest_rates.hotel_id AND watchlist.cid = latest_rates.cid
-      WHERE watchlist.status = ${status}
+      WHERE watchlist.status = ${status} AND watchlist.cid > ${today}
       ORDER BY cid ASC
     `;
 
