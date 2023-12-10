@@ -4,7 +4,8 @@ import { useFormState } from 'react-dom';
 import { GroupField, HotelField } from '@/app/lib/definitions';
 import Link from 'next/link';
 import {
-  BuildingOffice2Icon,
+  BuildingOfficeIcon,
+  RectangleGroupIcon,
   CalendarIcon,
   CurrencyYenIcon,
 } from '@heroicons/react/24/outline';
@@ -103,7 +104,7 @@ export default function Form( {groups, hotels, group_code, hotel_id, cid, basis}
                 </option>
               ))}
             </select>
-            <BuildingOffice2Icon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            <RectangleGroupIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
           {state.errors?.group_code ? (
             <div
@@ -145,7 +146,7 @@ export default function Form( {groups, hotels, group_code, hotel_id, cid, basis}
                 </option>
               ))}
             </select>
-            <BuildingOffice2Icon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            <BuildingOfficeIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
           {state.errors?.hotel_id ? (
             <div

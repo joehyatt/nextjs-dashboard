@@ -1,7 +1,7 @@
 'use client';
 
 import { HotelField } from '@/app/lib/definitions';
-import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import { BuildingOfficeIcon } from '@heroicons/react/24/outline';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
 
@@ -53,7 +53,7 @@ export default function Search({ hotels, hotel_id }: { hotels: HotelField[], hot
           </option>
         ))}
       </select>
-      <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+      <BuildingOfficeIcon className="absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
     </div>
   );
 }

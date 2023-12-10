@@ -7,7 +7,7 @@ export default function PuffinLogo() {
       className={`${lusitana.className} flex flex-row items-center leading-none text-white`}
     >
       <BuildingOffice2Icon className="h-12 w-12 rotate-[0deg]" />
-      <p className="ml-2 pt-2 text-[36px]">Puffin</p>
+      <p className="ml-2 pt-2 text-[30px] md:text-[36px]">Puffin</p>
     </div>
   );
 }

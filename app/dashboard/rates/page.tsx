@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { lusitana } from '@/app/ui/fonts';
-import Table from '@/app/ui/rates/table';
+// import Table from '@/app/ui/rates/table';
 import Calendar from '@/app/ui/rates/calendar';
 import GroupSelect from '@/app/ui/rates/group-select';
 import HotelSelect from '@/app/ui/rates/hotel-select';
@@ -36,8 +36,8 @@ export default async function Page({
         <GroupSelect groups={groups} group_code={group_code}/>
         {group_code ? <HotelSelect hotels={hotels} hotel_id={hotel_id} /> : <div></div>}
         {months ? <MonthSelect months={months}/> : <div></div>}
-        {hotel_id && cim ? <Calendar hotel_id={hotel_id} cim={cim} /> : <div></div>}
-        {group_code && hotel_id && cim ? <Table group_code={group_code} hotel_id={hotel_id} cim={cim} /> : <div></div>}
+        {group_code && hotel_id && cim ? <Calendar hotel_id={hotel_id} cim={cim} /> : <div></div>}
+        {/* {group_code && hotel_id && cim ? <Table group_code={group_code} hotel_id={hotel_id} cim={cim} /> : <div></div>} */}
         </div>
     );
 }
