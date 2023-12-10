@@ -14,12 +14,13 @@ import { updateWatchitem } from '@/app/lib/actions';
 
 export default function EditWatchitemForm({
   watchitem,
-  hotels,
-  oldRates,
+  // hotels,
+  // oldRates,
 }: {
   watchitem: WatchitemForm;
-  hotels: HotelField[];
-  oldRates: {capture_date: string, rate: number | null, exception: string | null}[];
+  // hotels: HotelField[];
+  // latestRate: number;
+  // oldRates: {capture_date: string, rate: number | null, exception: string | null}[];
 }) {
   const initialState = { message: null, errors: {} };
   const updateWatchitemWithId = updateWatchitem.bind(null, watchitem.id);
@@ -28,7 +29,10 @@ export default function EditWatchitemForm({
   return (
     <form action={dispatch}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
-        {/* Hotel Name */}
+
+        
+
+        {/* Hotel Name
         <div className="mb-4">
           <label htmlFor="hotel" className="mb-2 block text-sm font-medium">
             Choose hotel
@@ -51,9 +55,9 @@ export default function EditWatchitemForm({
             </select>
             <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
-        </div>
+        </div> */}
 
-        {/* Watchitem Amount */}
+        {/* Watchitem Amount
         <div className="mb-4">
           <label htmlFor="cid" className="mb-2 block text-sm font-medium">
             Choose a Check-in Date
@@ -83,12 +87,12 @@ export default function EditWatchitemForm({
               ))}
             </div>
           ) : null}
-        </div>
+        </div> */}
 
         {/* Watchitem basis */}
         <div className="mb-4">
           <label htmlFor="basis" className="mb-2 block text-sm font-medium">
-            Enter a basis
+            新しい基準価格
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
@@ -97,7 +101,7 @@ export default function EditWatchitemForm({
                 name="basis"
                 type="number"
                 defaultValue={watchitem.basis}
-                placeholder="Enter basis"
+                placeholder="新しい基準価格を入力"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="basis-error"
               />
@@ -117,7 +121,7 @@ export default function EditWatchitemForm({
           ) : null}
         </div>
       </div>
-      <div>
+      {/* <div>
         <p>過去14日間の価格推移</p>
         <div>
           {oldRates.map((rate) => (
@@ -127,15 +131,15 @@ export default function EditWatchitemForm({
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
       <div className="mt-6 flex justify-end gap-4">
         <Link
           href="/dashboard/watchlist"
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
         >
-          Cancel
+          キャンセル
         </Link>
-        <Button type="submit">Edit Watchitem</Button>
+        <Button type="submit">基準価格を変更する</Button>
       </div>
     </form>
   );

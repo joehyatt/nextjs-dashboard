@@ -20,15 +20,15 @@ export default async function Page({ params }: { params: { id: string } }) {
         <main>
         <Breadcrumbs
             breadcrumbs={[
-            { label: 'Watchlist', href: '/dashboard/watchlist' },
+            { label: 'ウォッチリスト', href: '/dashboard/watchlist' },
             {
-                label: 'Edit Watchitem',
+                label: '基準価格の変更',
                 href: `/dashboard/watchlist/${id}/edit`,
                 active: true,
             },
             ]}
         />
-        <Form watchitem={watchitem} hotels={hotels} oldRates={oldRates}/>
+        <Form watchitem={watchitem} />
         </main>
     );
 }

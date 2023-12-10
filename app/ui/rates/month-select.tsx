@@ -22,7 +22,7 @@ export default function Search({ months }: { months: {cim:string}[] }) {
   }, 500);
 
   return (
-    <div className="relative flex flex-1 flex-shrink-0">
+    <div className="relative flex flex-1 flex-shrink-0 mb-4">
       {/* <label htmlFor="search" className="sr-only">
         Search
       </label> */}

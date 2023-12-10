@@ -8,7 +8,7 @@ import MonthSelect from '@/app/ui/rates/month-select';
 import { fetchAllGroups, fetchAllHotels, fetchCapturedMonths } from '@/app/lib/data';
 
 export const metadata: Metadata = {
-    title: 'Rates',
+    title: '料金検索',
 };
 
 export default async function Page({
@@ -31,10 +31,10 @@ export default async function Page({
     return (
         <div className="w-full">
         <div className="flex w-full items-center justify-between mb-10">
-            <h1 className={`${lusitana.className} text-2xl`}>Rates</h1>
+            <h1 className={`${lusitana.className} text-2xl`}>料金検索</h1>
         </div>
-        <GroupSelect groups={groups}/>
-        {group_code ? <HotelSelect hotels={hotels} /> : <div></div>}
+        <GroupSelect groups={groups} group_code={group_code}/>
+        {group_code ? <HotelSelect hotels={hotels} hotel_id={hotel_id} /> : <div></div>}
         {months ? <MonthSelect months={months}/> : <div></div>}
         {hotel_id && cim ? <Calendar hotel_id={hotel_id} cim={cim} /> : <div></div>}
         {hotel_id && cim ? <Table hotel_id={hotel_id} cim={cim} /> : <div></div>}

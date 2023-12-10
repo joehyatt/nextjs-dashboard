@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-// import { fetchCaptureHotels } from '@/app/lib/data'
 import { withTimeout } from '@/app/lib/utils'
 import { fetchGroupHotels } from '@/app/lib/data'
 
@@ -14,6 +13,8 @@ type Rate = {
 }
 type Log = {
     hotel_id: string | null,
+    group_code: 'ihg' | 'accor' | 'hilton' | 'marriott' | 'hyatt',
+    country_code: 'JP' | 'TW' | 'MY'
     cid: string | null,
     capture_month: string | null,
     captured_hotels: number | null,
@@ -22,13 +23,30 @@ type Log = {
     save_timestamp: string | null,
 }
 
+const group_code = "accor";
+const country_code = "JP";
+
 let chrome = {};
 let puppeteer = {};
 let options = {};
+let captureLog: Log = {
+    hotel_id: null,
+    group_code,
+    country_code,
+    cid: null,
+    capture_month: null,
+    captured_hotels: null,
+    result: 'success',
+    capture_timestamp: "",
+    save_timestamp: null,
+};
 const capturedRates:Rate[] = [];
-const captureLogs:Log[] = [];
 
-const captureRates = async (puppeteer: any, chrome:any={}) => {
+const capture_date = new Date().toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit",day: "2-digit"}).replaceAll('/', '-');
+const capture_date_count = 60;
+const dateOffset = 22;
+
+const captureRates = async (puppeteer: any, chrome:any={}, client:any) => {
 
     if (process.env.AWS_LAMBDA_FUNCTION_VERSION){
         // Production --------------------------------------------- //
@@ -51,40 +69,30 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
         options = {
             args: chrome.args,
             executablePath: await chrome.executablePath,
-            headless: false,
+            // headless: false,
             slowMo: 100,
         }
         // Local --------------------------------------------- //
     }
 
-    // 取得対象日数設定
-    const capture_date_count = 1;
-    const dateOffset = 0;
-    
     // hotel_id, hotel_codeの対応表をDBからfetch
-    const hotels = await fetchGroupHotels('accor');
-
-    // baseUrl = https://all.accor.com/ssr/app/accor/hotels/japan/index.ja.shtml?token=jdTjsCwowv44dCvh4C72pfborPfj4rXhLmTvzecjo-nBdV0dPkn0gtnlAgNQtBk-caGogSAveHDH7N3H2CxUzXnZDVvpY8JN3_O0lpWEJPd0EtK-SQErAe6frrG2Vd4_njnHjy5ycqq2kclXQNKuLFi1tDZJYIbVAPUKlIvyIXBGHqDj4LVVSAbiXi1-i7T0VLHFkhvdA9v9d9k1T0Skt7WdowX6f1Fdg88EjKs9TAj40YjL8L4oFc_d30Y8Nn5tRig7WZgIKzMhlWjoQFhNNDouj1dp_DNbtT6OMICTiGg4CUeFN4ZT_sSaLATRPvvHYvw_3Q8VgKHY53bhp3T7ZXMFGrEUg7r6nM4c9khF4noKbetbWWBLqyEWRui7uUWhmhNCSusO6dam3rqfAH9syC6fnUtisiRQc1d6xBilPlm0EiUddXdqOGl_O1gmYAjBzbCJahdiJ4ZVcYRgpxWc6E8PYpBgIUBxuRzRb2orRggLwOpEGve4EtiP38yBFG2-G3tPqBcQEMxyHrthfQo8_9-cvkVC3YbaYe3Wv-KN21ghwkeavJiyq-4rCuMGqd6dPFhPyFaC_XwfLfFlQqPxbJX8JoL0SzptzlrPidwF8o905VJT9yU6GxDYnhWReD6a7-_o7IAWSQ4QDPj42MoSE6_EZ7a6KP74cvKpLD5YauwtKKqoYBc-xujhgW0Mgf7hbkLion08UEd1mAJpPdU0jY_EUDUZjAO_DW-TcdqPLc21hnCLNDt2le2jI1kwHa-Q-uEefZiqkZckDISo_nSwrZ8DlcHDb-z-zmRs2fzVwFaCnR5Iv-6kn7sYJiDlzM5TTQDfIJllU2MM1GVrs-TvtAx3lm5vl34bCwNAT8hdOYvbzbCd0XghOD99S0BOMZtMa_FP1KjM2TqmzuQKsIH_FXuf-KZbVD2RZ_09R4WPtc7rm6sreLB8uo16kBUUORG_XHd8Mespf7unVDLnr68UL_lg_R3Zdn7akwLirJmO1UP6kww2Gm0crY7mGZdZABmGgbUEjCO-5cg2BtOiQDff6_k4Q4ZNYEaF6isXQvqc1a5HK3KPjQK_YFNqVcqBhImZ49OXiRbJfV0PzJ9Y-gCblY0QdUugByfWdYv9PbSk_uVK24zsnto_uXIU-ug6MSJFPCUtYsD9xqznbItq5FU42kL1GwSAPjIREwkVQrXq57YHkTK0IaTdUqKumAIf3VnU0_a3KQXvGAcVEfAhGgca4UUZ0QTuvsZtvcuivyNyE8pKqoys3wsBWfTpEv7uWBAT5VKsFjybBdggcNtvhqg0H2PcgqfRdroMFo5LqI2TzPvtoSeF&dateIn=2023-12-20&nights=1&compositions=1&stayplus=false&snu=false&hideWDR=false&accessibleRooms=false&hideHotelDetails=false
-    // baseUrl = https://all.accor.com/ssr/app/accor/hotels/japan/index.ja.shtml?dateIn=2023-12-20
-
-    // 仮想ブラウザの立ち上げ
-    const browser = await puppeteer.launch(options)
-    const page = await browser.newPage();
+    const hotels = await fetchGroupHotels(group_code);
     
-    await page.setUserAgent('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36');
-
-    const capture_date = new Date().toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit",day: "2-digit"}).replaceAll('/', '-');
-
+    
     // 検索日の設定
     for (let dateNum = 0; dateNum < capture_date_count; dateNum++) {
+        // 仮想ブラウザの立ち上げ
+        const browser = await puppeteer.launch(options);
+        const page = await browser.newPage();
+        await page.setUserAgent('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36');
         let capturedRatesByDate: Rate[] = [];
         const cid = new Date(new Date().setDate(new Date().getDate() + dateOffset + dateNum)).toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit",day: "2-digit"}).replaceAll('/', '-');
-       
+
         try{
             // 検索URL決定
             const searchUrl = `https://all.accor.com/ssr/app/accor/hotels/japan/index.ja.shtml?dateIn=${cid}`;
             
-            console.log(`Start capturing ${cid} rates...`);
+            console.log(`Start capturing ${group_code} : ${cid} rates...`);
             
             await page.goto(searchUrl);
             await page.waitForSelector("div.skeleton.gallery-block__skeleton", { hidden: true, timeout: 30000 });
@@ -138,10 +146,8 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
                 return rateByHotels
 
             },cid,capture_date,hotels)
-            
-            console.log(`${rate_list.length} captured!`);
 
-            await new Promise(resolve => setTimeout(resolve, 20000));
+            console.log(`${rate_list.length} captured!`);
 
             // capturedRatesに日毎のRatesを格納
             capturedRatesByDate.push(...rate_list);
@@ -152,20 +158,24 @@ const captureRates = async (puppeteer: any, chrome:any={}) => {
             console.log("Capture Success!")
             console.log(`Captured ${capturedRatesByDate.length} Hotels (SoldOut: ${soldOutCount})`);
             const capture_timestamp = new Date().toISOString().replace("T"," ").slice(0,-5);
-            captureLogs.push({hotel_id: null, capture_month: null, cid, result: 'success', captured_hotels: capturedRatesByDate.length, capture_timestamp, save_timestamp: null })
+            captureLog = {group_code, country_code, hotel_id: null, capture_month: null, cid, result: 'success', captured_hotels: capturedRatesByDate.length, capture_timestamp, save_timestamp: null };
+            // save
+            await saveRates(client,capturedRatesByDate);
+            await saveLog(client,captureLog);
 
         } catch (e) {
             // log
             console.log("Capture Failed: " + e);
             const capture_timestamp = new Date().toISOString().replace("T"," ").slice(0,-5);
-            captureLogs.push({hotel_id: null, capture_month: null, cid, result: 'capturing_failure', captured_hotels: 0, capture_timestamp, save_timestamp: null })
+            captureLog = {group_code, country_code, hotel_id: null, capture_month: null, cid, result: 'capturing_failure', captured_hotels: null, capture_timestamp, save_timestamp: null };
+            // save
+            await saveLog(client,captureLog);
         }
+        
+        // 仮想ブラウザの終了
+        await browser.close();
     }
-
-    console.log(capturedRates.length)
-    console.log(captureLogs)
-    // 仮想ブラウザの終了
-    await browser.close();
+    
 }
 
 const saveRates = async (client:any, rates: Rate[]) => {
@@ -185,34 +195,32 @@ const saveRates = async (client:any, rates: Rate[]) => {
                     capture_date = EXCLUDED.capture_date;
                 `
             ),
-        ), 300000);
+        ), 60000);
         // log
         console.log(`Saved ${insertedRates.length} rates successfully!`);
-        captureLogs.map(log=> log.save_timestamp = save_timestamp);
+        captureLog.save_timestamp = save_timestamp;
     } catch (error) {
         // log
         console.error('Error during saving rates:', error);
-        captureLogs.map(log=>log.result = 'saving_failure');
+        captureLog.result = 'saving_failure';
     }
 }
 
-const saveLogs = async (client: any, logs: Log[]) => {
-    console.log(`Saving ${logs.length} logs...`);
+const saveLog = async (client: any, log: Log) => {
+    console.log(`Saving log...`);
     try {
-        const insertedLogs = await withTimeout(Promise.all(
-            logs.map(
-                (log) => client.sql`
-                INSERT INTO logs (hotel_id, capture_month, result, capture_timestamp, save_timestamp)
-                VALUES (${log.hotel_id}, ${log.capture_month}, ${log.result}, ${log.capture_timestamp}, ${log.save_timestamp})
+        await withTimeout(Promise.resolve(
+            client.sql`
+                INSERT INTO logs (group_code, country_code, cid, captured_hotels, hotel_id, capture_month, result, capture_timestamp, save_timestamp)
+                VALUES (${log.group_code}, ${log.country_code}, ${log.cid}, ${log.captured_hotels}, ${log.hotel_id}, ${log.capture_month}, ${log.result}, ${log.capture_timestamp}, ${log.save_timestamp})
                 ON CONFLICT DO NOTHING;
-                `
-            ),
+                `,
         ), 30000);
         // log
-        console.log(`Saved ${insertedLogs.length} logs successfully!`);
+        console.log(`Saved log successfully!`);
     } catch (error) {
         // log
-        console.error('Error during saving logs:', error);
+        console.error('Error during saving log:', error);
     }
 }
 
@@ -221,18 +229,16 @@ export default async function handler(
   res: NextApiResponse<string>
 ) { 
     try {
-        // const client = await Promise.race([
-        //     db.connect(),
-        //     new Promise((_, reject) => setTimeout(() => reject("DB connect timeout!"), 10000))
-        // ])
-        await captureRates(puppeteer, chrome);
-        // await saveRates(client,capturedRates);
-        // await saveLogs(client,captureLogs);
-        // await client.end();
+        const client = await Promise.race([
+            db.connect(),
+            new Promise((_, reject) => setTimeout(() => reject("DB connect timeout!"), 10000))
+        ])
+        await captureRates(puppeteer, chrome, client);
+        await client.end();
         console.log("DONE successfully!");
         res.send("DONE successfully!");
     } catch (error) {
-        console.error('Error during connecting db:', error);
-        res.send("DB Connection Error!");
+        console.error('Error:', error);
+        res.send("Error");
     }
 }

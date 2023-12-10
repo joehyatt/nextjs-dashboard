@@ -5,7 +5,7 @@ import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
 
-export default function Search({ hotels }: { hotels: HotelField[] }) {
+export default function Search({ hotels, hotel_id }: { hotels: HotelField[], hotel_id?: string }) {
 
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -38,7 +38,7 @@ export default function Search({ hotels }: { hotels: HotelField[] }) {
         id="hotel_id"
         name="hotel_id"
         className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-        defaultValue=""
+        defaultValue={hotel_id}
         aria-describedby="hotel_id-error"
         onChange={(e) => {
           handleSearch(e.target.value);

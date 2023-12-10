@@ -153,6 +153,12 @@ const WatchitemSchema = z.object({
       .number()
       .gt(0, { message: 'Please enter a rate greater than ¥0.' }),
 });
+const WatchitemEditSchema = z.object({
+  id: z.string(),
+  basis: z.coerce
+    .number()
+    .gt(0, { message: 'Please enter a rate greater than ¥0.' }),
+});
 
 const CreateWatchitem = WatchitemSchema.omit({ id: true });
 
@@ -197,7 +203,7 @@ export async function createWatchitem(prevState: WatchitemState, formData: FormD
   redirect('/dashboard/watchlist');
 }
 
-const UpdateWatchitem = WatchitemSchema.omit({ id: true });
+const UpdateWatchitem = WatchitemEditSchema.omit({ id: true });
 
 export async function updateWatchitem(
   id: string,
@@ -206,8 +212,8 @@ export async function updateWatchitem(
 ) {
 
   const validatedFields = UpdateWatchitem.safeParse({
-    hotel_id: formData.get('hotel'),
-    cid: formData.get('cid'),
+    // hotel_id: formData.get('hotel'),
+    // cid: formData.get('cid'),
     basis: formData.get('basis'),
   });
  
@@ -218,12 +224,13 @@ export async function updateWatchitem(
     };
   }
  
-  const { hotel_id, cid, basis } = validatedFields.data;
+  // const { hotel_id, cid, basis } = validatedFields.data;
+  const { basis } = validatedFields.data;
  
   try {
     await sql`
       UPDATE watchlist
-      SET hotel_id = ${hotel_id}, cid = ${cid}, basis = ${basis}
+      SET basis = ${basis}
       WHERE id = ${id}
     `;
   } catch (error) {

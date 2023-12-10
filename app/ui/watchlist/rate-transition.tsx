@@ -8,6 +8,7 @@ import {
     CartesianGrid,
     Tooltip,
     Legend,
+    ResponsiveContainer,
 } from "recharts";
 
 const data = [
@@ -29,8 +30,10 @@ export default function RateTransition({
 }) {
     
     return (
+        <div style={{ width: '100%', height: 300 }}>
+        <ResponsiveContainer>
         <LineChart
-            width={500}
+            width={600}
             height={300}
             data={oldRates}
             margin={{
@@ -46,7 +49,9 @@ export default function RateTransition({
             <Tooltip />
             {/* <Legend /> */}
             {/* <Line connectNulls type="monotone" dataKey="pv"/> */}
-            <Line connectNulls type="monotone" dataKey="rate" stroke="#82ca9d" fill="#82ca9d" activeDot={{ r: 8 }}/>
+            <Line connectNulls dataKey="rate" stroke="#82ca9d" fill="#82ca9d" activeDot={{ r: 8 }}/>
         </LineChart>
+        </ResponsiveContainer>
+        </div>
     )
 }

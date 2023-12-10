@@ -13,12 +13,13 @@ import { createWatchitem } from '@/app/lib/actions';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
 
-export default function Form( {groups, hotels, group_code, hotel_id, cid, rate, oldRates}: { 
+export default function Form( {groups, hotels, group_code, hotel_id, cid, basis, latestRate}: { 
   groups: GroupField[], hotels: HotelField[], 
   group_code?: string, hotel_id?: string, 
-  cid?: string, rate?:number,
-  oldRates: {capture_date: string, rate: number | null, exception: string | null}[];
+  cid?: string, basis?:number,latestRate?: number
 } ) {
+
+  console.log(basis)
 
   const today = new Date().toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit",day: "2-digit"}).replaceAll('/', '-');
 
@@ -35,7 +36,7 @@ export default function Form( {groups, hotels, group_code, hotel_id, cid, rate, 
       params.set('group_code', term);
       params.delete('hotel_id');
       params.delete('cid');
-      params.delete('rate');
+      params.delete('basis');
     } else {
       params.delete('group_code');
     }
@@ -47,7 +48,7 @@ export default function Form( {groups, hotels, group_code, hotel_id, cid, rate, 
     if (term) {
       params.set('hotel_id', term);
       params.delete('cid');
-      params.delete('rate');
+      params.delete('basis');
     } else {
       params.delete('hotel_id');
     }
@@ -58,22 +59,22 @@ export default function Form( {groups, hotels, group_code, hotel_id, cid, rate, 
     const params = new URLSearchParams(searchParams!);
     if (term) {
       params.set('cid', term);
-      params.delete('rate');
+      params.delete('basis');
     } else {
       params.delete('cid');
     }
     replace(`${pathname}?${params.toString()}`);
   }, 100);
 
-  // const handleBasisRate = useDebouncedCallback((term) => {
-  //   const params = new URLSearchParams(searchParams!);
-  //   if (term) {
-  //     params.set('rate', term);
-  //   }
-  //   replace(`${pathname}?${params.toString()}`);
-  // }, 100);
+  const handleBasisRate = useDebouncedCallback((term) => {
+    const params = new URLSearchParams(searchParams!);
+    if (term) {
+      params.set('basis', term);
+    }
+    replace(`${pathname}?${params.toString()}`);
+  }, 100);
 
-  const latestRate = oldRates[oldRates.length-1]?.rate
+  
 
   return (
     <form action={dispatch}>
@@ -172,7 +173,7 @@ export default function Form( {groups, hotels, group_code, hotel_id, cid, rate, 
                 type="date"
                 min={today}
                 max="2024-02-29"
-                defaultValue={cid ? cid : ""}
+                defaultValue={cid !== undefined ? cid : ""}
                 // step="0.01"
                 placeholder="Choose Check-in Date"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
@@ -208,9 +209,9 @@ export default function Form( {groups, hotels, group_code, hotel_id, cid, rate, 
                 id="basis"
                 name="basis"
                 type="number"
-                defaultValue={rate}
+                defaultValue={basis}
                 step="1"
-                placeholder="Enter JPY basis rate"
+                placeholder="基準価格を入力してください"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="basis-error"
               />
@@ -230,17 +231,17 @@ export default function Form( {groups, hotels, group_code, hotel_id, cid, rate, 
           ) : null}
         </div>
 
-        {/* <div>
+        <div>
           {latestRate ?
           <button onClick={() => handleBasisRate(latestRate)}>
             最新価格（{latestRate}）を基準価格に設定する
           </button>
           : <></>}
-        </div> */}
+        </div>
         
       </div>
 
-      <p>過去14日間の価格推移</p>
+      {/* <p>過去14日間の価格推移</p>
         <div>
           {oldRates.map((rate) => (
             <div key={rate.capture_date}>
@@ -248,16 +249,16 @@ export default function Form( {groups, hotels, group_code, hotel_id, cid, rate, 
               <span>{rate.rate ? rate.rate : rate.exception}</span>
             </div>
           ))}
-      </div>
+      </div> */}
 
       <div className="mt-6 flex justify-end gap-4">
         <Link
           href="/dashboard/watchlist"
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
         >
-          Cancel
+          キャンセル
         </Link>
-        <Button type="submit">Create Watchitem</Button>
+        <Button type="submit">登録する</Button>
       </div>
     </form>
   );

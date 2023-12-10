@@ -5,7 +5,7 @@ import { CreateWatchitem } from '@/app/ui/watchlist/buttons';
 import StatusFilter from '@/app/ui/watchlist/status-select';
 
 export const metadata: Metadata = {
-    title: 'Watchlist',
+    title: 'ウォッチリスト',
 };
 
 export default function Page({
@@ -20,12 +20,14 @@ export default function Page({
     return (
         <div className="w-full">
         <div className="flex w-full items-center justify-between">
-            <h1 className={`${lusitana.className} text-2xl`}>Watchlist</h1>
+            <h1 className={`${lusitana.className} text-2xl`}>ウォッチリスト</h1>
         </div>
         <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
             <CreateWatchitem />
         </div>
-        <StatusFilter />
+        <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
+            <StatusFilter />
+        </div>
         <Table status={status} />
         </div>
     );
