@@ -62,7 +62,7 @@ export default async function handler(
             const userId = req.body.events[0].source.userId;
             await dbClient.sql`UPDATE users SET line_id = ${userId} ,link_token = null , nonce = null WHERE nonce = ${nonce}`
             console.log("LINEとPuffinの連携が完了しました！");
-        } else if (result === "failed") {
+        } else {
             await dbClient.sql`UPDATE users SET link_token = null , nonce = null WHERE nonce = ${nonce}`
             console.log("LINEとPuffinの連携に失敗しました");
         }
