@@ -476,6 +476,7 @@ export async function fetchOldRates(hotel_id: string, cid: string) {
 
 export async function fetchFilteredWatchlist(
   status: string,
+  user_id: string,
 ) {
   noStore();
 
@@ -485,6 +486,7 @@ export async function fetchFilteredWatchlist(
     const watchlist = await sql<WatchlistTable>`
       SELECT
         watchlist.id,
+        watchlist.user_id,
         watchlist.hotel_id,
         hotel_name_jp,
         watchlist.cid,
@@ -496,7 +498,7 @@ export async function fetchFilteredWatchlist(
       INNER JOIN hotels ON watchlist.hotel_id = hotels.id
       LEFT OUTER JOIN (SELECT hotel_id,cid,rate,exception FROM rates WHERE capture_date = (SELECT MAX(capture_date) FROM rates)) as latest_rates
         ON watchlist.hotel_id = latest_rates.hotel_id AND watchlist.cid = latest_rates.cid
-      WHERE watchlist.status = ${status} AND watchlist.cid > ${today}
+      WHERE watchlist.user_id = ${user_id} AND watchlist.status = ${status} AND watchlist.cid > ${today}
       ORDER BY cid ASC
     `;
 
@@ -549,5 +551,18 @@ export async function fetchGroupHotels(group_code: string) {
     return data.rows;
   } catch (error) {
     console.error('Database Error:', error);
+  }
+}
+
+export async function getUserIdByEmail(email:string) {
+  try {
+    const data = await sql<{id:string}>`
+      SELECT id
+      FROM users
+      WHERE email = ${email};
+    `;
+    return data.rows[0].id;
+  } catch (error) {
+    console.error('Database Error during getUserIdByEmail:', error);
   }
 }

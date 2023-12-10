@@ -5,6 +5,7 @@ import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { signIn } from '@/auth'
+import bcrypt from 'bcrypt';
 
 export type State = {
   errors?: {
@@ -123,6 +124,41 @@ export async function authenticate(
 ) {
   try {
     await signIn('credentials', Object.fromEntries(formData));
+  } catch (error) {
+    if ((error as Error).message.includes('CredentialsSignin')) {
+      return 'CredentialSignin';
+    }
+    throw error;
+  }
+}
+
+export async function signup(
+  prevState: string | undefined,
+  formData: FormData,
+) {
+
+  const formObj = Object.fromEntries(formData)
+  const name = formObj.name as string;
+  const email = formObj.email as string;
+  const password = formObj.password as string;
+  const password_encrypted = await bcrypt.hash(password,10);
+
+  // ユーザー登録
+  try {
+    await sql`
+      INSERT INTO users (name, email, password)
+      VALUES (${name},${email},${password_encrypted})
+    `;
+  } catch (error) {
+    if ((error as Error).message.includes('users_email_key')) {
+      return 'EmailExists';
+    }
+    throw error;
+  }
+
+  // ログイン
+  try {
+    await signIn('credentials', {email,password});
   } catch (error) {
     if ((error as Error).message.includes('CredentialsSignin')) {
       return 'CredentialSignin';

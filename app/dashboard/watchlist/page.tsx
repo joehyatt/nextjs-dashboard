@@ -3,12 +3,14 @@ import { lusitana } from '@/app/ui/fonts';
 import Table from '@/app/ui/watchlist/table';
 import { CreateWatchitem } from '@/app/ui/watchlist/buttons';
 import StatusFilter from '@/app/ui/watchlist/status-select';
+import { auth } from '@/auth';
+import { getUserIdByEmail } from '@/app/lib/data'
 
 export const metadata: Metadata = {
     title: 'ウォッチリスト',
 };
 
-export default function Page({
+export default async function Page({
     searchParams,
 }: {
     searchParams?: {
@@ -16,6 +18,8 @@ export default function Page({
     };
 }) {
     const status = searchParams?.status || 'watching';
+    const authInfo = await auth()
+    const user_id = await getUserIdByEmail(authInfo!.user!.email!);
 
     return (
         <div className="w-full">
@@ -28,7 +32,7 @@ export default function Page({
         <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
             <StatusFilter />
         </div>
-        <Table status={status} />
+        <Table status={status} user_id = {user_id!} />
         </div>
     );
 }

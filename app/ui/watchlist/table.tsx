@@ -6,14 +6,15 @@ import { fetchFilteredWatchlist, fetchAllWhatchlist } from '@/app/lib/data';
 
 export default async function WatchlistTable(
   {
-  status
+  status, user_id
 }: {
   status: string;
+  user_id: string;
 }
 ) {
 
   // const watchlist = await fetchAllWhatchlist();
-  const watchlist = await fetchFilteredWatchlist(status);
+  const watchlist = await fetchFilteredWatchlist(status, user_id);
 
   return (
     <div className="mt-6 flow-root">

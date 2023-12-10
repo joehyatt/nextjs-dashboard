@@ -17,7 +17,7 @@ export default async function Page() {
   return (
     <main>
       <h1 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
-        Dashboard
+        ダッシュボード
       </h1>
       {
         authInfo?.user && <button><a href={linkUrl}>LINEアカウント連携を完了させる({authInfo.user.email})</a></button>
