@@ -5,9 +5,11 @@ import CreateWatchitem from '@/app/ui/rates/buttons';
 
 export default async function RatesTable(
   {
-  hotel_id,
-  cim,
+    group_code,
+    hotel_id,
+    cim,
 }: {
+  group_code: string;
   hotel_id: string;
   cim: string;
 }
@@ -50,7 +52,7 @@ export default async function RatesTable(
                     {/* <p>{formatDateToLocal(rate.capture_date)}</p> */}
                   </div>
                   <div className="flex justify-end gap-2">
-                    <CreateWatchitem hotel_id={hotel_id} cid={rate.cid} rate={rate.rate || 0} />
+                    <CreateWatchitem group_code={group_code} hotel_id={hotel_id} cid={rate.cid} basis={rate.rate || 0} />
                     {/* <UpdateInvoice id={invoice.id} /> */}
                     {/* <DeleteInvoice id={invoice.id} /> */}
                   </div>
@@ -115,7 +117,7 @@ export default async function RatesTable(
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <CreateWatchitem hotel_id={hotel_id} cid={rate.cid} rate={rate.rate || 0} />
+                      <CreateWatchitem group_code={group_code} hotel_id={hotel_id} cid={rate.cid} basis={rate.rate || 0} />
                       {/* <UpdateInvoice id={invoice.id} /> */}
                       {/* <DeleteInvoice id={invoice.id} /> */}
                     </div>

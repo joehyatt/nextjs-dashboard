@@ -37,7 +37,7 @@ export default async function Page({
         {group_code ? <HotelSelect hotels={hotels} hotel_id={hotel_id} /> : <div></div>}
         {months ? <MonthSelect months={months}/> : <div></div>}
         {hotel_id && cim ? <Calendar hotel_id={hotel_id} cim={cim} /> : <div></div>}
-        {hotel_id && cim ? <Table hotel_id={hotel_id} cim={cim} /> : <div></div>}
+        {group_code && hotel_id && cim ? <Table group_code={group_code} hotel_id={hotel_id} cim={cim} /> : <div></div>}
         </div>
     );
 }

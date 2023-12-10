@@ -13,13 +13,11 @@ import { createWatchitem } from '@/app/lib/actions';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
 
-export default function Form( {groups, hotels, group_code, hotel_id, cid, basis, latestRate}: { 
+export default function Form( {groups, hotels, group_code, hotel_id, cid, basis}: { 
   groups: GroupField[], hotels: HotelField[], 
   group_code?: string, hotel_id?: string, 
-  cid?: string, basis?:number,latestRate?: number
+  cid?: string, basis?:number,
 } ) {
-
-  console.log(basis)
 
   const today = new Date().toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit",day: "2-digit"}).replaceAll('/', '-');
 
@@ -121,6 +119,8 @@ export default function Form( {groups, hotels, group_code, hotel_id, cid, basis,
         </div>
 
         {/* Hotel Name */}
+        {group_code &&
+        <>
         <div className="mb-4">
           <label htmlFor="hotel" className="mb-2 block text-sm font-medium">
             ホテルを選択
@@ -159,8 +159,12 @@ export default function Form( {groups, hotels, group_code, hotel_id, cid, basis,
             </div>
           ) : null}
         </div>
+        </>}
+
 
         {/* Check in Date  */}
+        {group_code && hotel_id &&
+        <>
         <div className="mb-4">
           <label htmlFor="cid" className="mb-2 block text-sm font-medium">
             チェックイン日を選択
@@ -197,8 +201,11 @@ export default function Form( {groups, hotels, group_code, hotel_id, cid, basis,
             </div>
           ) : null}
         </div>
+        </>}
 
         {/* Basis Rate */}
+        {group_code && hotel_id && cid &&
+        <>
         <div className="mb-4">
           <label htmlFor="basis" className="mb-2 block text-sm font-medium">
             アラート基準価格の設定
@@ -230,14 +237,15 @@ export default function Form( {groups, hotels, group_code, hotel_id, cid, basis,
             </div>
           ) : null}
         </div>
+        </>}
 
-        <div>
+        {/* <div>
           {latestRate ?
           <button onClick={() => handleBasisRate(latestRate)}>
             最新価格（{latestRate}）を基準価格に設定する
           </button>
           : <></>}
-        </div>
+        </div> */}
         
       </div>
 

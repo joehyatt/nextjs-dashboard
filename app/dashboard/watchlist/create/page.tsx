@@ -28,8 +28,8 @@ export default async function Page({
   if (basis === null) basis = undefined;
 
   const oldRates = hotel_id && cid ? await fetchOldRates(hotel_id, cid) : [];
-  let latestRate = oldRates[oldRates.length-1]!.rate
-  // if (latestRate === null) latestRate = undefined;
+
+  // let latestRate = oldRates[oldRates.length-1].rate
  
   return (
     <main>
@@ -43,8 +43,10 @@ export default async function Page({
           },
         ]}
       />
-      <Form groups={groups} hotels={hotels} group_code={group_code} hotel_id={hotel_id} cid={cid} basis={basis} latestRate={latestRate!}/>
-      <RateTransition oldRates={oldRates} />
+      <Form groups={groups} hotels={hotels} group_code={group_code} hotel_id={hotel_id} cid={cid} basis={basis}/>
+      {oldRates.length !== 0 ?
+        <RateTransition oldRates={oldRates} />
+      : <></>}
     </main>
   );
 }
