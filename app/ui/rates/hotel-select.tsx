@@ -5,7 +5,7 @@ import { BuildingOfficeIcon } from '@heroicons/react/24/outline';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
 
-export default function Search({ hotels, hotel_id }: { hotels: HotelField[], hotel_id?: string }) {
+export default function Search({ hotels, hotel_id }: { hotels?: HotelField[], hotel_id?: string }) {
 
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -47,7 +47,7 @@ export default function Search({ hotels, hotel_id }: { hotels: HotelField[], hot
         <option value="" hidden>
           ホテルを選択してください
         </option>
-        {hotels.map((hotel) => (
+        {hotels?.map((hotel) => (
           <option key={hotel.id} value={hotel.id}>
             {hotel.hotel_name_jp}
           </option>

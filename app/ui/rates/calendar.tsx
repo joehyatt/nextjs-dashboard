@@ -1,6 +1,6 @@
 import React from "react";
 import { getMonth } from "@/app/lib/utils"
-import { BackwardIcon,ForwardIcon } from "@heroicons/react/24/outline";
+
 import { fetchFilteredRates } from '@/app/lib/data';
 import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
 import { showAlertModal, AlertModalManager } from "../alert-modal-manager";
@@ -14,7 +14,7 @@ export default async function Calendar({
     cim: string;
   }) {
 
-    const monthText = cim.split("-")[0]+"年"+cim.split("-")[1]+"月";
+    
     const month1Digit = Number(cim.split("-")[1]);
     const currentMonth = getMonth(Number(cim.split("-")[0]),Number(cim.split("-")[1])-1);
     const rates = await fetchFilteredRates(hotel_id,cim);
@@ -39,26 +39,6 @@ export default async function Calendar({
             {/* <CalendarHeader /> */}
             <div className="flex flex-col flex-1">
                 {/* <Sidebar /> */}
-                <div className="flex flex-row justify-between items-center mb-4 font-bold">
-                  <div className="flex flex-row items-center w-20">
-                    <BackwardIcon className="w-1/2"/>
-                    <span className="w-1/2 text-center">前月</span>
-                  </div>
-                  <div className="text-xl md:text-2xl">{monthText}</div>
-                  <div className="flex flex-row items-center w-20">
-                    <span className="w-1/2 text-center">次月</span>
-                    <ForwardIcon className="w-1/2"/>
-                  </div>
-                </div>
-                <div className="flex flex-row justify-between items-center mb-2 font-bold">
-                  <p>日</p>
-                  <p>月</p>
-                  <p>火</p>
-                  <p>水</p>
-                  <p>木</p>
-                  <p>金</p>
-                  <p>土</p>
-                </div>
                 <Month month={currentMonth} month1Digit={month1Digit}/>
             </div>
         </div>
@@ -86,6 +66,7 @@ export const Day = (props:any) => {
     return (
       <div className={clsx("border border-gray-200 flex flex-col",{
         'bg-gray-100 text-gray-400': day.$M+1 !== month1Digit,
+        'hover:bg-blue-100': day.$M+1 === month1Digit,
       })}>
         <header className="flex flex-col items-center">
           {/* 1行目に曜日を表示 */}

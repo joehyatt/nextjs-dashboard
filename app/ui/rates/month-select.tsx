@@ -1,10 +1,9 @@
 'use client';
-
-import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import { BackwardIcon,ForwardIcon } from "@heroicons/react/24/outline";
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
 
-export default function Search({ months }: { months: {cim:string}[] }) {
+export default function Search({ months, cim }: { months: {cim:string}[], cim: string }) {
 
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -21,8 +20,15 @@ export default function Search({ months }: { months: {cim:string}[] }) {
     replace(`${pathname}?${params.toString()}`);
   }, 500);
 
+
+  const monthText = cim && cim.split("-")[0]+"年"+cim.split("-")[1]+"月";
+  const prevMonth = months[months.map(m=>m.cim).indexOf(cim) - 1] ? months[months.map(m=>m.cim).indexOf(cim) - 1].cim : "";
+  const nextMonth = months[months.map(m=>m.cim).indexOf(cim) + 1] ? months[months.map(m=>m.cim).indexOf(cim) + 1].cim : "";
+
+
+
   return (
-    <div className="relative flex flex-1 flex-shrink-0 mb-4">
+    <div className="relative flex flex-col flex-1 flex-shrink-0 mt-10 mb-2">
       {/* <label htmlFor="search" className="sr-only">
         Search
       </label> */}
@@ -32,7 +38,7 @@ export default function Search({ months }: { months: {cim:string}[] }) {
         onChange={(e) => {handleSearch(e.target.value);}}
         defaultValue={searchParams!.get('query')?.toString()}
       /> */}
-      {months.map((month) => (
+      {/* {months.map((month) => (
           // <option key={month.cim} value={month.cim}>
           //   {month.cim}
           // </option>
@@ -41,7 +47,7 @@ export default function Search({ months }: { months: {cim:string}[] }) {
             className='block px-3 py-2 mr-3 rounded-md border border-blue-800' 
             onClick={() => handleSearch(month.cim)}
           >{month.cim}</button>
-      ))}
+      ))} */}
       {/* <select
         id="hotel_id"
         name="hotel_id"
@@ -62,6 +68,30 @@ export default function Search({ months }: { months: {cim:string}[] }) {
         ))}
       </select>
       <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" /> */}
+      <div className="flex flex-row justify-between items-center mb-4 font-bold">
+        <div className="flex flex-row items-center w-10 cursor-pointer">
+          {prevMonth &&
+            <BackwardIcon onClick={() => handleSearch(prevMonth)} />
+          }
+          {/* <span className="w-1/2 text-center">前月</span> */}
+        </div>
+        <div className="text-xl md:text-2xl">{monthText}</div>
+        <div className="flex flex-row items-center w-10 cursor-pointer">
+          {/* <span className="w-1/2 text-center">次月</span> */}
+          {nextMonth &&
+            <ForwardIcon onClick={() => handleSearch(nextMonth)} />
+          }
+        </div>
+      </div>
+      <div className="flex flex-row justify-between items-center mb-2 font-bold">
+        <p className="w-1/6 text-center text-red-500">日</p>
+        <p className="w-1/6 text-center">月</p>
+        <p className="w-1/6 text-center">火</p>
+        <p className="w-1/6 text-center">水</p>
+        <p className="w-1/6 text-center">木</p>
+        <p className="w-1/6 text-center">金</p>
+        <p className="w-1/6 text-center text-red-500">土</p>
+      </div>
     </div>
   );
 }

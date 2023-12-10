@@ -27,6 +27,7 @@ export default async function Page({
     const hotel_id = searchParams?.hotel_id;
     const months = hotel_id ? await fetchCapturedMonths(hotel_id) : [];
     const cim = searchParams?.cim || months[0]?.cim;
+    // console.log(cim)
 
     return (
         <div className="w-full">
@@ -35,7 +36,7 @@ export default async function Page({
         </div>
         <GroupSelect groups={groups} group_code={group_code}/>
         {group_code ? <HotelSelect hotels={hotels} hotel_id={hotel_id} /> : <div></div>}
-        {months ? <MonthSelect months={months}/> : <div></div>}
+        {months && months.length > 0 ? <MonthSelect months={months} cim={cim}/> : <div></div>}
         {group_code && hotel_id && cim ? <Calendar hotel_id={hotel_id} cim={cim} /> : <div></div>}
         {/* {group_code && hotel_id && cim ? <Table group_code={group_code} hotel_id={hotel_id} cim={cim} /> : <div></div>} */}
         </div>
