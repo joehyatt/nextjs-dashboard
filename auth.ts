@@ -50,7 +50,6 @@ export const { auth, signIn, signOut } = NextAuth({
                 const randomStrings = randomBytes(N).reduce((p: number,i: number)=> p+(i%36).toString(36),'');
                 const buf = Buffer.from(randomStrings);
                 const nonce = buf.toString('base64');
-                console.log('nonce:',nonce);
                 await setLinkToken(email,linkToken,nonce);
               };
               return user;

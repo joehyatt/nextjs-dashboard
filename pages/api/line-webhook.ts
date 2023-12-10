@@ -41,7 +41,7 @@ export default async function handler(
                     "type": "button",
                     "action": {
                       "type": "uri",
-                      "label": "自社HPログイン画面へ",
+                      "label": "PuffinにログインしてLINEアカウントを連携する",
                       "uri": `https://nextjs-dashboard-202311.vercel.app/login?linkToken=${linkToken}`
                     }
                   }
@@ -55,18 +55,19 @@ export default async function handler(
     if (req.body.events && req.body.events[0].type === "accountLink") {
         console.log("accountLink webhook");
         const {result, nonce} = req.body.events[0].link;
-        console.log(result);
-        console.log(nonce);
+        
+        const dbClient = await db.connect();
 
         if (result === "ok") {
             const userId = req.body.events[0].source.userId;
-            const dbClient = await db.connect();
-            await dbClient.sql`UPDATE users SET line_id = ${userId} WHERE nonce = ${nonce}`
-            await dbClient.end();
-            console.log("LINEとHotteの連携が完了しました！");
+            await dbClient.sql`UPDATE users SET line_id = ${userId} ,link_token = null , nonce = null WHERE nonce = ${nonce}`
+            console.log("LINEとPuffinの連携が完了しました！");
         } else if (result === "failed") {
-            console.log("LINEとHotteの連携に失敗しました");
+            await dbClient.sql`UPDATE users SET link_token = null , nonce = null WHERE nonce = ${nonce}`
+            console.log("LINEとPuffinの連携に失敗しました");
         }
+
+        await dbClient.end();
     }
     
     res.status(200).json('receive line message!');

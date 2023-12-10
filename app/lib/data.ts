@@ -246,10 +246,10 @@ export async function getUser(email: string) {
   }
 }
 
-export async function completeAccountLink() {
+export async function completeAccountLink(user_id: string) {
   try {
-    const user = await sql`SELECT link_token,nonce FROM users WHERE id = '8022354a-e36e-4488-8736-d90802f99069'`;
-    return user.rows[0]
+    const data = await sql`SELECT link_token,nonce FROM users WHERE id = ${user_id}`;
+    return data.rows[0]
   } catch (error) {
     console.error('Failed to fetch user:', error);
     throw new Error('Failed to fetch user.');
