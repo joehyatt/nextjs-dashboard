@@ -566,3 +566,16 @@ export async function getUserIdByEmail(email:string) {
     console.error('Database Error during getUserIdByEmail:', error);
   }
 }
+
+export async function getUserLineIdByEmail(email:string) {
+  try {
+    const data = await sql<{line_id:string}>`
+      SELECT line_id
+      FROM users
+      WHERE email = ${email};
+    `;
+    return data.rows[0].line_id;
+  } catch (error) {
+    console.error('Database Error during getUserLineIdByEmail:', error);
+  }
+}

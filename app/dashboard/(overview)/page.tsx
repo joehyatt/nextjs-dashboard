@@ -4,13 +4,15 @@ import LatestInvoices from '@/app/ui/dashboard/latest-invoices';
 import { lusitana } from '@/app/ui/fonts';
 import { Suspense } from 'react';
 import { RevenueChartSkeleton, LatestInvoicesSkeleton, CardsSkeleton } from '@/app/ui/skeletons';
-import { completeAccountLink, getUserIdByEmail } from '@/app/lib/data';
+import { completeAccountLink, getUserIdByEmail, getUserLineIdByEmail } from '@/app/lib/data';
 import { auth } from '@/auth'
+import { CheckBadgeIcon } from '@heroicons/react/20/solid';
 
 export default async function Page() {
 
   const authInfo = await auth()
   const user_id = await getUserIdByEmail(authInfo?.user?.email!)
+  const user_line_id = await getUserLineIdByEmail(authInfo?.user?.email!)
   const lineToken = await completeAccountLink(user_id!);
   const linkUrl = `https://access.line.me/dialog/bot/accountLink?linkToken=${lineToken.link_token}&nonce=${lineToken.nonce}`  
 
@@ -19,7 +21,7 @@ export default async function Page() {
       <h1 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
         ダッシュボード
       </h1>
-      <p className='mb-4'>ようこそ{authInfo?.user?.name}さん！</p>
+      <p className='mb-4'>ようこそ{authInfo?.user?.name}さん🎉</p>
 
       {lineToken.link_token && lineToken.nonce &&
         <button className='my-4 p-3 rounded-md bg-emerald-500 text-white'><a href={linkUrl}>LINEアカウント連携を完了させる</a></button>
@@ -38,8 +40,9 @@ export default async function Page() {
             </div>
           </div>
           <div className="flex grow flex-col justify-between rounded-xl bg-gray-50 py-2 px-4">
-            <div className="bg-white px-6 py-3">
-              <span>LINE連携</span><span className='ml-10'>連携済み</span>
+            <div className="bg-white px-6 py-3 flex flex-row">
+              <span>LINE連携</span>
+              <span className='ml-10'>{user_line_id ? <div className='flex flex-row'>連携済み<CheckBadgeIcon className='w-5 text-green-500' /></div> : '未連携'}</span>
             </div>
           </div>
         </div>
