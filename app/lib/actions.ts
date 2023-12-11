@@ -7,6 +7,10 @@ import { redirect } from 'next/navigation';
 import { signIn } from '@/auth'
 import bcrypt from 'bcrypt';
 
+import { auth } from '@/auth';
+import { getUserIdByEmail } from '@/app/lib/data'
+
+
 export type State = {
   errors?: {
     customerId?: string[];
@@ -200,6 +204,9 @@ const CreateWatchitem = WatchitemSchema.omit({ id: true });
 
 export async function createWatchitem(prevState: WatchitemState, formData: FormData) {
 
+  const authInfo = await auth()
+  const user_id = await getUserIdByEmail(authInfo!.user!.email!);
+
   // Validate form using Zod
   const validatedFields = CreateWatchitem.safeParse({
     hotel_id: formData.get('hotel'),
@@ -215,11 +222,8 @@ export async function createWatchitem(prevState: WatchitemState, formData: FormD
     };
   }
  
-  // Prepare data for insertion into the database
   const { hotel_id, cid, basis } = validatedFields.data;
-  // const amountInCents = amount * 100;
-  const user_id = "410544b2-4001-4271-9855-fec4b6a6442a"
-  // const date = new Date().toISOString().split('T')[0];
+  // const user_id = "410544b2-4001-4271-9855-fec4b6a6442a"
  
   // Insert data into the database
   try {
