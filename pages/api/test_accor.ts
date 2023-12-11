@@ -23,9 +23,13 @@ type Log = {
     save_timestamp: string | null,
 }
 
+const dateOffset = 55;
+const capture_date_count = 1;
+
 const group_code = "accor";
 const country_code = "JP";
-
+const capture_date = new Date().toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit",day: "2-digit"}).replaceAll('/', '-');
+const capturedRates:Rate[] = [];
 let chrome = {};
 let puppeteer = {};
 let options = {};
@@ -40,11 +44,6 @@ let captureLog: Log = {
     capture_timestamp: "",
     save_timestamp: null,
 };
-const capturedRates:Rate[] = [];
-
-const capture_date = new Date().toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit",day: "2-digit"}).replaceAll('/', '-');
-const capture_date_count = 60;
-const dateOffset = 22;
 
 const captureRates = async (puppeteer: any, chrome:any={}, client:any) => {
 
@@ -69,7 +68,7 @@ const captureRates = async (puppeteer: any, chrome:any={}, client:any) => {
         options = {
             args: chrome.args,
             executablePath: await chrome.executablePath,
-            // headless: false,
+            headless: true,
             slowMo: 100,
         }
         // Local --------------------------------------------- //
@@ -77,7 +76,6 @@ const captureRates = async (puppeteer: any, chrome:any={}, client:any) => {
 
     // hotel_id, hotel_codeの対応表をDBからfetch
     const hotels = await fetchGroupHotels(group_code);
-    
     
     // 検索日の設定
     for (let dateNum = 0; dateNum < capture_date_count; dateNum++) {

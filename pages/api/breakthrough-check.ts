@@ -64,8 +64,8 @@ const lineMessaging = async (breakthroughList: Breakthrough[]) => {
         const messages = [{type: 'text', text: messageText}];
         
         try {
-            const mes = await client.pushMessage(bt.line_id,messages,true);
-            console.log(mes)
+            const mes = await client.pushMessage(bt.line_id,messages,false);
+            // console.log(mes)
             if (mes) messageCount += mes.sentMessages.length;
         } catch (error: any) {
             console.log(`LINE-MessagingError: ${error.statusMessage}`);

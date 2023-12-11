@@ -26,9 +26,13 @@ type Log = {
     save_timestamp: string | null,
 }
 
+const dateOffset = 0;
+const capture_date_count = 81;
+
 const group_code = "hyatt";
 const country_code = "JP";
-
+const capture_date = new Date().toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit",day: "2-digit"}).replaceAll('/', '-');
+const capturedRates:Rate[] = [];
 let captureLog: Log = {
     hotel_id: null,
     group_code,
@@ -40,11 +44,6 @@ let captureLog: Log = {
     capture_timestamp: "",
     save_timestamp: null,
 };
-const capturedRates:Rate[] = [];
-
-const capture_date = new Date().toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit",day: "2-digit"}).replaceAll('/', '-');
-const capture_date_count = 82;
-const dateOffset = 0;
 
 const captureRates = async (client:any) => {
 

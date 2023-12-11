@@ -1,5 +1,5 @@
 'use client';
-import { BackwardIcon,ForwardIcon } from "@heroicons/react/24/outline";
+import { BackwardIcon,ForwardIcon,ChevronLeftIcon,ChevronRightIcon } from "@heroicons/react/24/outline";
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
 
@@ -25,10 +25,6 @@ export default function Search({ months, cim }: { months: {cim:string}[], cim: s
   const monthIndex = months.map(m=>m.cim).indexOf(cim);
   const prevMonth = months[monthIndex - 1] ? months[monthIndex - 1].cim : "";
   const nextMonth = months[monthIndex + 1] ? months[monthIndex + 1].cim : "";
-  // const prevMonth = "2023-12"
-  // const nextMonth = "2023-12"
-
-
 
   return (
     <div className="relative flex flex-col flex-1 flex-shrink-0 mt-10 mb-2">
@@ -74,7 +70,7 @@ export default function Search({ months, cim }: { months: {cim:string}[], cim: s
       <div className="flex flex-row justify-between items-center mb-4 font-bold">
         <div className="flex flex-row items-center w-10 cursor-pointer">
           {prevMonth &&
-            <BackwardIcon className="w-10" onClick={() => handleSearch(prevMonth)} />
+            <ChevronLeftIcon className="w-10" onClick={() => handleSearch(prevMonth)} />
           }
           {/* <span className="w-1/2 text-center">前月</span> */}
         </div>
@@ -82,7 +78,7 @@ export default function Search({ months, cim }: { months: {cim:string}[], cim: s
         <div className="flex flex-row items-center w-10 cursor-pointer">
           {/* <span className="w-1/2 text-center">次月</span> */}
           {nextMonth &&
-            <ForwardIcon className="w-10" onClick={() => handleSearch(nextMonth)} />
+            <ChevronRightIcon className="w-10" onClick={() => handleSearch(nextMonth)} />
           }
         </div>
       </div>

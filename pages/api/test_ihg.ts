@@ -23,9 +23,14 @@ type Log = {
     save_timestamp: string | null,
 }
 
+const dateOffset = 0;
+const capture_date_count = 81;
+
 const group_code = "ihg";
 const country_code = "JP";
-
+const areas = ["Hokkaido","Central","Kyushu","Okinawa"];
+const capture_date = new Date().toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit",day: "2-digit"}).replaceAll('/', '-');
+const capturedRates:Rate[] = [];
 let chrome = {};
 let puppeteer = {};
 let options = {};
@@ -40,12 +45,7 @@ let captureLog: Log = {
     capture_timestamp: "",
     save_timestamp: null,
 };
-const capturedRates:Rate[] = [];
 
-const areas = ["Hokkaido","Central","Kyushu","Okinawa"];
-const capture_date = new Date().toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit",day: "2-digit"}).replaceAll('/', '-');
-const capture_date_count = 60;
-const dateOffset = 22;
 
 const captureRates = async (puppeteer: any, chrome:any={}, client:any) => {
 

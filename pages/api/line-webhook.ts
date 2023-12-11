@@ -41,7 +41,7 @@ export default async function handler(
                     "type": "button",
                     "action": {
                       "type": "uri",
-                      "label": "PuffinにログインしてLINEアカウントを連携する",
+                      "label": "Puffinログイン画面へ",
                       "uri": `https://nextjs-dashboard-202311.vercel.app/login?linkToken=${linkToken}`
                     }
                   }
