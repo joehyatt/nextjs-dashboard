@@ -1,8 +1,8 @@
-import Image from 'next/image';
 import { UpdateWatchitem, DeleteWatchitem } from '@/app/ui/watchlist/buttons';
 import WatchlistStatus from '@/app/ui/watchlist/status';
 import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
-import { fetchFilteredWatchlist, fetchAllWhatchlist } from '@/app/lib/data';
+import { fetchFilteredWatchlist } from '@/app/lib/data';
+import clsx from 'clsx';
 
 export default async function WatchlistTable(
   {
@@ -22,7 +22,12 @@ export default async function WatchlistTable(
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
           <div className="md:hidden">
             {watchlist?.map((watchitem) => (
-              <div key={watchitem.id} className="mb-3 w-full rounded-md bg-white p-4 flex flex-row" >
+              <div key={watchitem.id} className={clsx(
+                'mb-3 w-full rounded-md bg-white p-1 flex flex-row',
+                {
+                  'bg-red-100': watchitem.rate !== null && watchitem.basis > watchitem.rate
+                }
+                )} >
                 <div className="flex flex-col w-2/3 items-left justify-between">
                   <p className="text-lg">
                     {formatDateToLocal(watchitem.cid)}泊
@@ -77,7 +82,12 @@ export default async function WatchlistTable(
               {watchlist?.map((watchitem) => (
                 <tr
                   key={watchitem.id}
-                  className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
+                  className={clsx(
+                    'w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg',
+                    {
+                      'bg-red-100': watchitem.rate !== null && watchitem.basis > watchitem.rate
+                    }
+                  )}
                 >
                   <td className="whitespace-nowrap px-3 py-3">
                     {formatDateToLocal(watchitem.cid)}

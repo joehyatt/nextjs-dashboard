@@ -14,7 +14,7 @@ import clsx from 'clsx';
 const links = [
   { name: 'ホーム', href: '/dashboard', icon: HomeIcon },
   { name: '料金検索', href: '/dashboard/rates', icon: CurrencyYenIcon },
-  { name: 'ウォッチリスト', href: '/dashboard/watchlist', icon: EyeIcon },
+  // { name: 'ウォッチリスト', href: '/dashboard/watchlist', icon: EyeIcon },
 ];
 
 export default function NavLinks() {

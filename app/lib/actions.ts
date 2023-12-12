@@ -237,9 +237,9 @@ export async function createWatchitem(prevState: WatchitemState, formData: FormD
     };
   }
  
-  // Revalidate the cache for the watchlist page and redirect the user.
-  revalidatePath('/dashboard/watchlist');
-  redirect('/dashboard/watchlist');
+  // Revalidate the cache for the home page and redirect the user.
+  revalidatePath('/dashboard');
+  redirect('/dashboard');
 }
 
 const UpdateWatchitem = WatchitemEditSchema.omit({ id: true });
@@ -277,8 +277,8 @@ export async function updateWatchitem(
     return { message: 'Database Error: Failed to Update Watchitem.' };
   }
  
-  revalidatePath('/dashboard/watchlist');
-  redirect('/dashboard/watchlist');
+  revalidatePath('/dashboard');
+  redirect('/dashboard');
 }
 
 export async function deleteWatchitem(id: string) {

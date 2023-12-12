@@ -7,6 +7,9 @@ import { RevenueChartSkeleton, LatestInvoicesSkeleton, CardsSkeleton } from '@/a
 import { completeAccountLink, getUserIdByEmail, getUserLineIdByEmail } from '@/app/lib/data';
 import { auth } from '@/auth'
 import { CheckBadgeIcon } from '@heroicons/react/20/solid';
+import Table from '@/app/ui/watchlist/table';
+import { CreateWatchitem } from '@/app/ui/watchlist/buttons';
+
 
 export default async function Page() {
 
@@ -15,6 +18,7 @@ export default async function Page() {
   const user_line_id = await getUserLineIdByEmail(authInfo?.user?.email!)
   const lineToken = await completeAccountLink(user_id!);
   const linkUrl = `https://access.line.me/dialog/bot/accountLink?linkToken=${lineToken.link_token}&nonce=${lineToken.nonce}`  
+  const status = 'watching'
 
   return (
     <main>
@@ -26,6 +30,18 @@ export default async function Page() {
       {lineToken.link_token && lineToken.nonce &&
         <button className='my-4 p-3 rounded-md bg-emerald-500 text-white'><a href={linkUrl}>LINEアカウント連携を完了させる</a></button>
       }
+
+
+      <div className="w-full mt-10">
+        <div className="flex w-full items-center justify-between">
+            <h1 className={`${lusitana.className} text-2xl`}>ウォッチリスト</h1>
+        </div>
+        {/* <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
+            <CreateWatchitem />
+        </div> */}
+        <Table status={status} user_id = {user_id!} />
+      </div>
+
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mt-10">
         <div className="flex w-full flex-col md:col-span-4 lg:col-span-4">
           <h2 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>アカウント情報</h2>
