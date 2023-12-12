@@ -23,7 +23,7 @@ export default async function WatchlistTable(
           <div className="md:hidden">
             {watchlist?.map((watchitem) => (
               <div key={watchitem.id} className={clsx(
-                'mb-3 w-full rounded-md bg-white p-1 flex flex-row',
+                'mb-3 w-full rounded-md bg-white p-4 flex flex-row',
                 {
                   'bg-red-100': watchitem.rate !== null && watchitem.basis > watchitem.rate
                 }
