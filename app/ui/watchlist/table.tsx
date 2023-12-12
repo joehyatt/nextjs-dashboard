@@ -25,9 +25,10 @@ export default async function WatchlistTable(
               <div key={watchitem.id} className={clsx(
                 'mb-3 w-full rounded-md bg-white p-4 flex flex-row',
                 {
-                  'bg-red-100': watchitem.rate !== null && watchitem.basis > watchitem.rate
+                  'bg-red-200': watchitem.rate !== null && watchitem.basis > watchitem.rate
                 }
-                )} >
+                )}
+              >
                 <div className="flex flex-col w-2/3 items-left justify-between">
                   <p className="text-lg">
                     {formatDateToLocal(watchitem.cid)}泊
