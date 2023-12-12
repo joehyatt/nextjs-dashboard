@@ -23,8 +23,8 @@ type Log = {
     save_timestamp: string | null,
 }
 
-const dateOffset = 79;
-const capture_date_count = 1;
+const dateOffset = 0;
+const capture_date_count = 80;
 
 const group_code = "ihg";
 const country_code = "JP";

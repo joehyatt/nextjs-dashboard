@@ -17,10 +17,11 @@ export default function Search({ hotels, hotel_id }: { hotels?: HotelField[], ho
     if (term) {
       params.set('hotel_id', term);
       params.delete('cim');
+      params.delete('cid');
     } else {
       params.delete('hotel_id');
     }
-    replace(`${pathname}?${params.toString()}`);
+    replace(`${pathname}?${params.toString()}#calendar`);
   }, 500);
 
   return (

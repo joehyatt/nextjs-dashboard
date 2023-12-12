@@ -19,6 +19,7 @@ export default function Search({ groups, group_code }: { groups: GroupField[], g
       params.set('group_code', term);
       params.delete('hotel_id');
       params.delete('cim');
+      params.delete('cid');
     } else {
       params.delete('group_code');
     }

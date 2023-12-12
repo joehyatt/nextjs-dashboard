@@ -14,10 +14,11 @@ export default function Search({ months, cim }: { months: {cim:string}[], cim: s
     const params = new URLSearchParams(searchParams!);
     if (term) {
       params.set('cim', term);
+      params.delete('cid');
     } else {
       params.delete('cim');
     }
-    replace(`${pathname}?${params.toString()}`);
+    replace(`${pathname}?${params.toString()}#calendar`);
   }, 500);
 
 
@@ -27,7 +28,7 @@ export default function Search({ months, cim }: { months: {cim:string}[], cim: s
   const nextMonth = months[monthIndex + 1] ? months[monthIndex + 1].cim : "";
 
   return (
-    <div className="relative flex flex-col flex-1 flex-shrink-0 mt-10 mb-2">
+    <div id="calendar" className="relative flex flex-col flex-1 flex-shrink-0 mt-10 mb-2">
       {/* <label htmlFor="search" className="sr-only">
         Search
       </label> */}

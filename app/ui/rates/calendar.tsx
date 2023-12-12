@@ -1,23 +1,43 @@
+'use client'
+
 import React from "react";
 import { getMonth } from "@/app/lib/utils"
-
+import { useSearchParams, usePathname, useRouter } from 'next/navigation';
+import { useDebouncedCallback } from 'use-debounce';
 import { fetchFilteredRates } from '@/app/lib/data';
 import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
 import { showAlertModal, AlertModalManager } from "../alert-modal-manager";
 import clsx from 'clsx';
+import { RatesTable } from "@/app/lib/definitions";
 
-export default async function Calendar({
+export default function Calendar({
     hotel_id,
     cim,
+    rates,
   }: {
     hotel_id: string;
     cim: string;
+    rates: RatesTable[]
   }) {
 
+    // const searchParams = useSearchParams();
+    // const pathname = usePathname();
+    // const { replace } = useRouter();
+
+    // const handleOldRatesSearch = useDebouncedCallback((term) => {
+    //   console.log(`Searching... ${term}`);
+    //   const params = new URLSearchParams(searchParams!);
+    //   if (term) {
+    //     params.set('cid', term);
+    //   } else {
+    //     params.delete('cid');
+    //   }
+    //   replace(`${pathname}?${params.toString()}`);
+    // }, 100);
     
     const month1Digit = Number(cim.split("-")[1]);
     const currentMonth = getMonth(Number(cim.split("-")[0]),Number(cim.split("-")[1])-1);
-    const rates = await fetchFilteredRates(hotel_id,cim);
+    // const rates = await fetchFilteredRates(hotel_id,cim);
     
     currentMonth.map((row)=>{
         return row.map((day:any) => {
@@ -63,11 +83,32 @@ export const Month = (props: any) => {
 export const Day = (props:any) => {
     const { day, rowIdx, month1Digit } = props;
 
+    const searchParams = useSearchParams();
+    const pathname = usePathname();
+    const { replace } = useRouter();
+
+    const handleOldRatesSearch = useDebouncedCallback((term) => {
+      console.log(`Searching... ${term}`);
+      const params = new URLSearchParams(searchParams!);
+      if (term) {
+        params.set('cid', term);
+      } else {
+        params.delete('cid');
+      }
+      replace(`${pathname}?${params.toString()}#transition`);
+    }, 100);
+
     return (
-      <div className={clsx("border border-gray-200 flex flex-col",{
+      <div 
+        onClick={() => handleOldRatesSearch(day.format("YYYY-MM-DD"))}
+        className={clsx("border border-gray-200 flex flex-col",{
         'bg-gray-100 text-gray-400': day.$M+1 !== month1Digit,
-        'hover:bg-blue-100': day.$M+1 === month1Digit,
-      })}>
+        'hover:bg-blue-100 cursor-pointer': day.$M+1 === month1Digit,
+        })}
+        // onChange={(e) => {
+        //   handleOldRatesSearch(e.target.value);
+        // }}
+      >
         <header className="flex flex-col items-center">
           {/* 1行目に曜日を表示 */}
           {/* {rowIdx === 0 && <p className="text-sm mt-1">{day.format("ddd")}</p>} */}

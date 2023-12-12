@@ -27,7 +27,7 @@ type Log = {
 }
 
 const dateOffset = 0;
-const capture_date_count = 81;
+const capture_date_count = 111;
 
 const group_code = "hyatt";
 const country_code = "JP";

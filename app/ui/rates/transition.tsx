@@ -11,14 +11,16 @@ import {
     ResponsiveContainer,
 } from "recharts";
 
-export default function RateTransition({
-    oldRates
+export default function Transition({
+    oldRates,cid
 }: {
     oldRates: {capture_date: string, rate: number | null, exception: string | null}[];
+    cid: string
 }) {
     
     return (
-        <div style={{ width: '100%', height: 300 }}>
+        <div id="transition" className="mt-10 text-lg" style={{ width: '100%', height: 300 }}>
+            <h2>{} {cid} の価格推移</h2>
         <ResponsiveContainer>
         <LineChart
             width={600}
