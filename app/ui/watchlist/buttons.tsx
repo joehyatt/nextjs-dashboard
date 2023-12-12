@@ -18,7 +18,7 @@ export function UpdateWatchitem({ id }: { id: string }) {
   return (
     <Link
       href={`/dashboard/watchlist/${id}/edit`}
-      className="rounded-md border p-2 hover:bg-gray-100"
+      className="rounded-md border p-2 hover:bg-gray-100 w-10"
     >
       <PencilIcon className="w-5" />
     </Link>
@@ -29,7 +29,7 @@ export function DeleteWatchitem({ id }: { id: string }) {
   const deleteWatchitemWithId = deleteWatchitem.bind(null, id);
   return (
     <form action={deleteWatchitemWithId}>
-      <button className="rounded-md border p-2 hover:bg-gray-100">
+      <button className="rounded-md border p-2 hover:bg-gray-100 ml-2">
         <span className="sr-only">Delete</span>
         <TrashIcon className="w-5" />
       </button>

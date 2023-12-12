@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-  scroll-behavior: smooth;
-}
-
 input[type='number'] {
   -moz-appearance: textfield;
   appearance: textfield;

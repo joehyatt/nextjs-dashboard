@@ -223,7 +223,6 @@ export async function createWatchitem(prevState: WatchitemState, formData: FormD
   }
  
   const { hotel_id, cid, basis } = validatedFields.data;
-  // const user_id = "410544b2-4001-4271-9855-fec4b6a6442a"
  
   // Insert data into the database
   try {

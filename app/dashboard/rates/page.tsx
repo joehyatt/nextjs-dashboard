@@ -7,6 +7,7 @@ import HotelSelect from '@/app/ui/rates/hotel-select';
 import MonthSelect from '@/app/ui/rates/month-select';
 import Transition from '@/app/ui/rates/transition';
 import { fetchAllGroups, fetchAllHotels, fetchCapturedMonths, fetchFilteredRates, fetchOldRates } from '@/app/lib/data';
+import WatchlistForm from '@/app/ui/rates/watchlist-form';
 
 export const metadata: Metadata = {
     title: '料金検索',
@@ -42,7 +43,12 @@ export default async function Page({
         {group_code && <HotelSelect hotels={hotels} hotel_id={hotel_id} />}
         {months && months.length > 0 && <MonthSelect months={months} cim={cim}/>}
         {group_code && hotel_id && cim && rates && <Calendar hotel_id={hotel_id} cim={cim} rates={rates}/>}
-        {oldRates.length !== 0 && <Transition oldRates={oldRates} cid={cid}/>}
+        {oldRates.length !== 0 && 
+        <>
+            <Transition oldRates={oldRates} cid={cid}/>
+            <WatchlistForm hotel_id={hotel_id} cid={cid} />
+        </>
+        }
         {/* {group_code && hotel_id && cim ? <Table group_code={group_code} hotel_id={hotel_id} cim={cim} /> : <div></div>} */}
         </div>
     );
