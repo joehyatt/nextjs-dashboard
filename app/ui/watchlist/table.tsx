@@ -20,12 +20,18 @@ export default async function WatchlistTable(
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
-        <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
+        <div className="rounded-lg bg-gray-50 p-4 pt-8 md:pt-0">
           <div className="md:hidden">
             {watchlist?.map((watchitem) => (
               
-              <Link href={`/dashboard/watchlist/${watchitem.id}/edit`} key={watchitem.id} className="mb-3 w-full rounded-md bg-white p-4 flex flex-col">
-              
+              <Link 
+                href={`/dashboard/watchlist/${watchitem.id}/edit`} key={watchitem.id} 
+                className="mb-3 w-full rounded-md bg-white p-4 flex flex-col relative"
+              >
+                {/* <div className='absolute top-0 right-0 w-[89px] h-[91px] overflow-hidden'>
+                  <span className="inline-block absolute py-[7px] px-0 left-[-23px] top-[22px] w-[160px] text-center font-[18px] bg-[#ffa520] text-white rotate-45">NEW</span>
+                </div> */}
+      
                 <div className="flex flex-col h-1/2 items-left justify-between">
                   <p className="text-lg">
                     🗓&nbsp;{formatDateToLocal(watchitem.cid)}泊

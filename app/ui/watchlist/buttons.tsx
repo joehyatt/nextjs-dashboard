@@ -44,7 +44,7 @@ export function DeleteWatchitem2({ id }: { id: string }) {
   return (
     <form action={deleteWatchitemWithId}>
       <button className={clsx(
-        'flex mt-10 w-full h-10 items-center rounded-lg bg-red-500 px-4 text-sm font-medium text-white transition-colors hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500 active:bg-red-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50',
+        'flex mt-4 w-full h-10 justify-center items-center rounded-lg bg-red-500 px-4 text-sm font-medium text-white transition-colors hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500 active:bg-red-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50',
       )}>ウォッチリストから削除する</button>
     </form>
   );
