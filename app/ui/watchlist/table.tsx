@@ -3,6 +3,7 @@ import WatchlistStatus from '@/app/ui/watchlist/status';
 import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
 import { fetchFilteredWatchlist } from '@/app/lib/data';
 import clsx from 'clsx';
+import Link from 'next/link';
 
 export default async function WatchlistTable(
   {
@@ -22,34 +23,39 @@ export default async function WatchlistTable(
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
           <div className="md:hidden">
             {watchlist?.map((watchitem) => (
-              <div key={watchitem.id} className={clsx(
-                'mb-3 w-full rounded-md bg-white p-4 flex flex-row',
-                {
-                  'bg-red-200 font-bold': watchitem.rate !== null && watchitem.basis > watchitem.rate
-                }
-                )}
-              >
-                <div className="flex flex-col w-2/3 items-left justify-between">
+              
+              <Link href={`/dashboard/watchlist/${watchitem.id}/edit`} key={watchitem.id} className="mb-3 w-full rounded-md bg-white p-4 flex flex-col">
+              
+                <div className="flex flex-col h-1/2 items-left justify-between">
                   <p className="text-lg">
-                    {formatDateToLocal(watchitem.cid)}泊
+                    🗓&nbsp;{formatDateToLocal(watchitem.cid)}泊
                   </p>
                   <div className="mb-2 flex items-center">
-                    <p>{watchitem.hotel_name_jp}</p>
-                  </div>
-                  <div className="mb-2 flex items-center">
-                    <p>{formatCurrency(watchitem.basis)}</p>
+                    <p>🏨&nbsp;{watchitem.hotel_name_jp}</p>
                   </div>
                 </div>
-                <div className="flex w-1/3 flex-col items-center justify-between align-middle">
-                  <p className="text-xl font-medium align-middle">
-                    {watchitem.rate !== null ? formatCurrency(watchitem.rate) : watchitem.exception}
-                  </p>
-                  <div className='flex flex-row justify-between'>
+
+                <div className="flex h-1/2 flex-row items-center justify-between align-middle">
+                  <div className="flex flex-col w-1/2 items-center">
+                    <p className='text-xs'>基準価格</p>
+                    <p className='text-xl '>{formatCurrency(watchitem.basis)}</p>
+                  </div>
+                  <div className="flex flex-col w-1/2 items-center">
+                    <p className='text-xs'>最新価格</p>
+                    <p className={clsx(
+                      'text-xl',
+                      {
+                        'text-red-500': watchitem.rate !== null && watchitem.basis > watchitem.rate
+                      }
+                    )}>{watchitem.rate !== null ? formatCurrency(watchitem.rate) : watchitem.exception}</p>
+                  </div>
+                  {/* <div className='flex flex-row justify-between'>
                     <UpdateWatchitem id={watchitem.id} />
                     <DeleteWatchitem id={watchitem.id} />
-                  </div>
+                  </div> */}
                 </div>
-              </div>
+
+              </Link>
             ))}
           </div>
           {/* PC用表示 */}

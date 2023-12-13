@@ -284,13 +284,13 @@ export async function updateWatchitem(
 export async function deleteWatchitem(id: string) {
   try {
     await sql`DELETE FROM watchlist WHERE id = ${id}`;
-    revalidatePath('/dashboard/watchlist');
-    return { message: 'Deleted Watchitem.' };
+    // revalidatePath('/dashboard/watchlist');
+    // return { message: 'Deleted Watchitem.' };
   } catch (error) {
     return { message: 'Database Error: Failed to Delete Watchitem.' };
   }
-  // revalidatePath('/dashboard');
-  // redirect('/dashboard');
+  revalidatePath('/dashboard');
+  redirect('/dashboard');
 }
 
 export type HotelState = {

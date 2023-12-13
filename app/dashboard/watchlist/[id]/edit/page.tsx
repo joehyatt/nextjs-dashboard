@@ -3,6 +3,7 @@ import Breadcrumbs from '@/app/ui/watchlist/breadcrumbs';
 import Transition from '@/app/ui/rates/transition';
 import { fetchWatchitemById, fetchHotels, fetchOldRates, fetchHotelById } from '@/app/lib/data';
 import { notFound } from 'next/navigation';
+import { DeleteWatchitem2 } from '@/app/ui/watchlist/buttons';
  
 export default async function Page({ params }: { params: { id: string } }) {
     const id = params.id;
@@ -28,6 +29,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         />
         <Transition oldRates={oldRates} hotel_name_jp={hotel!.hotel_name_jp} cid={watchitem.cid}/>
         <Form watchitem={watchitem} />
+        <DeleteWatchitem2 id={id}/>
         </main>
     );
 }
