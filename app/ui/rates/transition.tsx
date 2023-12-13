@@ -10,6 +10,7 @@ import {
     Legend,
     ResponsiveContainer,
 } from "recharts";
+import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
 
 export default function Transition({
     oldRates,hotel_name_jp,cid
@@ -20,12 +21,12 @@ export default function Transition({
 }) {
     
     return (
-        <div id="transition" className="mt-16 text-lg" style={{ width: '100%', height: 300 }}>
-            <h2>
+        <div id="transition" className="mt-16 text-lg md:mb-36" style={{ width: '100%', height: 300 }}>
+            <div className="rounded-md bg-gray-50 p-4 md:p-6">
                 🏨&nbsp;{hotel_name_jp}
                 <br/>
-                🗓&nbsp;{cid}泊
-            </h2>
+                🗓&nbsp;{formatDateToLocal(cid)}泊
+            </div>
             <h2 className="mt-4">💹&nbsp;過去の価格推移</h2>
             <ResponsiveContainer>
                 <LineChart
@@ -33,19 +34,18 @@ export default function Transition({
                     height={300}
                     data={oldRates}
                     margin={{
-                        top: 50,
-                        right: 30,
-                        left: 30,
-                        bottom: 5,
+                        top: 30,
+                        right: 10,
+                        left: 10,
+                        bottom: 30,
                     }}
                 >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="capture_date" />
-                    <YAxis unit="円"/>
+                    <XAxis dataKey="capture_date" fontSize={14}/>
+                    <YAxis unit="円" fontSize={14}/>
                     <Tooltip />
                     {/* <Legend /> */}
-                    {/* <Line connectNulls type="monotone" dataKey="pv"/> */}
-                    <Line connectNulls dataKey="rate" stroke="#82ca9d" fill="#82ca9d" activeDot={{ r: 8 }}/>
+                    <Line connectNulls dataKey="rate" stroke="#2E6FEB" fill="#2E6FEB" activeDot={{ r: 8 }}/>
                 </LineChart>
             </ResponsiveContainer>
         </div>

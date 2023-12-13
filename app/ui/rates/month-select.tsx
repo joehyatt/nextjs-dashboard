@@ -68,7 +68,7 @@ export default function Search({ months, cim }: { months: {cim:string}[], cim: s
         ))}
       </select>
       <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" /> */}
-      <div className="flex flex-row justify-between items-center mb-4 font-bold">
+      <div className="flex flex-row justify-between items-center mb-4">
         <div className="flex flex-row items-center w-10 cursor-pointer">
           {prevMonth &&
             <ChevronLeftIcon className="w-10" onClick={() => handleSearch(prevMonth)} />
@@ -83,7 +83,7 @@ export default function Search({ months, cim }: { months: {cim:string}[], cim: s
           }
         </div>
       </div>
-      <div className="flex flex-row justify-between items-center mb-2 font-bold">
+      <div className="flex flex-row justify-between items-center mb-2">
         <p className="w-1/6 text-center text-red-500">日</p>
         <p className="w-1/6 text-center">月</p>
         <p className="w-1/6 text-center">火</p>

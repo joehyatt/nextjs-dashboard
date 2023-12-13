@@ -18,7 +18,7 @@ export default function EditWatchitemForm({
   const [state, dispatch] = useFormState(updateWatchitemWithId, initialState);
 
   return (
-    <form action={dispatch} className='mt-32'>
+    <form action={dispatch}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
 
         {/* Watchitem basis */}

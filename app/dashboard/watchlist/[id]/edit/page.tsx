@@ -1,7 +1,7 @@
 import Form from '@/app/ui/watchlist/edit-form';
 import Breadcrumbs from '@/app/ui/watchlist/breadcrumbs';
 import Transition from '@/app/ui/rates/transition';
-import { fetchWatchitemById, fetchHotels, fetchOldRates, fetchHotelById } from '@/app/lib/data';
+import { fetchWatchitemById, fetchOldRates, fetchHotelById } from '@/app/lib/data';
 import { notFound } from 'next/navigation';
 import { DeleteWatchitem2 } from '@/app/ui/watchlist/buttons';
  
