@@ -10,7 +10,9 @@ import {
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
+// import { DeleteWatchitem2 } from './buttons';
 import { updateWatchitem } from '@/app/lib/actions';
+
 
 export default function EditWatchitemForm({
   watchitem,
@@ -139,6 +141,7 @@ export default function EditWatchitemForm({
         >
           キャンセル
         </Link>
+        {/* <DeleteWatchitem2 id={watchitem.id} /> */}
         <Button type="submit">基準価格を変更する</Button>
       </div>
     </form>

@@ -20,7 +20,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             breadcrumbs={[
             // { label: 'ウォッチリスト', href: '/dashboard/watchlist' },
             {
-                label: '基準価格の変更',
+                label: 'ウォッチリストの編集',
                 href: `/dashboard/watchlist/${id}/edit`,
                 active: true,
             },

@@ -1,6 +1,7 @@
 import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { deleteWatchitem } from '@/app/lib/actions';
+import clsx from 'clsx';
 
 export function CreateWatchitem() {
   return (
@@ -36,3 +37,15 @@ export function DeleteWatchitem({ id }: { id: string }) {
     </form>
   );
 }
+
+// export function DeleteWatchitem2({ id }: { id: string }) {
+//   console.log(id)
+//   const deleteWatchitemWithId = deleteWatchitem.bind(null, id);
+//   return (
+//     <form action={deleteWatchitemWithId}>
+//       <button className={clsx(
+//         'flex h-10 items-center rounded-lg bg-red-500 px-4 text-sm font-medium text-white transition-colors hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500 active:bg-red-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50',
+//       )}>削除する</button>
+//     </form>
+//   );
+// }

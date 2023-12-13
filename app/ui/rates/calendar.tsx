@@ -4,9 +4,6 @@ import React from "react";
 import { getMonth } from "@/app/lib/utils"
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
-import { fetchFilteredRates } from '@/app/lib/data';
-import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
-import { showAlertModal, AlertModalManager } from "../alert-modal-manager";
 import clsx from 'clsx';
 import { RatesTable } from "@/app/lib/definitions";
 
@@ -19,21 +16,6 @@ export default function Calendar({
     cim: string;
     rates: RatesTable[]
   }) {
-
-    // const searchParams = useSearchParams();
-    // const pathname = usePathname();
-    // const { replace } = useRouter();
-
-    // const handleOldRatesSearch = useDebouncedCallback((term) => {
-    //   console.log(`Searching... ${term}`);
-    //   const params = new URLSearchParams(searchParams!);
-    //   if (term) {
-    //     params.set('cid', term);
-    //   } else {
-    //     params.delete('cid');
-    //   }
-    //   replace(`${pathname}?${params.toString()}`);
-    // }, 100);
     
     const month1Digit = Number(cim.split("-")[1]);
     const currentMonth = getMonth(Number(cim.split("-")[0]),Number(cim.split("-")[1])-1);
@@ -105,13 +87,8 @@ export const Day = (props:any) => {
         'bg-gray-100 text-gray-400': day.$M+1 !== month1Digit,
         'hover:bg-blue-100 cursor-pointer': day.$M+1 === month1Digit,
         })}
-        // onChange={(e) => {
-        //   handleOldRatesSearch(e.target.value);
-        // }}
       >
         <header className="flex flex-col items-center">
-          {/* 1行目に曜日を表示 */}
-          {/* {rowIdx === 0 && <p className="text-sm mt-1">{day.format("ddd")}</p>} */}
           <p className={"text-sm p-1 my-1 text-center"}>{day.format("DD")}</p>
         </header>
         <p className={"text-xs md:text-sm p-1 my-3 align-middle text-center"} >{day.$R}</p>

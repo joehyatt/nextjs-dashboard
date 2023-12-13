@@ -289,6 +289,8 @@ export async function deleteWatchitem(id: string) {
   } catch (error) {
     return { message: 'Database Error: Failed to Delete Watchitem.' };
   }
+  // revalidatePath('/dashboard');
+  // redirect('/dashboard');
 }
 
 export type HotelState = {
