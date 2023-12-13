@@ -1,35 +1,26 @@
 'use client';
 
 import { useFormState } from 'react-dom';
+import { useState } from 'react';
 import {
-  CurrencyYenIcon,
+  CurrencyYenIcon
 } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
 import { createWatchitem } from '@/app/lib/actions';
-// import { useSearchParams, usePathname, useRouter } from 'next/navigation';
-// import { useDebouncedCallback } from 'use-debounce';
 
-export default function WatchlistForm( {hotel_id, cid}: { 
+export default function WatchlistForm( {hotel_id, cid, latestRate}: { 
   hotel_id?: string, 
-  cid?: string
+  cid?: string,
+  latestRate?: number
 } ) {
-
-//   const today = new Date().toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit",day: "2-digit"}).replaceAll('/', '-');
 
   const initialState = { message: null, errors: {} };
   const [state, dispatch] = useFormState(createWatchitem, initialState);
+  const [basis, setBasis] = useState(latestRate)
 
-//   const searchParams = useSearchParams();
-//   const pathname = usePathname();
-//   const { replace } = useRouter();
-
-//   const handleBasisRate = useDebouncedCallback((term) => {
-//     const params = new URLSearchParams(searchParams!);
-//     if (term) {
-//       params.set('basis', term);
-//     }
-//     replace(`${pathname}?${params.toString()}`);
-//   }, 100);
+  const updateBasis = (e:any) => {
+    setBasis(e.target.value as number)
+  }
 
   return (
     <form action={dispatch} className='mt-32'>
@@ -39,7 +30,7 @@ export default function WatchlistForm( {hotel_id, cid}: {
         {/* Basis Rate */}
         <div className="mb-4">
           <label htmlFor="basis" className="mb-2 block text-sm font-medium">
-            アラート基準価格の設定
+            🔔&nbsp;アラート基準価格の設定
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
@@ -47,7 +38,7 @@ export default function WatchlistForm( {hotel_id, cid}: {
                 id="basis"
                 name="basis"
                 type="number"
-                defaultValue=""
+                value={basis}
                 step="1"
                 placeholder="基準価格を入力してください"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
@@ -56,6 +47,7 @@ export default function WatchlistForm( {hotel_id, cid}: {
               <CurrencyYenIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
           </div>
+          
           {state.errors?.basis ? (
             <div
               id="basis-error"
@@ -67,6 +59,12 @@ export default function WatchlistForm( {hotel_id, cid}: {
               ))}
             </div>
           ) : null}
+
+          <div className='flex w-full h-14 items-center'>
+            <span className='w-1/6 pr-2'>1000</span>
+            <input type="range" min={1000} max={latestRate} step={10} defaultValue={latestRate} className='w-full' onChange={updateBasis} />
+            <span className='w-1/6 pl-2'>{latestRate}</span>
+          </div>
         </div>
         
       </div>

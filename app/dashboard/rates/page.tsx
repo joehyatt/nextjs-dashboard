@@ -34,6 +34,7 @@ export default async function Page({
     const cid = searchParams?.cid || '';
     const oldRates = hotel_id && cid ? await fetchOldRates(hotel_id, cid) : [];
     const hotel = hotel_id && await fetchHotelById(hotel_id);
+    const latestRate = oldRates && oldRates.length > 0 && oldRates[oldRates.length -1].rate
 
     return (
         <div className="w-full">
@@ -47,7 +48,7 @@ export default async function Page({
         {oldRates.length !== 0 && hotel &&
         <>
             <Transition oldRates={oldRates} hotel_name_jp={hotel.hotel_name_jp} cid={cid}/>
-            <WatchlistForm hotel_id={hotel_id} cid={cid} />
+            <WatchlistForm hotel_id={hotel_id} cid={cid} latestRate={latestRate || 100000} />
         </>
         }
         {/* {group_code && hotel_id && cim ? <Table group_code={group_code} hotel_id={hotel_id} cim={cim} /> : <div></div>} */}
