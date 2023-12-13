@@ -21,8 +21,9 @@ export default function Search({ hotels, hotel_id }: { hotels?: HotelField[], ho
     } else {
       params.delete('hotel_id');
     }
-    replace(`${pathname}?${params.toString()}#calendar`);
-  }, 500);
+    replace(`${pathname}?${params.toString()}`);
+    
+  }, 100);
 
   return (
     <div className="relative flex flex-1 flex-shrink-0 mb-4">

@@ -6,7 +6,7 @@ import GroupSelect from '@/app/ui/rates/group-select';
 import HotelSelect from '@/app/ui/rates/hotel-select';
 import MonthSelect from '@/app/ui/rates/month-select';
 import Transition from '@/app/ui/rates/transition';
-import { fetchAllGroups, fetchAllHotels, fetchCapturedMonths, fetchFilteredRates, fetchOldRates } from '@/app/lib/data';
+import { fetchAllGroups, fetchAllHotels, fetchCapturedMonths, fetchFilteredRates, fetchOldRates, fetchHotelById } from '@/app/lib/data';
 import WatchlistForm from '@/app/ui/rates/watchlist-form';
 
 export const metadata: Metadata = {
@@ -33,6 +33,7 @@ export default async function Page({
     const rates = hotel_id && cim ? await fetchFilteredRates(hotel_id,cim) : [];
     const cid = searchParams?.cid || '';
     const oldRates = hotel_id && cid ? await fetchOldRates(hotel_id, cid) : [];
+    const hotel = hotel_id && await fetchHotelById(hotel_id);
 
     return (
         <div className="w-full">
@@ -43,9 +44,9 @@ export default async function Page({
         {group_code && <HotelSelect hotels={hotels} hotel_id={hotel_id} />}
         {months && months.length > 0 && <MonthSelect months={months} cim={cim}/>}
         {group_code && hotel_id && cim && rates && <Calendar hotel_id={hotel_id} cim={cim} rates={rates}/>}
-        {oldRates.length !== 0 && 
+        {oldRates.length !== 0 && hotel &&
         <>
-            <Transition oldRates={oldRates} cid={cid}/>
+            <Transition oldRates={oldRates} hotel_name_jp={hotel.hotel_name_jp} cid={cid}/>
             <WatchlistForm hotel_id={hotel_id} cid={cid} />
         </>
         }

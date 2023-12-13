@@ -23,7 +23,7 @@ type Log = {
     save_timestamp: string | null,
 }
 
-const dateOffset = 28;
+const dateOffset = 8;
 const capture_date_count = 1;
 
 const group_code = "accor";

@@ -113,6 +113,7 @@ export type WatchitemForm = {
 
 export type HotelForm = {
   id: string;
+  hotel_name_jp: string;
   capture_script: string;
   capture_month_count: number;
 };

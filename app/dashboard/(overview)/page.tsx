@@ -1,14 +1,14 @@
-import CardWrapper from '@/app/ui/dashboard/cards';
-import RevenueChart from '@/app/ui/dashboard/revenue-chart';
-import LatestInvoices from '@/app/ui/dashboard/latest-invoices';
+// import CardWrapper from '@/app/ui/dashboard/cards';
+// import RevenueChart from '@/app/ui/dashboard/revenue-chart';
+// import LatestInvoices from '@/app/ui/dashboard/latest-invoices';
 import { lusitana } from '@/app/ui/fonts';
-import { Suspense } from 'react';
-import { RevenueChartSkeleton, LatestInvoicesSkeleton, CardsSkeleton } from '@/app/ui/skeletons';
+// import { Suspense } from 'react';
+// import { RevenueChartSkeleton, LatestInvoicesSkeleton, CardsSkeleton } from '@/app/ui/skeletons';
 import { completeAccountLink, getUserIdByEmail, getUserLineIdByEmail } from '@/app/lib/data';
 import { auth } from '@/auth'
 import { CheckBadgeIcon } from '@heroicons/react/20/solid';
 import Table from '@/app/ui/watchlist/table';
-import { CreateWatchitem } from '@/app/ui/watchlist/buttons';
+// import { CreateWatchitem } from '@/app/ui/watchlist/buttons';
 
 
 export default async function Page() {
