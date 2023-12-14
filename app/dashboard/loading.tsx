@@ -1,13 +1,13 @@
-// import DashboardSkeleton from '@/app/ui/skeletons';
+import DashboardSkeleton from '@/app/ui/skeletons';
  
 export default function Loading() {
-  return (
-    <div className="flex justify-center" aria-label="読み込み中">
-  <div className="animate-spin h-10 w-10 border-4 border-blue-500 rounded-full border-t-transparent"></div>
-</div>
+  // return (
+//     <div className="flex justify-center" aria-label="読み込み中">
+//   <div className="animate-spin h-10 w-10 border-4 border-blue-500 rounded-full border-t-transparent"></div>
+// </div>
   // <div className="w-100% h-[60vh] flex justify-center items-center">
   //   <span className="text-center">Loading...</span>
   // </div>
-  );
-  // return <DashboardSkeleton />;
+  // );
+  return <DashboardSkeleton />;
 }

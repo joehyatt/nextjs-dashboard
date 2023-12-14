@@ -66,12 +66,12 @@ export default function WatchlistForm( {hotel_id, cid, latestRate}: {
           </div>
 
           <div className='flex w-full h-14 items-center'>
-            <span className='w-1/5 pr-5'>{formatCurrency(5000)}</span>
+            <span className='w-1/5 pr-5'>{formatCurrency(Math.round((latestRate!/3)/100)*100)}</span>
             <input 
               id="basis"
               name="basis"
               type="range" 
-              min={5000} max={latestRate} step={10} 
+              min={Math.round((latestRate!/3)/100)*100} max={latestRate} step={100} 
               defaultValue={latestRate} 
               className='w-full' 
               onChange={updateBasis} 

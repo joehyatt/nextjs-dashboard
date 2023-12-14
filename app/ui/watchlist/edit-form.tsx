@@ -18,7 +18,7 @@ export default function EditWatchitemForm({
   const initialState = { message: null, errors: {} };
   const updateWatchitemWithId = updateWatchitem.bind(null, watchitem.id);
   const [state, dispatch] = useFormState(updateWatchitemWithId, initialState);
-  const [basis, setBasis] = useState(latestRate)
+  const [basis, setBasis] = useState(watchitem.basis)
 
   const updateBasis = (e:any) => {
     setBasis(e.target.value as number)
@@ -63,13 +63,13 @@ export default function EditWatchitemForm({
           </div>
 
           <div className='flex w-full h-14 items-center'>
-            <span className='w-1/4 pr-2'>{formatCurrency(5000)}</span>
+            <span className='w-1/4 pr-2'>{formatCurrency(Math.round((latestRate!/3)/100)*100)}</span>
             <input 
               id="basis"
               name="basis"
               type="range" 
-              min={5000} max={latestRate} step={10} 
-              defaultValue={latestRate} 
+              min={Math.round((latestRate!/3)/100)*100} max={latestRate} step={100} 
+              defaultValue={watchitem.basis} 
               className='w-full' 
               onChange={updateBasis} 
             />
