@@ -24,7 +24,7 @@ type Log = {
 }
 
 const dateOffset = 0;
-const capture_date_count = 79;
+const capture_date_count = 109;
 
 const group_code = "ihg";
 const country_code = "JP";

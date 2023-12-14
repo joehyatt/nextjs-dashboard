@@ -1,21 +1,28 @@
 'use client';
 
 import { useFormState } from 'react-dom';
+import { useState } from 'react';
 import { WatchitemForm } from '@/app/lib/definitions';
-import { CurrencyDollarIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
 import { updateWatchitem } from '@/app/lib/actions';
-
+import { formatCurrency } from '@/app/lib/utils';
 
 export default function EditWatchitemForm({
-  watchitem
+  watchitem,
+  latestRate
 }: {
   watchitem: WatchitemForm;
+  latestRate? : number
 }) {
   const initialState = { message: null, errors: {} };
   const updateWatchitemWithId = updateWatchitem.bind(null, watchitem.id);
   const [state, dispatch] = useFormState(updateWatchitemWithId, initialState);
+  const [basis, setBasis] = useState(latestRate)
+
+  const updateBasis = (e:any) => {
+    setBasis(e.target.value as number)
+  }
 
   return (
     <form action={dispatch}>
@@ -23,7 +30,7 @@ export default function EditWatchitemForm({
 
         {/* Watchitem basis */}
         <div className="mb-4">
-          <label htmlFor="basis" className="mb-2 block text-sm font-medium">
+          {/* <label htmlFor="basis" className="mb-2 block text-sm font-medium">
             新しい基準価格
           </label>
           <div className="relative mt-2 rounded-md">
@@ -50,7 +57,24 @@ export default function EditWatchitemForm({
                 <p key={error}>{error}</p>
               ))}
             </div>
-          ) : null}
+          ) : null} */}
+          <div className='flex justify-center py-4'>
+            <p className='font-bold text-2xl'>{formatCurrency(basis!)}</p>
+          </div>
+
+          <div className='flex w-full h-14 items-center'>
+            <span className='w-1/4 pr-2'>{formatCurrency(5000)}</span>
+            <input 
+              id="basis"
+              name="basis"
+              type="range" 
+              min={5000} max={latestRate} step={10} 
+              defaultValue={latestRate} 
+              className='w-full' 
+              onChange={updateBasis} 
+            />
+            <span className='w-1/5 pl-2'>{formatCurrency(latestRate!)}</span>
+          </div>
         </div>
       </div>
       <div className="mt-6 flex flex-col gap-4">

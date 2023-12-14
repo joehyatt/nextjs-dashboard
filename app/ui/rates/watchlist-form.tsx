@@ -7,6 +7,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
 import { createWatchitem } from '@/app/lib/actions';
+import { formatCurrency } from '@/app/lib/utils';
 
 export default function WatchlistForm( {hotel_id, cid, latestRate}: { 
   hotel_id?: string, 
@@ -32,7 +33,7 @@ export default function WatchlistForm( {hotel_id, cid, latestRate}: {
           <label htmlFor="basis" className="mb-2 block text-sm font-medium">
             🔔&nbsp;アラート基準価格の設定
           </label>
-          <div className="relative mt-2 rounded-md">
+          {/* <div className="relative mt-2 rounded-md">
             <div className="relative">
               <input
                 id="basis"
@@ -46,9 +47,9 @@ export default function WatchlistForm( {hotel_id, cid, latestRate}: {
               />
               <CurrencyYenIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
-          </div>
+          </div> */}
           
-          {state.errors?.basis ? (
+          {/* {state.errors?.basis ? (
             <div
               id="basis-error"
               aria-live="polite"
@@ -58,12 +59,24 @@ export default function WatchlistForm( {hotel_id, cid, latestRate}: {
                 <p key={error}>{error}</p>
               ))}
             </div>
-          ) : null}
+          ) : null} */}
+
+          <div className='flex justify-center py-4'>
+            <p className='font-bold text-2xl'>{formatCurrency(basis!)}</p>
+          </div>
 
           <div className='flex w-full h-14 items-center'>
-            <span className='w-1/6 pr-2'>1000</span>
-            <input type="range" min={1000} max={latestRate} step={10} defaultValue={latestRate} className='w-full' onChange={updateBasis} />
-            <span className='w-1/6 pl-2'>{latestRate}</span>
+            <span className='w-1/5 pr-5'>{formatCurrency(5000)}</span>
+            <input 
+              id="basis"
+              name="basis"
+              type="range" 
+              min={5000} max={latestRate} step={10} 
+              defaultValue={latestRate} 
+              className='w-full' 
+              onChange={updateBasis} 
+            />
+            <span className='w-1/5 pl-3'>{formatCurrency(latestRate!)}</span>
           </div>
         </div>
         

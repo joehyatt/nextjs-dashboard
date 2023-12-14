@@ -14,6 +14,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
     const hotel = await fetchHotelById(watchitem.hotel_id);
     const oldRates = await fetchOldRates(watchitem.hotel_id, watchitem.cid)
+    const latestRate = oldRates && oldRates.length > 0 && oldRates[oldRates.length -1].rate
       
     return (
         <main>
@@ -28,7 +29,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             ]}
         />
         <Transition oldRates={oldRates} hotel_name_jp={hotel!.hotel_name_jp} cid={watchitem.cid}/>
-        <Form watchitem={watchitem} />
+        <Form watchitem={watchitem} latestRate={latestRate || 100000} />
         <DeleteWatchitem2 id={id}/>
         </main>
     );
