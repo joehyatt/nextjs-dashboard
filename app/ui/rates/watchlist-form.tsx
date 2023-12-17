@@ -33,7 +33,7 @@ export default function WatchlistForm( {hotel_id, cid, latestRate}: {
           </label>
 
           <div className='flex justify-center py-4'>
-            <p className='font-bold text-2xl'>{formatCurrency(Math.round(basis!/100)*100)}</p>
+            <p className='font-bold text-2xl'>{basis > latestRate! ? formatCurrency(Math.round(latestRate!/100)*100) : formatCurrency(Math.round(basis!/100)*100)}</p>
           </div>
 
           <div className='flex w-full h-14 items-center'>

@@ -58,6 +58,11 @@ export default function EditWatchitemForm({
               ))}
             </div>
           ) : null} */}
+
+          <label htmlFor="basis" className="mb-2 block text-sm font-medium">
+            🔔&nbsp;アラート基準価格の変更
+          </label>
+
           <div className='flex justify-center py-4'>
             <p className='font-bold text-2xl'>{formatCurrency(basis!)}</p>
           </div>
@@ -68,13 +73,18 @@ export default function EditWatchitemForm({
               id="basis"
               name="basis"
               type="range" 
-              min={Math.round((latestRate!/3)/100)*100} max={latestRate} step={100} 
+              min={Math.round((latestRate!/3)/100)*100} max={Math.round(latestRate!/100)*100} step={100} 
               defaultValue={watchitem.basis} 
               className='w-full' 
               onChange={updateBasis} 
             />
-            <span className='w-1/5 pl-2'>{formatCurrency(latestRate!)}</span>
+            <span className='w-1/5 pl-2'>{formatCurrency(Math.round(latestRate!/100)*100!)}</span>
           </div>
+
+          <div className='flex justify-center'>
+            <p className='text-sm'>最新価格：{formatCurrency(latestRate!)}</p>
+          </div>
+
         </div>
       </div>
       <div className="mt-6 flex flex-col gap-4">
