@@ -12,9 +12,10 @@ export default function WatchlistForm( {hotel_id, cid, latestRate}: {
   latestRate?: number
 } ) {
 
+  
   const initialState = { message: null, errors: {} };
   const [state, dispatch] = useFormState(createWatchitem, initialState);
-  const [basis, setBasis] = useState(latestRate)
+  const [basis, setBasis] = useState(Math.round(latestRate!/100)*100)
 
   const updateBasis = (e:any) => {
     setBasis(e.target.value as number)
@@ -30,36 +31,9 @@ export default function WatchlistForm( {hotel_id, cid, latestRate}: {
           <label htmlFor="basis" className="mb-2 block text-sm font-medium">
             🔔&nbsp;アラート基準価格の設定
           </label>
-          {/* <div className="relative mt-2 rounded-md">
-            <div className="relative">
-              <input
-                id="basis"
-                name="basis"
-                type="number"
-                value={basis}
-                step="1"
-                placeholder="基準価格を入力してください"
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                aria-describedby="basis-error"
-              />
-              <CurrencyYenIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
-            </div>
-          </div> */}
-          
-          {/* {state.errors?.basis ? (
-            <div
-              id="basis-error"
-              aria-live="polite"
-              className="mt-2 text-sm text-red-500"
-            >
-              {state.errors.basis.map((error: string) => (
-                <p key={error}>{error}</p>
-              ))}
-            </div>
-          ) : null} */}
 
           <div className='flex justify-center py-4'>
-            <p className='font-bold text-2xl'>{formatCurrency(basis!)}</p>
+            <p className='font-bold text-2xl'>{formatCurrency(Math.round(basis!/100)*100)}</p>
           </div>
 
           <div className='flex w-full h-14 items-center'>
@@ -68,12 +42,16 @@ export default function WatchlistForm( {hotel_id, cid, latestRate}: {
               id="basis"
               name="basis"
               type="range" 
-              min={Math.round((latestRate!/3)/100)*100} max={latestRate} step={100} 
+              min={Math.round((latestRate!/3)/100)*100} max={Math.round(latestRate!/100)*100} step={100} 
               defaultValue={latestRate} 
               className='w-full' 
               onChange={updateBasis} 
             />
-            <span className='w-1/5 pl-3'>{formatCurrency(latestRate!)}</span>
+            <span className='w-1/5 pl-3'>{formatCurrency(Math.round(latestRate!/100)*100)}</span>
+          </div>
+
+          <div className='flex justify-center'>
+            <p className='text-sm'>最新価格：{formatCurrency(latestRate!)}</p>
           </div>
         </div>
         
