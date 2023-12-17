@@ -3,7 +3,6 @@
 import { HotelField } from '@/app/lib/definitions';
 import { BuildingOfficeIcon } from '@heroicons/react/24/outline';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
-import { useDebouncedCallback } from 'use-debounce';
 
 export default function Search({ hotels, hotel_id }: { hotels?: HotelField[], hotel_id?: string }) {
 
@@ -11,7 +10,7 @@ export default function Search({ hotels, hotel_id }: { hotels?: HotelField[], ho
   const pathname = usePathname();
   const { replace } = useRouter();
 
-  const handleSearch = useDebouncedCallback((term) => {
+  const handleSearch = (term:string) => {
     console.log(`Searching... ${term}`);
     const params = new URLSearchParams(searchParams!);
     if (term) {
@@ -21,9 +20,9 @@ export default function Search({ hotels, hotel_id }: { hotels?: HotelField[], ho
     } else {
       params.delete('hotel_id');
     }
-    replace(`${pathname}?${params.toString()}`);
+    replace(`${pathname}?${params.toString()}#calendar`);
     
-  }, 100);
+  };
 
   return (
     <div className="relative flex flex-1 flex-shrink-0 mb-4">

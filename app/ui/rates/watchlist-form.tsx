@@ -2,9 +2,6 @@
 
 import { useFormState } from 'react-dom';
 import { useState } from 'react';
-import {
-  CurrencyYenIcon
-} from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
 import { createWatchitem } from '@/app/lib/actions';
 import { formatCurrency } from '@/app/lib/utils';

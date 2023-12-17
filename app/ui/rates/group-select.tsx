@@ -12,7 +12,7 @@ export default function Search({ groups, group_code }: { groups: GroupField[], g
   const { replace } = useRouter();
   
 
-  const handleSearch = useDebouncedCallback((term) => {
+  const handleSearch = (term: string) => {
     console.log(`Searching... ${term}`);
     const params = new URLSearchParams(searchParams!);
     if (term) {
@@ -24,7 +24,7 @@ export default function Search({ groups, group_code }: { groups: GroupField[], g
       params.delete('group_code');
     }
     replace(`${pathname}?${params.toString()}`);
-  }, 100);
+  };
 
   return (
     <div className="relative flex flex-1 flex-shrink-0 mb-4">
