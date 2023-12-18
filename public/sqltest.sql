@@ -41,6 +41,7 @@ UPDATE users SET link_token = ${linkToken} WHERE email = ${email}
 UPDATE hotels SET capture_script = ${linkToken} WHERE id = ${email}
 
 UPDATE users SET line_id = null, link_token = null, nonce = null  WHERE email = 'user@nextmail.com';
+UPDATE hotels SET country_code = "MY" WHERE country_code = "my"
 
 -- ユーザー追加
 INSERT INTO users (name, email, password) VALUES ('Test', 'test@nextmail.com', '$2b$10$fumaJC.VIR/NyWzWnJy3m.W/WRkJ.O49CwcDcxd8kIFESG2gVvHB6');
@@ -79,6 +80,7 @@ ALTER TABLE hotels ADD COLUMN capture_script VARCHAR(50);
 ALTER TABLE hotels ADD COLUMN capture_month_count INT NOT NULL DEFAULT 2; 
 ALTER TABLE logs ADD COLUMN group_code VARCHAR(20);
 ALTER TABLE logs ADD COLUMN captured_hotels INT;
+ALTER TABLE hotels ADD COLUMN country_code VARCHAR(2);
 
 -- カラム名変更
 ALTER TABLE rates RENAME COLUMN is_soldout TO exception;

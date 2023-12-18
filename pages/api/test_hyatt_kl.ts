@@ -26,11 +26,11 @@ type Log = {
     save_timestamp: string | null,
 }
 
-const dateOffset = 0;
-const capture_date_count = 105;
+const dateOffset = 126;
+const capture_date_count = 30;
 
 const group_code = "hyatt";
-const country_code = "JP";
+const country_code = "MY";
 const capture_date = new Date().toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit",day: "2-digit"}).replaceAll('/', '-');
 const capturedRates:Rate[] = [];
 let captureLog: Log = {
@@ -57,7 +57,7 @@ const captureRates = async (client:any) => {
         const cid = new Date(new Date().setDate(new Date().getDate() + dateOffset + dateNum)).toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit",day: "2-digit"}).replaceAll('/', '-');
 
         // 検索URL決定
-        const searchFilename = `hyatt_${cid}.html`;
+        const searchFilename = `hyatt_kl_${cid}.html`;
         console.log(`Start capturing ${cid} rates...`);
 
         try{

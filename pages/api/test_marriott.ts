@@ -24,7 +24,7 @@ type Log = {
 }
 
 const dateOffset = 0;
-const capture_date_count = 106;
+const capture_date_count = 105;
 
 const group_code = "marriott";
 const country_code = "JP";

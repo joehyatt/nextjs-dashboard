@@ -9,28 +9,28 @@ async function seedHotels(client) {
     try {
     await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`; 
       // Create the "hotels" table if it doesn't exist
-      const createTable = await client.sql`
-        CREATE TABLE IF NOT EXISTS hotels (
-            id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-            group_code VARCHAR(10) NOT NULL,
-            group_name_jp VARCHAR(50) NOT NULL,
-            group_name_en VARCHAR(50) NOT NULL,
-            brand_code VARCHAR(10) NOT NULL,
-            brand_name_jp VARCHAR(50) NOT NULL,
-            brand_name_en VARCHAR(50) NOT NULL,
-            hotel_code VARCHAR(10) NOT NULL UNIQUE,
-            hotel_name_jp VARCHAR(255) NOT NULL UNIQUE,
-            hotel_name_en VARCHAR(255) NOT NULL UNIQUE
-        );
-      `;
-      console.log(`Created "hotels" table`);
+      // const createTable = await client.sql`
+      //   CREATE TABLE IF NOT EXISTS hotels (
+      //       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+      //       group_code VARCHAR(10) NOT NULL,
+      //       group_name_jp VARCHAR(50) NOT NULL,
+      //       group_name_en VARCHAR(50) NOT NULL,
+      //       brand_code VARCHAR(10) NOT NULL,
+      //       brand_name_jp VARCHAR(50) NOT NULL,
+      //       brand_name_en VARCHAR(50) NOT NULL,
+      //       hotel_code VARCHAR(10) NOT NULL UNIQUE,
+      //       hotel_name_jp VARCHAR(255) NOT NULL UNIQUE,
+      //       hotel_name_en VARCHAR(255) NOT NULL UNIQUE
+      //   );
+      // `;
+      // console.log(`Created "hotels" table`);
   
       // Insert data into the "hotels" table
       const insertedHotels = await Promise.all(
         hotels.map(
           (hotel) => client.sql`
-            INSERT INTO hotels (group_code, group_name_jp, group_name_en, brand_code, brand_name_jp, brand_name_en, hotel_code, hotel_name_jp, hotel_name_en)
-            VALUES (${hotel.group_code}, ${hotel.group_name_jp}, ${hotel.group_name_en}, ${hotel.brand_code}, ${hotel.brand_name_jp}, ${hotel.brand_name_en}, ${hotel.hotel_code}, ${hotel.hotel_name_jp}, ${hotel.hotel_name_en})
+            INSERT INTO hotels (country_code,group_code, group_name_jp, group_name_en, brand_code, brand_name_jp, brand_name_en, hotel_code, hotel_name_jp, hotel_name_en)
+            VALUES (${hotel.country_code}, ${hotel.group_code}, ${hotel.group_name_jp}, ${hotel.group_name_en}, ${hotel.brand_code}, ${hotel.brand_name_jp}, ${hotel.brand_name_en}, ${hotel.hotel_code}, ${hotel.hotel_name_jp}, ${hotel.hotel_name_en})
             ON CONFLICT (id) DO NOTHING;
         `,
         ),
@@ -39,7 +39,7 @@ async function seedHotels(client) {
       console.log(`Seeded ${insertedHotels.length} hotels`);
   
       return {
-        createTable,
+        // createTable,
         hotels: insertedHotels,
       };
     } catch (error) {

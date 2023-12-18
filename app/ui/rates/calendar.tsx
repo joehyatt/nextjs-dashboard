@@ -71,6 +71,12 @@ export const Day = (props:any) => {
 
     const handleOldRatesSearch = useDebouncedCallback((term) => {
       console.log(`Searching... ${term}`);
+
+      const today = new Date().toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit",day: "2-digit"}).replaceAll('/', '-');
+
+      if (term < today) return;
+      if (Number(term.split("-")[1]) !== month1Digit) return;
+
       const params = new URLSearchParams(searchParams!);
       if (term) {
         params.set('cid', term);

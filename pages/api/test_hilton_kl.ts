@@ -23,12 +23,12 @@ type Log = {
     save_timestamp: string | null,
 }
 
-const dateOffset = 0;
-const capture_date_count = 105;
+const dateOffset = 126;
+const capture_date_count = 30;
 
-const group_code = "ihg";
+const group_code = "hilton";
 const country_code = "JP";
-const areas = ["Hokkaido","Central","Kyushu","Okinawa"];
+const areas = ["Kuala%20Lumpur"];
 const capture_date = new Date().toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit",day: "2-digit"}).replaceAll('/', '-');
 const capturedRates:Rate[] = [];
 let chrome = {};
@@ -36,8 +36,8 @@ let puppeteer = {};
 let options = {};
 let captureLog: Log = {
     hotel_id: null,
-    group_code,
-    country_code,
+    group_code: group_code,
+    country_code: country_code,
     cid: null,
     capture_month: null,
     captured_hotels: null,
@@ -70,7 +70,7 @@ const captureRates = async (puppeteer: any, chrome:any={}, client:any) => {
         options = {
             args: chrome.args,
             executablePath: await chrome.executablePath,
-            headless: true,
+            // headless: false,
             slowMo: 100,
         }
         // Local --------------------------------------------- //
@@ -78,7 +78,6 @@ const captureRates = async (puppeteer: any, chrome:any={}, client:any) => {
 
     // hotel_id, hotel_codeの対応表をDBからfetch
     const hotels = await fetchGroupHotels(group_code);
-    
     
     // 検索日の設定
     for (let dateNum = 0; dateNum < capture_date_count; dateNum++) {
@@ -89,48 +88,50 @@ const captureRates = async (puppeteer: any, chrome:any={}, client:any) => {
         let capturedRatesByDate: Rate[] = [];
         
         const cid = new Date(new Date().setDate(new Date().getDate() + dateOffset + dateNum)).toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit",day: "2-digit"}).replaceAll('/', '-');
-        const qCiD = String(new Date(new Date().setDate(new Date().getDate() + dateOffset + dateNum)).getDate());
-        const qCiMy = String(new Date(new Date().setDate(new Date().getDate() + dateOffset + dateNum)).getMonth()) + String(new Date(new Date().setDate(new Date().getDate() + dateOffset + dateNum)).getFullYear());
-        const qCoD = String(new Date(new Date().setDate(new Date().getDate() + dateOffset + dateNum + 1)).getDate());
-        const qCoMy = String(new Date(new Date().setDate(new Date().getDate() + dateOffset + dateNum + 1)).getMonth()) + String(new Date(new Date().setDate(new Date().getDate() + dateOffset + dateNum + 1)).getFullYear());
+        const cod = new Date(new Date().setDate(new Date().getDate() + dateOffset + dateNum + 1)).toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit",day: "2-digit"}).replaceAll('/', '-');
 
         try{
+
             for (let areaNum = 0; areaNum < areas.length; areaNum++) {
                 const area = areas[areaNum];
-                // 検索URL決定
-                const searchUrl = `https://www.ihg.com/hotels/us/en/find-hotels/hotel-search?qDest=Japan%20-%20${area}%20area&qCiD=${qCiD}&qCiMy=${qCiMy}&qCoD=${qCoD}&qCoMy=${qCoMy}`;
+
+                // 検索URL決定  
+                const searchUrl = `https://www.hilton.com/en/search/?query=${area},%20MY&arrivalDate=${cid}&departureDate=${cod}`
                 
                 console.log(`Start capturing ${group_code} : ${area} : ${cid} rates...`);
                 
                 await page.goto(searchUrl,{ timeout:0 });
-                await page.mouse.wheel({deltaY: 5000});
-                await page.waitForSelector("hotel-card-list-view hotel-cta-selection app-hotel-card-selection app-hotel-price app-hotel-cash > div > div.price.d-block", { timeout: 30000 });
+                await page.waitForSelector("h2[data-testid='numberOfHotelsShowing'] > span", { timeout: 30000 });
+                await page.mouse.wheel({deltaY: 4000});
+                await page.waitForSelector("p[data-testid='priceInfo']", { timeout: 30000 });
 
                 const rate_list: Rate[]  = await page.evaluate((cid: string, capture_date: string, hotels:{id:string,hotel_code:string}[])=>{
                     const rateByHotels:Rate[] = [];
-                    const hotel_node_list = Array.from(document.querySelectorAll("hotel-card-list-view > div.hotel-card-list-view-container"));
+                    const hotel_node_list = Array.from(document.querySelectorAll("li[data-testid*='hotel-card-']"));
                     
                     for (let h = 0; h < hotel_node_list.length; h++) {
                         let rate = null;
                         let exception = null;
-                        const hotel_code = hotel_node_list[h].id!;
-                        if (hotel_node_list[h].querySelector("hotel-cta-selection app-hotel-card-selection app-hotel-price app-hotel-cash > div > div.price.d-block")) {
-                            rate = Number(hotel_node_list[h].querySelector("hotel-cta-selection app-hotel-card-selection app-hotel-price app-hotel-cash > div > div.price.d-block")!.textContent!.trim().replace(",",""));
-                        } else if (hotel_node_list[h].querySelector("div.availability-message")) {
-                            exception = "Sold Out"
-                        } else {
-                            // throw new Error("Invalid Rate");
-                            exception = "other"
-                        }
+                        const hotel_code = hotel_node_list[h].getAttribute("data-testid")!.replace("hotel-card-","");
+                        if (hotel_node_list[h].querySelector("p[data-testid='priceInfo']")) {
+                            if (hotel_node_list[h].querySelector("p[data-testid='priceInfo']")?.textContent === "Coming Soon") {
+                                exception = "Opening Soon";
+                            } else if (hotel_node_list[h].querySelector("p[data-testid='priceInfo']")?.textContent === "Sold Out") {
+                                exception = "Sold Out";
+                            } else {
+                                rate = Number(hotel_node_list[h].querySelector("p[data-testid='priceInfo']")!.textContent!.replace("RM ","").replaceAll(",",""));
+                            }    
+                        } 
+                        
                         if (hotels!.find(hotel => hotel.hotel_code === hotel_code)) {
                             const hotel_id = hotels!.find(hotel => hotel.hotel_code === hotel_code)!.id
                             rateByHotels.push({hotel_id,cid,rate,exception,capture_date});
                         }
                     }
                     return rateByHotels
-                },cid,capture_date,hotels)
-
-                console.log(`${rate_list.length} captured!`);
+                },cid,capture_date,hotels);
+                // console.log(rate_list);
+                console.log(`${rate_list.length} captured`);
     
                 // capturedRatesに日毎のRatesを格納
                 capturedRatesByDate.push(...rate_list);
@@ -139,8 +140,10 @@ const captureRates = async (puppeteer: any, chrome:any={}, client:any) => {
 
             // log
             const soldOutCount = capturedRatesByDate.filter(rate=>rate.exception === "Sold Out").length
+            const openingSoonCount = capturedRatesByDate.filter(rate=>rate.exception === "Opening Soon").length
             console.log("Capture Success!")
-            console.log(`Captured ${capturedRatesByDate.length} Hotels (SoldOut: ${soldOutCount})`);
+            console.log(`Captured ${capturedRatesByDate.length} Hotels (SoldOut: ${soldOutCount}, OpeningSoon: ${openingSoonCount})`);
+
             const capture_timestamp = new Date().toISOString().replace("T"," ").slice(0,-5);
             captureLog = {group_code, country_code, hotel_id: null, capture_month: null, cid, result: 'success', captured_hotels: capturedRatesByDate.length, capture_timestamp, save_timestamp: null };
             // save
