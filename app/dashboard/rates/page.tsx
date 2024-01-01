@@ -54,7 +54,7 @@ export default async function Page({
     return (
         <div className="w-full">
         <div className="flex w-full items-center justify-between mb-10">
-            <h1 className={`${lusitana.className} text-lg`}>🔎&nbsp;料金検索</h1>
+            <h1 className={`${lusitana.className} text-lg`}>🔍&nbsp;料金検索</h1>
         </div>
 
 
@@ -69,11 +69,10 @@ export default async function Page({
             <Pagination totalPages={totalPages} />
         </div>
 
+        
+        {/* <GroupSelect groups={groups} group_code={group_code}/> */}
+        {/* {group_code && <HotelSelect hotels={hotels} hotel_id={hotel_id} />} */}
 
-
-        <div className='h-10 my-10'></div>
-        <GroupSelect groups={groups} group_code={group_code}/>
-        {group_code && <HotelSelect hotels={hotels} hotel_id={hotel_id} />}
         {months && months.length > 0 && <MonthSelect months={months} cim={cim}/>}
         {group_code && hotel_id && cim && rates && <Calendar hotel_id={hotel_id} cim={cim} rates={rates}/>}
         {oldRates.length !== 0 && hotel &&

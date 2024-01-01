@@ -16,6 +16,10 @@ export default function Search({ placeholder }: { placeholder: string }) {
     params.set('page', '1');
     if (term) {
       params.set('query', term);
+      params.delete('group_code');
+      params.delete('hotel_id');
+      params.delete('cim');
+      params.delete('cid');
     } else {
       params.delete('query');
     }
@@ -28,7 +32,7 @@ export default function Search({ placeholder }: { placeholder: string }) {
         Search
       </label>
       <input
-        className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+        className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-lg outline-2 placeholder:text-gray-500"
         placeholder={placeholder}
         onChange={(e) => {
           handleSearch(e.target.value);

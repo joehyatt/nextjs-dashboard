@@ -1,31 +1,36 @@
 'use client';
 
-import Image from 'next/image';
+// import Image from 'next/image';
 import { UpdateInvoice, DeleteInvoice } from '@/app/ui/invoices/buttons';
 import InvoiceStatus from '@/app/ui/invoices/status';
 import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
 import { HotelsTable } from '@/app/lib/definitions';
 // import { fetchFilteredHotels } from '@/app/lib/data';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
-
+import clsx from 'clsx';
 export default function HotelsTable({hotels}: {hotels: HotelsTable[]}) {
 //   const hotels = await fetchFilteredHotels(query, currentPage);
 
     const searchParams = useSearchParams();
     const pathname = usePathname();
     const { replace } = useRouter();
+    const params = new URLSearchParams(searchParams!);
 
     const handleSearch = (group_code:string, hotel_id:string) => {
-    console.log(`Searching... ${hotel_id}`);
-    const params = new URLSearchParams(searchParams!);
-    if (group_code) {
-        params.set('group_code', group_code);
-        params.set('hotel_id', hotel_id);
-    } else {
-        params.delete('group_code');
-        params.delete('hotel_id');
-    }
-    replace(`${pathname}?${params.toString()}#calendar`);
+        console.log(`Searching... ${hotel_id}`);
+        console.log(`param hotel_id... ${params.get('hotel_id')}`)
+        if (group_code && hotel_id) {
+            params.set('group_code', group_code);
+            params.set('hotel_id', hotel_id);
+            params.delete('cim');
+            params.delete('cid');
+        } else {
+            params.delete('group_code');
+            params.delete('hotel_id');
+            params.delete('cim');
+            params.delete('cid');
+        }
+        replace(`${pathname}?${params.toString()}`);
     };
 
   return (
@@ -36,7 +41,13 @@ export default function HotelsTable({hotels}: {hotels: HotelsTable[]}) {
             {hotels?.map((hotel) => (
               <div
                 key={hotel.id}
-                className="mb-2 w-full rounded-md bg-white p-2"
+                className={clsx(
+                    "mb-2 w-full rounded-md bg-white p-2",
+                    {
+                        'bg-[#F66C16]':  hotel.id === params.get('hotel_id'),
+                    }
+                )}
+                // className="mb-2 w-full rounded-md bg-white p-2"
                 onClick={() => handleSearch(hotel.group_code,hotel.id)}
               >
                 <div className="flex items-center justify-between">
@@ -60,7 +71,13 @@ export default function HotelsTable({hotels}: {hotels: HotelsTable[]}) {
               {hotels?.map((hotel) => (
                 <tr
                   key={hotel.id}
-                  className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
+                  className={clsx(
+                    "w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg",
+                    {
+                        'bg-red-500 text-red-500':  hotel.id === params.get('hotel_id'),
+                    }
+                  )}
+                //   className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
                 >
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex items-center gap-3">
