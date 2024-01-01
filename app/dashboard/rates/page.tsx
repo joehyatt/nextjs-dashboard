@@ -75,6 +75,8 @@ export default async function Page({
 
         {months && months.length > 0 && <MonthSelect months={months} cim={cim}/>}
         {group_code && hotel_id && cim && rates && <Calendar hotel_id={hotel_id} cim={cim} rates={rates}/>}
+
+
         {oldRates.length !== 0 && hotel &&
         <>
             <Transition oldRates={oldRates} hotel={hotel} cid={cid}/>

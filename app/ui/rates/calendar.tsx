@@ -68,6 +68,7 @@ export const Day = (props:any) => {
     const searchParams = useSearchParams();
     const pathname = usePathname();
     const { replace } = useRouter();
+    const params = new URLSearchParams(searchParams!);
 
     const handleOldRatesSearch = useDebouncedCallback((term) => {
       console.log(`Searching... ${term}`);
@@ -77,7 +78,6 @@ export const Day = (props:any) => {
       if (term < today) return;
       if (Number(term.split("-")[1]) !== month1Digit) return;
 
-      const params = new URLSearchParams(searchParams!);
       if (term) {
         params.set('cid', term);
       } else {
@@ -92,12 +92,13 @@ export const Day = (props:any) => {
         className={clsx("border border-gray-200 flex flex-col",{
         'bg-gray-100 text-gray-400': day.$M+1 !== month1Digit,
         'hover:bg-blue-100 cursor-pointer': day.$M+1 === month1Digit,
+        'bg-[#F66C16]': day.$M+1 === month1Digit && day.$D === Number(params.get('cid')?.split("-")[2]),
         })}
       >
         <header className="flex flex-col items-center">
-          <p className={"text-sm p-1 my-1 text-center"}>{day.format("DD")}</p>
+          <p className={"text-sm p-0 my-[2px] text-center"}>{day.format("D")}</p>
         </header>
-        <p className={"text-xs md:text-sm p-1 my-3 align-middle text-center"} >{day.$R}</p>
+        <p className={"text-xs md:text-sm p-2 my-1 align-middle text-center"} >{day.$R}</p>
         
       </div>
     );

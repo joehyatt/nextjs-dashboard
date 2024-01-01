@@ -23,7 +23,7 @@ export default function Transition({
 }) {
     
     return (
-        <div id="transition" className="mt-8 mb-40 text-lg md:mb-36" style={{ width: '100%', height: 300 }}>
+        <div id="transition" className="my-24 text-lg md:mb-36" style={{ width: '100%', height: 300 }}>
             <div className="flex flex-col rounded-md bg-gray-50 p-4 md:p-6">
                 <div>
                     🏨&nbsp;{hotel.hotel_name_jp}
@@ -34,7 +34,7 @@ export default function Transition({
                     <Link href={`/dashboard/rates?group_code=${hotel.group_code}&hotel_id=${hotel.id}`}>🔗&nbsp;他の日付の料金を調べる</Link>
                 </div>
             </div>
-            <h2 className="mt-4">💹&nbsp;過去の価格推移</h2>
+            <h2 className="mt-8">💹&nbsp;過去の価格推移</h2>
             <ResponsiveContainer>
                 <LineChart
                     width={600}

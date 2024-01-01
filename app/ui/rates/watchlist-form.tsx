@@ -22,7 +22,7 @@ export default function WatchlistForm( {hotel_id, cid, latestRate}: {
   }
 
   return (
-    <form action={dispatch} className='mt-32'>
+    <form action={dispatch} className='mt-44'>
         <input type='hidden' id="hotel" name='hotel' value={hotel_id} />
         <input type='hidden' id="cid" name='cid' value={cid} />
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
