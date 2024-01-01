@@ -37,7 +37,7 @@ export default function Calendar({
     })
 
     return (
-        <div className="h-screen flex flex-col">
+        <div className="h-[50vh] md:h-[75vh] flex flex-col">
             {/* <CalendarHeader /> */}
             <div className="flex flex-col flex-1">
                 {/* <Sidebar /> */}
