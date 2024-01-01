@@ -15,6 +15,7 @@ export default async function handler(
     console.log(JSON.stringify(req.body));
     console.log('======================');
 
+    // アカウント連携開始処理
     if (req.body.events && req.body.events[0].type === "message" && req.body.events[0].message.text === "アカウント連携") {
         const userId = req.body.events[0].source.userId;
 
@@ -52,6 +53,7 @@ export default async function handler(
 
     }
 
+    // アカウント連携完了処理
     if (req.body.events && req.body.events[0].type === "accountLink") {
         console.log("accountLink webhook");
         const {result, nonce} = req.body.events[0].link;
@@ -68,6 +70,11 @@ export default async function handler(
         }
 
         await dbClient.end();
+    }
+
+    // アカウント連携解除処理
+    if (req.body.events && req.body.events[0].type === "message" && req.body.events[0].message.text === "連携解除") {
+      console.log("cancel line connect");
     }
     
     res.status(200).json('receive line message!');

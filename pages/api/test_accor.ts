@@ -24,7 +24,7 @@ type Log = {
 }
 
 const dateOffset = 0;
-const capture_date_count = 74;
+const capture_date_count = 91;
 
 const group_code = "accor";
 const country_code = "JP";

@@ -26,7 +26,7 @@ type Log = {
     save_timestamp: string | null,
 }
 
-const dateOffset = 126;
+const dateOffset = 100;
 const capture_date_count = 30;
 
 const group_code = "hyatt";

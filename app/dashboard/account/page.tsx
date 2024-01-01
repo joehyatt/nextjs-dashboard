@@ -23,18 +23,23 @@ export default async function Page({ params }: { params: { id: string } }) {
             breadcrumbs={[
             // { label: 'ウォッチリスト', href: '/dashboard/watchlist' },
             {
-                label: 'アカウントの編集',
-                href: `/dashboard/accountedit`,
+                label: 'アカウント',
+                href: `/dashboard/account`,
                 active: true,
             },
             ]}
         />
-        <div>アカウント編集ページ</div>
+        <div>アカウント</div>
         <div>
-            <div>名前の編集フォーム</div>
-            <div>メールアドレスの編集フォーム</div>
-            <div>パスワードの編集フォーム</div>
+            <div>名前</div>
+            <div>メールアドレス</div>
+            <div>パスワード</div>
             <div>LINE連携</div>
+        </div>
+        <div>
+            <button>ホームに戻る</button>
+            <button>ログアウト</button>
+            <button>アカウントを削除する</button>
         </div>
         {/* <Form /> */}
         {/* <Transition oldRates={oldRates} hotel_name_jp={hotel!.hotel_name_jp} cid={watchitem.cid}/>
