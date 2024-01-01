@@ -2,6 +2,7 @@ import { sql } from '@vercel/postgres';
 import {
   HotelField,
   HotelForm,
+  HotelsTable,
   HotelWithLogField,
   CaptureHotelField,
   RateField,
@@ -100,7 +101,7 @@ export async function fetchCardData() {
   }
 }
 
-const ITEMS_PER_PAGE = 6;
+const ITEMS_PER_PAGE = 10;
 export async function fetchFilteredInvoices(
   query: string,
   currentPage: number,
@@ -136,6 +137,35 @@ export async function fetchFilteredInvoices(
     throw new Error('Failed to fetch invoices.');
   }
 }
+export async function fetchFilteredHotels(
+  query: string,
+  currentPage: number,
+) {
+  noStore();
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  try {
+    const hotels = await sql<HotelsTable>`
+      SELECT
+        id,group_code,hotel_name_jp,hotel_name_en
+      FROM hotels
+      WHERE
+        group_name_jp ILIKE ${`%${query}%`} OR
+        group_name_en ILIKE ${`%${query}%`} OR
+        brand_name_jp ILIKE ${`%${query}%`} OR
+        brand_name_en ILIKE ${`%${query}%`} OR
+        hotel_name_jp ILIKE ${`%${query}%`} OR
+        hotel_name_en ILIKE ${`%${query}%`}
+      ORDER BY hotel_name_jp ASC
+      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+    `;
+
+    return hotels.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch hotels.');
+  }
+}
 
 export async function fetchInvoicesPages(query: string) {
   noStore();
@@ -156,6 +186,28 @@ export async function fetchInvoicesPages(query: string) {
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch total number of invoices.');
+  }
+}
+
+export async function fetchHotelsPages(query: string) {
+  noStore();
+  try {
+    const count = await sql`SELECT COUNT(*)
+    FROM hotels
+    WHERE
+      group_name_jp ILIKE ${`%${query}%`} OR
+      group_name_en ILIKE ${`%${query}%`} OR
+      brand_name_jp ILIKE ${`%${query}%`} OR
+      brand_name_en ILIKE ${`%${query}%`} OR
+      hotel_name_jp ILIKE ${`%${query}%`} OR
+      hotel_name_en ILIKE ${`%${query}%`}
+  `;
+
+    const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
+    return totalPages;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch total number of hotels.');
   }
 }
 

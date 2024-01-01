@@ -55,6 +55,13 @@ export type InvoicesTable = {
   status: 'pending' | 'paid';
 };
 
+export type HotelsTable = {
+  id: string;
+  group_code: string;
+  hotel_name_jp: string;
+  hotel_name_en: string;
+};
+
 export type CustomersTable = {
   id: string;
   name: string;
