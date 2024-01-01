@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import NavLinks from '@/app/ui/dashboard/nav-links';
 import PuffinLogo from '@/app/ui/puffin-logo';
-import { PowerIcon } from '@heroicons/react/24/outline';
+import { MagnifyingGlassIcon, UserIcon } from '@heroicons/react/24/outline';
 import { signOut } from '@/auth';
 
 
@@ -9,7 +9,7 @@ export default function SideNav() {
   return (
     // <div className="flex h-full flex-col px-3 py-4 md:px-2">
 
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col relative">
       
       <Link
         // className="mb-2 flex h-20 items-end justify-start rounded-md bg-blue-600 p-4 md:h-40"
@@ -20,8 +20,13 @@ export default function SideNav() {
           <PuffinLogo />
         </div>
       </Link>
-      {/* <div>search</div>
-      <div>account</div> */}
+
+      <div className='flex flex-row justify-end items-center absolute h-16 w-24 right-6'>
+        <Link href="/dashboard/rates">
+          <MagnifyingGlassIcon className='w-8 pr-2'/>
+        </Link>
+        <UserIcon className='w-6'/>
+      </div>
       {/* <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
         <NavLinks />
         <div className="hidden h-auto w-full grow rounded-md bg-gray-50 md:block"></div>

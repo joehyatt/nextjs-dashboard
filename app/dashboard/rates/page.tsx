@@ -39,7 +39,7 @@ export default async function Page({
     return (
         <div className="w-full">
         <div className="flex w-full items-center justify-between mb-10">
-            <h1 className={`${lusitana.className} text-2xl`}>料金検索</h1>
+            <h1 className={`${lusitana.className} text-lg`}>料金検索</h1>
         </div>
         <GroupSelect groups={groups} group_code={group_code}/>
         {group_code && <HotelSelect hotels={hotels} hotel_id={hotel_id} />}

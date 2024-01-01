@@ -32,7 +32,7 @@ export default function WatchlistForm( {hotel_id, cid, latestRate}: {
             🔔&nbsp;アラート基準価格の設定
           </label>
 
-          <div className='flex justify-center py-4'>
+          <div className='flex justify-center py-3'>
             <p className='font-bold text-2xl'>{basis > latestRate! ? formatCurrency(Math.round(latestRate!/100)*100) : formatCurrency(Math.round(basis!/100)*100)}</p>
           </div>
 
