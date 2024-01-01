@@ -4,6 +4,7 @@ import Transition from '@/app/ui/rates/transition';
 import { fetchWatchitemById, fetchOldRates, fetchHotelById } from '@/app/lib/data';
 import { notFound } from 'next/navigation';
 import { DeleteWatchitem2 } from '@/app/ui/watchlist/buttons';
+import { HotelForm } from '@/app/lib/definitions';
  
 export default async function Page({ params }: { params: { id: string } }) {
     const id = params.id;
@@ -28,7 +29,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             },
             ]}
         />
-        <Transition oldRates={oldRates} hotel_name_jp={hotel!.hotel_name_jp} cid={watchitem.cid}/>
+        <Transition oldRates={oldRates} hotel={hotel as HotelForm} cid={watchitem.cid}/>
         <Form watchitem={watchitem} latestRate={latestRate || 100000} />
         <DeleteWatchitem2 id={id}/>
         </main>

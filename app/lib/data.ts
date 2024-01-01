@@ -336,7 +336,7 @@ export async function fetchHotelById(id: string) {
   noStore();
   try {
     const data = await sql<HotelForm>`
-      SELECT id, hotel_name_jp, capture_script, capture_month_count
+      SELECT id, group_code, hotel_name_jp, capture_script, capture_month_count
       FROM hotels
       WHERE id = ${id};
     `;

@@ -22,19 +22,19 @@ export default async function Page() {
 
   return (
     <main>
-      <h1 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
+      {/* <h1 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
         ダッシュボード
       </h1>
-      <p className='mb-4'>ようこそ{authInfo?.user?.name}さん🎉</p>
+      <p className='mb-4'>ようこそ{authInfo?.user?.name}さん🎉</p> */}
 
-      {lineToken.link_token && lineToken.nonce &&
+      {/* {lineToken.link_token && lineToken.nonce &&
         <button className='my-4 p-3 rounded-md bg-emerald-500 text-white'><a href={linkUrl}>LINEアカウント連携を完了させる</a></button>
-      }
+      } */}
 
 
-      <div className="w-full mt-10">
+      <div className="w-full">
         <div className="flex w-full items-center justify-between">
-            <h1 className={`${lusitana.className} text-2xl`}>ウォッチリスト</h1>
+            <h1 className={`${lusitana.className} text-xl`}>👀&nbsp;ウォッチリスト</h1>
         </div>
         {/* <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
             <CreateWatchitem />
