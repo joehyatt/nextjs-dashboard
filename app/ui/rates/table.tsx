@@ -30,7 +30,7 @@ export default function HotelsTable({hotels}: {hotels: HotelsTable[]}) {
             params.delete('cim');
             params.delete('cid');
         }
-        replace(`${pathname}?${params.toString()}`);
+        replace(`${pathname}?${params.toString()}#calendar`);
     };
 
   return (
@@ -42,9 +42,9 @@ export default function HotelsTable({hotels}: {hotels: HotelsTable[]}) {
               <div
                 key={hotel.id}
                 className={clsx(
-                    "mb-2 w-full rounded-md bg-white p-2",
+                    "mb-2 w-full rounded-m p-2",
                     {
-                        'bg-[#F66C16]':  hotel.id === params.get('hotel_id'),
+                        'bg-[#F66C16] text-[#fff]':  hotel.id === params.get('hotel_id'),
                     }
                 )}
                 // className="mb-2 w-full rounded-md bg-white p-2"

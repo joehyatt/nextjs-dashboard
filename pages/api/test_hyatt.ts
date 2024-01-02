@@ -27,7 +27,7 @@ type Log = {
 }
 
 const dateOffset = 0;
-const capture_date_count = 91;
+const capture_date_count = 100;
 
 const group_code = "hyatt";
 const country_code = "JP";
@@ -63,7 +63,7 @@ const captureRates = async (client:any) => {
         try{
             const rateByHotels: Rate[] = [];
             
-            const file = path.join(process.cwd(), 'scripts/html', searchFilename);
+            const file = path.join(process.cwd(), 'html', searchFilename);
             const data = fs.readFileSync(file, 'utf8');
             const root = parse(data)
 

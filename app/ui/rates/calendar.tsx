@@ -37,6 +37,7 @@ export default function Calendar({
     })
 
     return (
+      <>
         <div className="h-[50vh] md:h-[75vh] flex flex-col">
             {/* <CalendarHeader /> */}
             <div className="flex flex-col flex-1">
@@ -44,6 +45,8 @@ export default function Calendar({
                 <Month month={currentMonth} month1Digit={month1Digit}/>
             </div>
         </div>
+        <div className="h-[40vh] md:h-[15vh]" />
+      </>
     )
 }
 
@@ -92,7 +95,7 @@ export const Day = (props:any) => {
         className={clsx("border border-gray-200 flex flex-col",{
         'bg-gray-100 text-gray-400': day.$M+1 !== month1Digit,
         'hover:bg-blue-100 cursor-pointer': day.$M+1 === month1Digit,
-        'bg-[#F66C16]': day.$M+1 === month1Digit && day.$D === Number(params.get('cid')?.split("-")[2]),
+        'bg-[#F66C16] text-[#fff]': day.$M+1 === month1Digit && day.$D === Number(params.get('cid')?.split("-")[2]),
         })}
       >
         <header className="flex flex-col items-center">

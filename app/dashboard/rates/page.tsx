@@ -62,12 +62,17 @@ export default async function Page({
             <Search placeholder="ホテル名を検索..." />
         </div>
 
-        <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
-            <Table hotels={filteredHotels} />
-        </Suspense>
-        <div className="mt-5 flex w-full justify-center">
-            <Pagination totalPages={totalPages} />
-        </div>
+        {query && (
+            <>
+                <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
+                    <Table hotels={filteredHotels} />
+                </Suspense>
+                <div className="mt-5 flex w-full justify-center">
+                    <Pagination totalPages={totalPages} />
+                </div>
+            
+            </>
+        )}
 
         
         {/* <GroupSelect groups={groups} group_code={group_code}/> */}

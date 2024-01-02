@@ -16,12 +16,18 @@ export default function Search({ placeholder }: { placeholder: string }) {
     params.set('page', '1');
     if (term) {
       params.set('query', term);
+      params.delete('page');
       params.delete('group_code');
       params.delete('hotel_id');
       params.delete('cim');
       params.delete('cid');
     } else {
       params.delete('query');
+      params.delete('page');
+      params.delete('group_code');
+      params.delete('hotel_id');
+      params.delete('cim');
+      params.delete('cid');
     }
     replace(`${pathname}?${params.toString()}`);
   }, 500);
