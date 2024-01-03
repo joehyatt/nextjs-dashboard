@@ -6,8 +6,11 @@ import InvoiceStatus from '@/app/ui/invoices/status';
 import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
 import { HotelsTable } from '@/app/lib/definitions';
 // import { fetchFilteredHotels } from '@/app/lib/data';
+import { useState, useEffect } from 'react'
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import clsx from 'clsx';
+
+
 export default function HotelsTable({hotels}: {hotels: HotelsTable[]}) {
 //   const hotels = await fetchFilteredHotels(query, currentPage);
 
@@ -16,7 +19,11 @@ export default function HotelsTable({hotels}: {hotels: HotelsTable[]}) {
     const { replace } = useRouter();
     const params = new URLSearchParams(searchParams!);
 
+    const [ isLoading, setIsLoading ] = useState(false);
+
     const handleSearch = (group_code:string, hotel_id:string) => {
+        setIsLoading(true);
+
         console.log(`Searching... ${hotel_id}`);
         console.log(`param hotel_id... ${params.get('hotel_id')}`)
         if (group_code && hotel_id) {
@@ -33,8 +40,20 @@ export default function HotelsTable({hotels}: {hotels: HotelsTable[]}) {
         replace(`${pathname}?${params.toString()}#calendar`);
     };
 
+    useEffect(() => {
+        setIsLoading(false);
+    }, [pathname, searchParams])
+
   return (
+    <>
+    {isLoading && 
+        <div className="flex justify-center items-center fixed top-0 left-0 right-0 bottom-0 bg-slate-300 opacity-50" aria-label="読み込み中">
+            <div className="animate-spin h-10 w-10 border-4 border-[#F66C16] rounded-full border-t-transparent"></div>
+        </div>
+    }
+    
     <div className="mt-6 flow-root">
+        
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
           <div className="md:hidden">
@@ -93,5 +112,8 @@ export default function HotelsTable({hotels}: {hotels: HotelsTable[]}) {
         </div>
       </div>
     </div>
+    </>
+    
+    
   );
 }

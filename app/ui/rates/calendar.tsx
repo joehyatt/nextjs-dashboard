@@ -1,6 +1,7 @@
 'use client'
 
 import React from "react";
+import { useState, useEffect } from 'react'
 import { getMonth } from "@/app/lib/utils"
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
@@ -67,6 +68,7 @@ export const Month = (props: any) => {
 
 export const Day = (props:any) => {
     const { day, rowIdx, month1Digit } = props;
+    const [ isLoading, setIsLoading ] = useState(false);
 
     const searchParams = useSearchParams();
     const pathname = usePathname();
@@ -75,6 +77,7 @@ export const Day = (props:any) => {
 
     const handleOldRatesSearch = useDebouncedCallback((term) => {
       console.log(`Searching... ${term}`);
+      setIsLoading(true);
 
       const today = new Date().toLocaleDateString("ja-JP", {year: "numeric",month: "2-digit",day: "2-digit"}).replaceAll('/', '-');
 
@@ -89,7 +92,17 @@ export const Day = (props:any) => {
       replace(`${pathname}?${params.toString()}#transition`);
     }, 100);
 
+    useEffect(() => {
+      setIsLoading(false);
+    }, [pathname, searchParams])
+
     return (
+      <>
+      {isLoading && 
+        <div className="flex justify-center items-center fixed top-0 left-0 right-0 bottom-0 bg-slate-300 opacity-50" aria-label="読み込み中">
+            <div className="animate-spin h-10 w-10 border-4 border-[#F66C16] rounded-full border-t-transparent"></div>
+        </div>
+      }
       <div 
         onClick={() => handleOldRatesSearch(day.format("YYYY-MM-DD"))}
         className={clsx("border border-gray-200 flex flex-col",{
@@ -101,8 +114,9 @@ export const Day = (props:any) => {
         <header className="flex flex-col items-center">
           <p className={"text-sm p-0 my-[2px] text-center"}>{day.format("D")}</p>
         </header>
-        <p className={"text-xs md:text-sm p-2 my-1 align-middle text-center"} >{day.$R}</p>
+        <p className={"text-[10px] md:text-sm mt-2 align-middle text-center"} >{day.$R}</p>
         
       </div>
+      </>
     );
 };
