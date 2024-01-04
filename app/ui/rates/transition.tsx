@@ -23,7 +23,7 @@ export default function Transition({
 }) {
     
     return (
-        <div id="transition" className="text-lg" style={{ width: '100%', height: 300 }}>
+        <div id="transition" className="text-lg w-[100%] h-[300px]">
             <div className="flex flex-col rounded-md bg-gray-50 p-4 md:p-6">
                 <div>
                     🏨&nbsp;{hotel.hotel_name_jp}

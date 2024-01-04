@@ -7,12 +7,10 @@ import { signOut } from '@/auth';
 
 export default function SideNav() {
   return (
-    // <div className="flex h-full flex-col px-3 py-4 md:px-2">
 
     <div className="flex h-full flex-col relative">
       
       <Link
-        // className="mb-2 flex h-20 items-end justify-start rounded-md bg-blue-600 p-4 md:h-40"
         className="mb-2 flex h-16 items-center justify-center p-2 md:h-32"
         href="/"
       >
@@ -25,7 +23,9 @@ export default function SideNav() {
         <Link href="/dashboard/rates">
           <MagnifyingGlassIcon className='w-8 pr-2'/>
         </Link>
-        <UserIcon className='w-6'/>
+        <Link href="/dashboard/account">
+          <UserIcon className='w-6'/>
+        </Link>
       </div>
       {/* <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
         <NavLinks />

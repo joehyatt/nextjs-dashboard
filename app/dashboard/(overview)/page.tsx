@@ -39,10 +39,10 @@ export default async function Page() {
         {/* <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
             <CreateWatchitem />
         </div> */}
-        <Table status={status} user_id = {user_id!} />
+        <Table status={status} user_id={user_id!} />
       </div>
 
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mt-10">
+      {/* <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mt-10">
         <div className="flex w-full flex-col md:col-span-4 lg:col-span-4">
           <h2 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>アカウント情報</h2>
           <div className="flex grow flex-col justify-between rounded-xl bg-gray-50 py-2 px-4">
@@ -62,7 +62,8 @@ export default async function Page() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
+
       {/* <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <Suspense fallback={<CardsSkeleton />}>
           <CardWrapper />
