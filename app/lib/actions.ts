@@ -122,6 +122,50 @@ export async function deleteInvoice(id: string) {
     }
 }
 
+export async function editName(
+  formData: FormData,
+) {
+  const formObj = Object.fromEntries(formData)
+  const new_name = formObj.name as string;
+  const user_id = formObj.user_id as string;
+
+  console.log(new_name);
+  console.log(user_id);
+  try {
+    await sql`
+      UPDATE users
+      SET name = ${new_name}
+      WHERE id = ${user_id}
+    `;
+  } catch (error) {
+    return { message: 'Database Error: Failed to Update UserName.' };
+  }
+  revalidatePath('/dashboard/account');
+  redirect('/dashboard/account');
+}
+
+export async function editMail(
+  formData: FormData,
+) {
+  const formObj = Object.fromEntries(formData)
+  const new_mail = formObj.mail as string;
+  const user_id = formObj.user_id as string;
+
+  console.log(new_mail);
+  console.log(user_id);
+  try {
+    await sql`
+      UPDATE users
+      SET email = ${new_mail}
+      WHERE id = ${user_id}
+    `;
+  } catch (error) {
+    return { message: 'Database Error: Failed to Update Email.' };
+  }
+  revalidatePath('/dashboard/account');
+  redirect('/dashboard/account');
+}
+
 export async function authenticate(
   prevState: string | undefined,
   formData: FormData,

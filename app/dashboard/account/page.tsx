@@ -1,32 +1,73 @@
 import Breadcrumbs from '@/app/ui/watchlist/breadcrumbs';
+import Link from 'next/link';
 import { signOut } from '@/auth';
-import { PowerIcon } from '@heroicons/react/24/outline';
+import { CheckBadgeIcon } from '@heroicons/react/20/solid';
 import { Button } from '@/app/ui/button';
+import { auth } from '@/auth'
+import { getUserIdByEmail, getUserInfo } from '@/app/lib/data';
  
 export default async function Page({ params }: { params: { id: string } }) {
+
+    const authInfo = await auth()
+    const user_id = await getUserIdByEmail(authInfo?.user?.email!)
+    const userInfo = await getUserInfo(user_id!)
 
     return (
         <main>
             <Breadcrumbs
                 breadcrumbs={[
                 {
-                    label: 'アカウント',
+                    label: '🙎アカウント',
                     href: `/dashboard/account`,
                     active: true,
                 },
                 ]}
             />
-            <div>アカウント</div>
             <div>
-                <div>名前</div>
-                <div>メールアドレス</div>
-                <div>パスワード</div>
-                <div>LINE連携</div>
-            </div>
-            <div>
-                <div className="mt-6 flex justify-end gap-4">
-                    <Button type="submit">ホームに戻る</Button>
+                <div className='rounded-m'>
+                    <div>🏷&nbsp;名前</div>
+                    <div className='w-full flex flex-row justify-between'>
+                        <p>{userInfo?.name}</p>
+                        <Link href="/dashboard/account/editname"><button>変更する</button></Link>
+                    </div>
                 </div>
+
+                <div className='mt-5'>
+                    <div>📧&nbsp;メールアドレス</div>
+                    <div className='w-full flex flex-row justify-between'>
+                        <p>{userInfo?.email}</p>
+                        <Link href="/dashboard/account/editmail">
+                            <button className='h-10 justify-center items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200'>変更する</button>
+                        </Link>
+                    </div>
+                </div>
+
+                <div className='mt-5'>
+                    <div>🔑&nbsp;パスワード</div>
+                    <div className='w-full flex flex-row justify-between'>
+                        <p className='h-10 flex items-center'>********</p>
+                        <button className='h-10 justify-center items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200'>変更する</button>
+                    </div>
+                </div>
+
+                <div className='mt-5'>
+                    <div>🔗&nbsp;LINE連携</div>
+                    <div>{userInfo?.line_id ? 
+                        <div className='w-full flex flex-row justify-between'>
+                            <div className='flex flex-row items-center'>連携済み<CheckBadgeIcon className='w-5 text-green-500' /></div>
+                            <button className='h-10 justify-center items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200'>解除する</button>
+                        </div> 
+                        : 
+                        '未連携'
+                    }</div>
+                </div>
+
+            </div>
+
+            <div className='mt-12'>
+                <Link href="/dashboard" className="flex w-full h-10 justify-center items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200">
+                    ホームに戻る
+                </Link>
                 <form
                     className='mt-6'
                     action={async () => {
@@ -34,15 +75,12 @@ export default async function Page({ params }: { params: { id: string } }) {
                         await signOut();
                     }}
                     >
-                    {/* <button className="flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3">
-                        <PowerIcon className="w-6" />
-                        <div className="hidden md:block">サインアウト</div>
-                    </button> */}
                     <Button type="submit">サインアウトする</Button>
                 </form>
-                <div className="mt-6 flex justify-end gap-4">
+
+                {/* <div className="mt-6 flex justify-end gap-4">
                     <Button type="submit">アカウントを削除する</Button>
-                </div>
+                </div> */}
             </div>
         </main>
     );

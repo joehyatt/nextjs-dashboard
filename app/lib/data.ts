@@ -289,6 +289,7 @@ export async function fetchFilteredCustomers(query: string) {
 }
 
 export async function getUser(email: string) {
+  noStore();
   try {
     const user = await sql`SELECT * from USERS where email=${email}`;
     return user.rows[0] as User;
@@ -629,5 +630,18 @@ export async function getUserLineIdByEmail(email:string) {
     return data.rows[0].line_id;
   } catch (error) {
     console.error('Database Error during getUserLineIdByEmail:', error);
+  }
+}
+
+export async function getUserInfo(user_id:string) {
+  try {
+    const data = await sql<User>`
+      SELECT *
+      FROM users
+      WHERE id = ${user_id};
+    `;
+    return data.rows[0];
+  } catch (error) {
+    console.error('Database Error during getUserInfo:', error);
   }
 }
